@@ -4,14 +4,16 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
+    "dev": "wrangler dev -c wrangler.toml",
+    "deploy": "wrangler deploy -c wrangler.toml",
     "db:generate": "drizzle-kit generate",
-    "db:migrate:local": "wrangler d1 migrations apply fleet-ledger-demo-db --local",
-    "db:migrate:remote": "wrangler d1 migrations apply fleet-ledger-demo-db --remote",
-    "db:seed:local": "wrangler d1 execute fleet-ledger-demo-db --local --file=./seed.sql",
-    "db:seed:remote": "wrangler d1 execute fleet-ledger-demo-db --remote --file=./seed.sql",
-    "test": "vitest run"
+    "db:migrate:local": "wrangler d1 migrations apply fleet-ledger-demo-db --local -c wrangler.toml",
+    "db:migrate:remote": "wrangler d1 migrations apply fleet-ledger-demo-db --remote -c wrangler.toml",
+    "db:seed:local": "wrangler d1 execute fleet-ledger-demo-db --local --file=./seed.sql -c wrangler.toml",
+    "db:seed:remote": "wrangler d1 execute fleet-ledger-demo-db --remote --file=./seed.sql -c wrangler.toml",
+    "test": "vitest run",
+    "secret:jwt": "wrangler secret put JWT_SECRET -c wrangler.toml",
+    "secret:gemini": "wrangler secret put GEMINI_API_KEY -c wrangler.toml"
   },
   "dependencies": {
     "drizzle-orm": "^0.44.6",

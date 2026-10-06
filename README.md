@@ -6,12 +6,20 @@
 > fictional sample data under the company name "Demo Logistics". Nothing here
 > reads or writes the SMT production database. Trip numbers are `DEMO-#####`.
 >
-> First-time setup of the demo backend (from `worker/`):
-> 1. `npx wrangler d1 create fleet-ledger-demo-db`, then paste the printed id
->    into `database_id` in `worker/wrangler.toml`
-> 2. `npx wrangler r2 bucket create fleet-ledger-demo-docs`
-> 3. `npx wrangler secret put JWT_SECRET` (use a new value, not SMT's)
-> 4. `npm run db:migrate:remote && npm run db:seed:remote && npx wrangler deploy`
+> **Already done (6 Oct 2026):** the demo D1 database `fleet-ledger-demo-db`
+> (`886fcd84-b0a7-417b-91e9-236f6adde3ce`) is created, migrated (0000–0015)
+> and seeded; the R2 bucket `fleet-ledger-demo-docs` exists.
+>
+> **To deploy the demo** (from a clone of this repo, after `npx wrangler login`):
+> 1. API, from `worker/`: `npm install`, `npm run secret:jwt` (a NEW value,
+>    never SMT's), then `npm run deploy`. Always use these npm scripts: they
+>    pass `-c wrangler.toml`, so wrangler can't pick up the web app's
+>    `wrangler.jsonc` in the repo root instead.
+> 2. Web app: Cloudflare dashboard → Workers & Pages → Create → Import a Git
+>    repository → `smkrmuthu/FleetAppDemo`, branch `main`, build command
+>    `npm run build`, deploy command `npx wrangler deploy`. The root
+>    `wrangler.jsonc` pins the worker name to `fleetappdemo`.
+> 3. Attach the custom domain `fleet.oneuptech.co` to the `fleetappdemo` worker.
 >
 > Demo sign-in: `mgr@demo.com` / `mgr123`, `office@demo.com` / `office123`,
 > `driver@demo.com` / `driver123`.
