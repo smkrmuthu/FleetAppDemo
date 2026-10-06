@@ -5,6 +5,9 @@
 {
   "name": "fleetappdemo",
   "compatibility_date": "2026-01-01",
+  // The demo's public address. Cloudflare creates the DNS record and
+  // certificate on deploy. SMT lives at smt.oneuptech.co on its own worker.
+  "routes": [{ "pattern": "fleet.oneuptech.co", "custom_domain": true }],
   "assets": {
     "directory": "./dist",
     "not_found_handling": "single-page-application"
