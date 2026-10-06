@@ -6,7 +6,7 @@ Last verified: 2026-10-04. The nightly backup and its restore (section 9) were t
 
 | What | Where | Identifier |
 |---|---|---|
-| Database (all trips, vehicles, drivers, users, expenses, Master settings, audit log) | Cloudflare **D1** (managed SQLite) | name `fleet-ledger-demo-db`, id `REPLACE_WITH_DEMO_D1_DATABASE_ID`, region APAC, created 2026-09-14 |
+| Database (all trips, vehicles, drivers, users, expenses, Master settings, audit log) | Cloudflare **D1** (managed SQLite) | name `fleet-ledger-demo-db`, id `886fcd84-b0a7-417b-91e9-236f6adde3ce`, region APAC, created 2026-09-14 |
 | Uploaded files (receipt photos, PDFs) | Cloudflare **R2** bucket | `fleet-ledger-demo-docs`, region APAC, Standard storage |
 | API that reads and writes both | Cloudflare **Worker** | `fleet-ledger-demo-api`, `https://fleet-ledger-demo-api.smkrmuthu.workers.dev/v1` |
 | Secrets (`JWT_SECRET`, `GEMINI_API_KEY`) | Worker secrets | not in the database, not in any dump |

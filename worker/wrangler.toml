@@ -18,10 +18,10 @@ crons = ["0 21 * * *"]
 
 [[d1_databases]]
 binding = "DB"
-# Demo-only database. Create it with `npx wrangler d1 create fleet-ledger-demo-db`
-# and paste the id it prints below. Never reuse the SMT production database id.
+# Demo-only database (created 6 Oct 2026, APAC). Never put the SMT production
+# database id (fleet-ledger-db) here.
 database_name = "fleet-ledger-demo-db"
-database_id = "REPLACE_WITH_DEMO_D1_DATABASE_ID"
+database_id = "886fcd84-b0a7-417b-91e9-236f6adde3ce"
 
 [[r2_buckets]]
 binding = "DOCS"
