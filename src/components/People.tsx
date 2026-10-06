@@ -20,7 +20,7 @@ function dueItems(v: Vehicle) {
 function dueCell(date: string) {
   const status = dueStatus(date);
   if (!status) return <span style={{ whiteSpace: 'nowrap' }}>{date}</span>;
-  return <span className={status.expired ? 'tag tag-accent' : 'tag tag-outline'} title={status.label} style={{ whiteSpace: 'nowrap' }}>{date}</span>;
+  return <span className={status.expired ? 'badge badge-error' : 'badge badge-warning'} title={status.label} style={{ whiteSpace: 'nowrap' }}>{date}</span>;
 }
 
 // A minimal, focused dialog — just the two password fields — rather than
@@ -51,14 +51,14 @@ function ChangePasswordDialog({
 
   return (
     <div
-      style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(32,30,29,0.55)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '6vh 16px', overflowY: 'auto' }}
+      style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(23, 33, 43, 0.45)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '6vh 16px', overflowY: 'auto' }}
       onMouseDown={(e) => { if (e.target === e.currentTarget && !saving) onClose(); }}
     >
-      <div style={{ background: 'var(--color-bg)', border: '2px solid var(--color-text)', width: '100%', maxWidth: 420 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, padding: '18px 20px 14px', borderBottom: '2px solid var(--color-divider)' }}>
+      <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', width: '100%', maxWidth: 420 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, padding: '18px 20px 14px', borderBottom: '1px solid var(--color-border)' }}>
           <div>
             <div className="kicker">Change password</div>
-            <h2 style={{ fontSize: 22, letterSpacing: '-0.01em', marginTop: 2 }}>{userName}</h2>
+            <h2 style={{ fontSize: 'var(--fs-section)', letterSpacing: '-0.01em', marginTop: 2 }}>{userName}</h2>
           </div>
           <button type="button" className="btn btn-ghost" aria-label="Close" onClick={onClose} style={{ fontSize: 18, lineHeight: 1, padding: '2px 8px' }}>×</button>
         </div>
@@ -110,14 +110,14 @@ function AddUserDialog({ onSave, onClose }: { onSave: (u: { name: string; phone:
 
   return (
     <div
-      style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(32,30,29,0.55)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '6vh 16px', overflowY: 'auto' }}
+      style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(23, 33, 43, 0.45)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '6vh 16px', overflowY: 'auto' }}
       onMouseDown={(e) => { if (e.target === e.currentTarget && !saving) onClose(); }}
     >
-      <div style={{ background: 'var(--color-bg)', border: '2px solid var(--color-text)', width: '100%', maxWidth: 460 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, padding: '18px 20px 14px', borderBottom: '2px solid var(--color-divider)' }}>
+      <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', width: '100%', maxWidth: 460 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, padding: '18px 20px 14px', borderBottom: '1px solid var(--color-border)' }}>
           <div>
             <div className="kicker">New account</div>
-            <h2 style={{ fontSize: 22, letterSpacing: '-0.01em', marginTop: 2 }}>Add user</h2>
+            <h2 style={{ fontSize: 'var(--fs-section)', letterSpacing: '-0.01em', marginTop: 2 }}>Add user</h2>
           </div>
           <button type="button" className="btn btn-ghost" aria-label="Close" onClick={onClose} style={{ fontSize: 18, lineHeight: 1, padding: '2px 8px' }}>×</button>
         </div>
@@ -338,7 +338,7 @@ export function People({
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap', marginBottom: 18 }}>
         <div>
           <div className="kicker">Demo Logistics · {users.length} accounts, 3 branches</div>
-          <h1 style={{ fontSize: 34, letterSpacing: '-0.02em' }}>People</h1>
+          <h1>People</h1>
           <p style={{ color: 'var(--color-neutral-700)', marginTop: 6, fontSize: 13 }}>Manage the fleet's trucks, drivers and user accounts.</p>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
@@ -346,8 +346,8 @@ export function People({
         </div>
       </div>
 
-      <h2 style={{ fontSize: 20, marginBottom: 12 }}>User accounts</h2>
-      <div className="scroll-x" style={{ border: '2px solid var(--color-divider)', marginBottom: 30 }}>
+      <h2 style={{ fontSize: 'var(--fs-section)', marginBottom: 12 }}>User accounts</h2>
+      <div className="scroll-x" style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', marginBottom: 30, background: 'var(--color-surface)' }}>
         <table className="table" style={{ minWidth: 1150 }}>
           <thead>
             <tr>
@@ -359,7 +359,7 @@ export function People({
             {users.map((u) => (
               <tr key={u.id}>
                 <td style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{u.name}</td>
-                <td>{u.isManager ? <span className="tag tag-accent">{u.role}</span> : <span className="tag tag-outline">{u.role}</span>}</td>
+                <td>{u.isManager ? <span className="badge badge-info">{u.role}</span> : <span className="badge badge-neutral">{u.role}</span>}</td>
                 <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: 12, whiteSpace: 'nowrap' }}>{u.phone}</td>
                 <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: 12, whiteSpace: 'nowrap' }}>{u.userId || '—'}</td>
                 <td>{u.branch}</td>
@@ -379,8 +379,8 @@ export function People({
         </table>
       </div>
 
-      <h2 style={{ fontSize: 20, marginBottom: 12 }}>Trucks</h2>
-      <div style={{ border: '2px solid var(--color-divider)', padding: 16, marginBottom: 16 }}>
+      <h2 style={{ fontSize: 'var(--fs-section)', marginBottom: 12 }}>Trucks</h2>
+      <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 16, marginBottom: 16, background: 'var(--color-surface)' }}>
         <div className="filters-grid">
           <div className="field"><label>Reg No</label><input className="input" type="text" placeholder="TN00 XX 0000" value={newVehicle.id} onChange={(e) => setNewVehicle((v) => ({ ...v, id: e.target.value }))} /></div>
           <div className="field"><label>Reg Date</label><input className="input" type="date" value={newVehicle.regDate} onChange={(e) => setNewVehicle((v) => ({ ...v, regDate: e.target.value }))} /></div>
@@ -422,7 +422,7 @@ export function People({
                 <td>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, maxWidth: 320 }}>
                     {dueItems(v).map((item) => (
-                      <span key={item.name} className={item.status.expired ? 'tag tag-accent' : 'tag tag-outline'} title={`${item.name}: ${item.status.label}`}>
+                      <span key={item.name} className={item.status.expired ? 'badge badge-error' : 'badge badge-warning'} title={`${item.name}: ${item.status.label}`}>
                         {item.name} · {item.status.label}
                       </span>
                     ))}
@@ -446,8 +446,8 @@ export function People({
       </DualScroll>
       </div>
 
-      <h2 style={{ fontSize: 20, marginBottom: 12 }}>Drivers</h2>
-      <div style={{ border: '2px solid var(--color-divider)', padding: 16, marginBottom: 16 }}>
+      <h2 style={{ fontSize: 'var(--fs-section)', marginBottom: 12 }}>Drivers</h2>
+      <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 16, marginBottom: 16, background: 'var(--color-surface)' }}>
         <div className="filters-grid">
           <div className="field"><label>Name</label><input className="input" type="text" placeholder="Driver name" value={newDriver.name} onChange={(e) => setNewDriver((d) => ({ ...d, name: e.target.value }))} /></div>
           <div className="field"><label>Licence no</label><input className="input" type="text" placeholder="Licence no" value={newDriver.licence} onChange={(e) => setNewDriver((d) => ({ ...d, licence: e.target.value }))} /></div>
@@ -456,7 +456,7 @@ export function People({
           {driverError && <div role="alert" style={{ color: 'var(--color-accent-700)', fontSize: 13 }}>{driverError}</div>}
         </div>
       </div>
-      <div className="scroll-x" style={{ border: '2px solid var(--color-divider)' }}>
+      <div className="scroll-x" style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', background: 'var(--color-surface)' }}>
         <table className="table" style={{ minWidth: 760 }}>
           <thead>
             <tr>
@@ -469,7 +469,7 @@ export function People({
               <tr key={d.name}>
                 <td style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{d.name}</td>
                 <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: 12, whiteSpace: 'nowrap' }}>{d.licence}</td>
-                <td style={{ whiteSpace: 'nowrap' }}>{d.expiring ? <span className="tag tag-accent">{d.expiry}</span> : <span>{d.expiry}</span>}</td>
+                <td style={{ whiteSpace: 'nowrap' }}>{d.expiring ? <span className="badge badge-warning">{d.expiry}</span> : <span>{d.expiry}</span>}</td>
                 <td style={{ color: 'var(--color-neutral-700)' }}>{d.credential}</td>
                 <td className="col-actions">
                   <div style={actions}>

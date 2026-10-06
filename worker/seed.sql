@@ -88,12 +88,12 @@ UPDATE trips SET odo_start = 0, odo_end = 98  WHERE id = 't7';
 UPDATE trips SET odo_start = 0, odo_end = 268 WHERE id = 't8';
 
 INSERT INTO monthly_expenses (id, org_id, vehicle_id, driver_id, spent_on, category, amount_paise, remarks, created_by, created_at) VALUES
-  ('e1', 'org-meridian', 'TN38 AB 4412', 'Murugan S', '2026-09-01', 'detention', 2860000, 'EWB 2710 0345 6789 · yard halt', 'user-kavitha', '2026-09-01T09:00:00Z'),
-  ('e2', 'org-meridian', 'TN45 CQ 9087', 'Rafiq A',   '2026-09-02', 'permit_tax', 1240000, 'Sept transit permit', 'user-kavitha', '2026-09-02T09:00:00Z'),
-  ('e3', 'org-meridian', 'KA01 MD 7731', 'Prakash N', '2026-09-04', 'detention', 1980000, '2 days, EWB 1145 0032 8871', 'user-kavitha', '2026-09-04T09:00:00Z'),
-  ('e4', 'org-meridian', 'TN52 BK 2290', 'Ilango R',  '2026-09-06', 'loan_lease', 5620000, 'EMI', 'user-kavitha', '2026-09-06T09:00:00Z'),
-  ('e5', 'org-meridian', 'TN38 AB 4412', 'Murugan S', '2026-09-07', 'insurance', 1840000, 'Goods-in-transit insurance, Q3', 'user-kavitha', '2026-09-07T09:00:00Z'),
-  ('e6', 'org-meridian', 'TN45 CQ 9087', 'Rafiq A',   '2026-09-09', 'maintenance', 520000, 'Oil change', 'user-kavitha', '2026-09-09T09:00:00Z');
+  ('e1', 'org-meridian', 'TN38 AB 4412', 'Murugan S', '2026-09-01', 'Detention / halting charges', 2860000, 'EWB 2710 0345 6789 · yard halt', 'user-kavitha', '2026-09-01T09:00:00Z'),
+  ('e2', 'org-meridian', 'TN45 CQ 9087', 'Rafiq A',   '2026-09-02', 'Permit / tax', 1240000, 'Sept transit permit', 'user-kavitha', '2026-09-02T09:00:00Z'),
+  ('e3', 'org-meridian', 'KA01 MD 7731', 'Prakash N', '2026-09-04', 'Detention / halting charges', 1980000, '2 days, EWB 1145 0032 8871', 'user-kavitha', '2026-09-04T09:00:00Z'),
+  ('e4', 'org-meridian', 'TN52 BK 2290', 'Ilango R',  '2026-09-06', 'Loan / lease', 5620000, 'EMI', 'user-kavitha', '2026-09-06T09:00:00Z'),
+  ('e5', 'org-meridian', 'TN38 AB 4412', 'Murugan S', '2026-09-07', 'Insurance', 1840000, 'Goods-in-transit insurance, Q3', 'user-kavitha', '2026-09-07T09:00:00Z'),
+  ('e6', 'org-meridian', 'TN45 CQ 9087', 'Rafiq A',   '2026-09-09', 'Maintenance', 520000, 'Oil change', 'user-kavitha', '2026-09-09T09:00:00Z');
 
 INSERT INTO notifications (id, org_id, kind, message, tab, related_trip_id, read, created_at) VALUES
   ('n1', 'org-meridian', 'approval', 'Ilango R logged TN52 BK 2290 — pending approval', 'triplog', 't8', 0, '2026-09-11T12:40:00Z'),

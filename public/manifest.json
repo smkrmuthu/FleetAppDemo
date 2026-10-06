@@ -4,8 +4,8 @@
   "description": "Goods movement and expense ledger for a trucking fleet.",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#f3f2f2",
-  "theme_color": "#ec3013",
+  "background_color": "#F6F7F8",
+  "theme_color": "#17212B",
   "icons": [
     { "src": "icons/icon-48.png", "type": "image/png", "sizes": "48x48", "purpose": "any maskable" },
     { "src": "icons/icon-72.png", "type": "image/png", "sizes": "72x72", "purpose": "any maskable" },

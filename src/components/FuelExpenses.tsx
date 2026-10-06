@@ -274,7 +274,7 @@ export function FuelExpenses({ trips, vehicles, drivers, master, role, dateFrom,
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap', marginBottom: 18 }}>
         <div>
           <div className="kicker">Diesel</div>
-          <h1 style={{ fontSize: 34, letterSpacing: '-0.02em' }}>Fuel Expenses</h1>
+          <h1>Fuel &amp; Expenses</h1>
           <p style={{ color: 'var(--color-neutral-700)', marginTop: 6, fontSize: 13 }}>
             Enter a diesel fill. Choose the trip now, or leave it empty and let Office assign it later with Edit. The trip must still be open.
           </p>
@@ -292,7 +292,7 @@ export function FuelExpenses({ trips, vehicles, drivers, master, role, dateFrom,
         </div>
       </div>
 
-      <div ref={formRef} style={{ border: '2px solid var(--color-divider)', padding: 20, marginBottom: 24 }}>
+      <div ref={formRef} style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 20, marginBottom: 24, background: 'var(--color-surface)' }}>
         {editing && (
           <div style={{ fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--color-accent-700)', marginBottom: 12 }}>
             {editing.trip
@@ -366,11 +366,11 @@ export function FuelExpenses({ trips, vehicles, drivers, master, role, dateFrom,
           </div>
         )}
 
-        {error && <div role="alert" style={{ marginTop: 12, border: '2px solid var(--color-accent)', color: 'var(--color-accent-700)', padding: '10px 14px', fontSize: 13 }}>{error}</div>}
+        {error && <div role="alert" style={{ marginTop: 12, border: '1px solid var(--color-accent-200)', borderRadius: 'var(--radius-md)', color: 'var(--color-accent-700)', padding: '10px 14px', fontSize: 13 }}>{error}</div>}
         {notice && !error && <div role="status" style={{ marginTop: 12, fontSize: 13, color: 'var(--color-profit)', fontWeight: 600 }}>{notice}</div>}
       </div>
 
-      <div style={{ border: '2px solid var(--color-divider)', padding: 16, marginBottom: 20 }}>
+      <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 16, marginBottom: 20, background: 'var(--color-surface)' }}>
         <div className="filters-grid">
           <div className="field"><label htmlFor="fuel-from">Date from</label><input id="fuel-from" className="input" type="date" value={dateFrom} onChange={(e) => onDateFrom(e.target.value)} /></div>
           <div className="field"><label htmlFor="fuel-to">Date to</label><input id="fuel-to" className="input" type="date" value={dateTo} onChange={(e) => onDateTo(e.target.value)} /></div>
@@ -386,16 +386,16 @@ export function FuelExpenses({ trips, vehicles, drivers, master, role, dateFrom,
         </div>
       </div>
 
-      <h2 style={{ fontSize: 20, marginBottom: 12 }}>
+      <h2 style={{ fontSize: 'var(--fs-section)', marginBottom: 12 }}>
         Fuel entries <span style={{ fontSize: 13, fontWeight: 400, color: 'var(--color-neutral-700)' }}>{entries.length}{entries.length !== allEntries.length ? ` of ${allEntries.length}` : ''}</span>
         {notAssigned > 0 && <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--color-accent-700)', marginLeft: 12 }}>{notAssigned} not assigned to a trip yet</span>}
       </h2>
       {entries.length === 0 ? (
-        <div style={{ border: '2px solid var(--color-divider)', padding: 16, color: 'var(--color-neutral-700)' }}>
+        <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 16, color: 'var(--color-neutral-700)', background: 'var(--color-surface)' }}>
           {allEntries.length === 0 ? 'No fuel entries yet.' : 'No fuel entries match the selected filters.'}
         </div>
       ) : (
-        <div className="scroll-x" style={{ border: '2px solid var(--color-divider)' }}>
+        <div className="scroll-x" style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', background: 'var(--color-surface)' }}>
           <table className="table" style={{ minWidth: 760 }}>
             <thead>
               <tr>
@@ -410,7 +410,7 @@ export function FuelExpenses({ trips, vehicles, drivers, master, role, dateFrom,
                 <tr key={line.id} style={editing?.line.id === line.id ? { background: 'var(--color-accent-100)' } : undefined}>
                   <td style={{ whiteSpace: 'nowrap' }}>{line.date}</td>
                   <td style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{row.vehicle}</td>
-                  <td style={{ whiteSpace: 'nowrap' }}>{trip ? trip.waybillNo : <span className="tag tag-accent">Not assigned</span>}</td>
+                  <td style={{ whiteSpace: 'nowrap' }}>{trip ? trip.waybillNo : <span className="badge badge-warning">Not assigned</span>}</td>
                   <td style={{ textAlign: 'right' }}>{line.litres != null ? line.litres.toFixed(2) : '—'}</td>
                   <td style={{ textAlign: 'right' }}>{line.ratePerLitre != null ? rupees(line.ratePerLitre) : '—'}</td>
                   <td style={{ textAlign: 'right', fontWeight: 700 }}>{rupees(line.amount)}</td>

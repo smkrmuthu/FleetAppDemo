@@ -17,6 +17,9 @@ import { MonthlyReport } from './components/MonthlyReport';
 import { People } from './components/People';
 import { Master } from './components/Master';
 import { DataModel } from './components/DataModel';
+import { Movements } from './components/Movements';
+import { SettingsPage } from './components/SettingsPage';
+import { HelpPage } from './components/HelpPage';
 
 type PersonUser = UserAccount & { id: string };
 
@@ -579,13 +582,15 @@ export function App() {
         notifications={notifications}
         onOpenNotification={openNotification}
         onMarkAllNotificationsRead={markAllNotificationsRead}
+        openMovements={role === 'Viewer' ? undefined : trips.filter((t) => t.status !== 'approved').length}
       >
         {error && (
-          <div style={{ border: '2px solid var(--color-accent)', color: 'var(--color-accent-700)', padding: '10px 16px', marginBottom: 16 }}>
-            {error} <button type="button" className="btn btn-ghost" style={{ padding: '0 6px' }} onClick={() => setError('')}>Dismiss</button>
+          <div className="banner" role="alert">
+            <span>{error}</span>
+            <button type="button" className="btn btn-ghost btn-sm" onClick={() => setError('')}>Dismiss</button>
           </div>
         )}
-        {loading && <div style={{ color: 'var(--color-neutral-700)', marginBottom: 16 }}>Loading…</div>}
+        {loading && <div className="loading-line"><span className="spinner" /> Loading…</div>}
 
         {shownTab === 'dashboard' && (
           <Dashboard
@@ -737,7 +742,19 @@ export function App() {
             isManager={role === 'Manager'}
           />
         )}
+        {shownTab === 'movements' && (
+          <Movements
+            trips={trips}
+            role={role}
+            onAddMovement={() => { setEditingTrip(null); setTab('addtrip'); }}
+            onEdit={startEditingTrip}
+            onDelete={deleteTrip}
+            onOpenTripLog={() => setTab('triplog')}
+          />
+        )}
         {shownTab === 'schema' && <DataModel />}
+        {shownTab === 'settings' && <SettingsPage role={role} userName={currentUserName} onSignOut={signOut} onTabChange={setTab} />}
+        {shownTab === 'help' && <HelpPage role={role} />}
       </AppShell>
       <PwaInstall />
     </>

@@ -48,7 +48,7 @@ export function DualScroll({ children }: { children: React.ReactNode }) {
       <div
         ref={bodyRef}
         className="scroll-x scroll-body"
-        style={{ border: '2px solid var(--color-divider)' }}
+        style={{ border: '1px solid var(--color-border)', borderRadius: '0 0 var(--radius-md) var(--radius-md)', background: 'var(--color-surface)' }}
         onScroll={() => follow(bodyRef.current, topRef.current)}
       >
         {children}

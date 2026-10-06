@@ -50,8 +50,8 @@ export function BackupPanel() {
   const stale = ageHours !== null && ageHours > STALE_AFTER_HOURS;
 
   return (
-    <div style={{ border: '2px solid var(--color-divider)', padding: 20, marginBottom: 24 }}>
-      <h2 style={{ fontSize: 20, marginBottom: 6 }}>Data backup</h2>
+    <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 20, marginBottom: 24, background: 'var(--color-surface)' }}>
+      <h2 style={{ fontSize: 'var(--fs-section)', marginBottom: 6 }}>Data backup</h2>
       <p style={{ color: 'var(--color-neutral-700)', fontSize: 13, marginBottom: 14 }}>
         A copy of all data is saved automatically every night and the last {status?.keepDays ?? 30} days are kept.
       </p>

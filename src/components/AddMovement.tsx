@@ -412,15 +412,15 @@ export function AddMovement({ onSubmit, driverOnly, vehicles, drivers, master, l
       )}
       <div style={{ marginBottom: 18 }}>
         <div className="kicker">Driver or documentation resource</div>
-        <h1 style={{ fontSize: 34, letterSpacing: '-0.02em' }}>{isEditing ? 'Edit Movement' : 'Add Movement'}</h1>
+        <h1>{isEditing ? 'Edit Movement' : 'Add Movement'}</h1>
         <p style={{ color: 'var(--color-neutral-700)', marginTop: 6, fontSize: 13 }}>
           {isCompleted
             ? 'This movement is complete. Changes you save replace what is recorded and are kept in the audit log.'
-            : isEditing ? 'Update an open movement, add entries to it, or mark it complete.' : 'Add a new movement and its expense entries as you go. Fuel is posted from the Fuel Expenses tab.'}
+            : isEditing ? 'Update an open movement, add entries to it, or mark it complete.' : 'Add a new movement and its expense entries as you go. Fuel is posted from Fuel & Expenses.'}
         </p>
       </div>
       <div className="movement-grid">
-        <div style={{ background: 'var(--color-bg)', padding: 20, border: '2px solid var(--color-divider)' }}>
+        <div style={{ background: 'var(--color-surface)', padding: 20, border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)' }}>
           <div className="filters-grid" style={{ alignItems: 'stretch' }}>
             <div className="field"><label>Trip number</label>
               <input
@@ -472,7 +472,7 @@ export function AddMovement({ onSubmit, driverOnly, vehicles, drivers, master, l
           </div>
 
           {vehicleConflicts.length > 0 && !confirmAction && (
-            <div role="status" style={{ border: '2px solid var(--color-accent)', background: 'var(--color-accent-100)', color: 'var(--color-accent-800)', padding: '10px 14px', marginTop: 16, fontSize: 13, display: 'grid', gap: 4 }}>
+            <div role="status" style={{ border: '1px solid var(--color-accent-200)', borderRadius: 'var(--radius-md)', background: 'var(--color-accent-100)', color: 'var(--color-accent-800)', padding: '10px 14px', marginTop: 16, fontSize: 13, display: 'grid', gap: 4 }}>
               <strong>{form.vehicle} is recorded unavailable during these dates:</strong>
               {vehicleConflicts.map((w) => (
                 <div key={w.id}>{formatDisplayDateTime(w.startsAt)} → {formatDisplayDateTime(w.endsAt)}{w.remarks ? ` — ${w.remarks}` : ''}</div>
@@ -481,7 +481,7 @@ export function AddMovement({ onSubmit, driverOnly, vehicles, drivers, master, l
           )}
 
           {driverLeaveConflicts.length > 0 && !confirmAction && (
-            <div role="status" style={{ border: '2px solid var(--color-accent)', background: 'var(--color-accent-100)', color: 'var(--color-accent-800)', padding: '10px 14px', marginTop: 16, fontSize: 13, display: 'grid', gap: 4 }}>
+            <div role="status" style={{ border: '1px solid var(--color-accent-200)', borderRadius: 'var(--radius-md)', background: 'var(--color-accent-100)', color: 'var(--color-accent-800)', padding: '10px 14px', marginTop: 16, fontSize: 13, display: 'grid', gap: 4 }}>
               <strong>{form.driver} is recorded on leave during these dates:</strong>
               {driverLeaveConflicts.map((l) => (
                 <div key={l.id}>{formatDisplayDateTime(l.startsAt)} → {formatDisplayDateTime(l.endsAt)}{l.remarks ? ` — ${l.remarks}` : ''}</div>
@@ -490,7 +490,7 @@ export function AddMovement({ onSubmit, driverOnly, vehicles, drivers, master, l
             </div>
           )}
 
-          <div style={{ marginTop: 20, borderTop: '2px solid var(--color-divider)', paddingTop: 16 }}>
+          <div style={{ marginTop: 20, borderTop: '1px solid var(--color-border)', paddingTop: 16 }}>
             <div style={{ fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--color-neutral-700)', marginBottom: 12 }}>
               Route
             </div>
@@ -568,7 +568,7 @@ export function AddMovement({ onSubmit, driverOnly, vehicles, drivers, master, l
             </div>
           </div>
 
-          <div style={{ marginTop: 20, borderTop: '2px solid var(--color-divider)', paddingTop: 16 }}>
+          <div style={{ marginTop: 20, borderTop: '1px solid var(--color-border)', paddingTop: 16 }}>
             <div style={{ fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--color-neutral-700)', marginBottom: 12 }}>
               Expense entries
             </div>
@@ -621,7 +621,7 @@ export function AddMovement({ onSubmit, driverOnly, vehicles, drivers, master, l
             )}
           </div>
 
-          <div style={{ marginTop: 16, borderTop: '2px solid var(--color-divider)', paddingTop: 16 }}>
+          <div style={{ marginTop: 16, borderTop: '1px solid var(--color-border)', paddingTop: 16 }}>
             <div style={{ fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--color-neutral-700)', marginBottom: 12 }}>Supporting documents</div>
             <input ref={fileInputRef} type="file" multiple accept="image/*,.pdf" onChange={onFilesChosen} style={{ marginBottom: docErrorMsg || documents.length ? 10 : 0 }} />
             {docErrorMsg && (
@@ -645,7 +645,7 @@ export function AddMovement({ onSubmit, driverOnly, vehicles, drivers, master, l
           </div>
 
           {Object.keys(errors).length > 0 && (
-            <div ref={errorBoxRef} style={{ border: '2px solid var(--color-accent)', color: 'var(--color-accent-700)', padding: '10px 14px', marginTop: 16, fontSize: 13, display: 'grid', gap: 4 }}>
+            <div ref={errorBoxRef} style={{ border: '1px solid var(--color-accent-200)', borderRadius: 'var(--radius-md)', color: 'var(--color-accent-700)', padding: '10px 14px', marginTop: 16, fontSize: 13, display: 'grid', gap: 4 }}>
               {Object.values(errors).map((msg) => <div key={msg}>{msg}</div>)}
             </div>
           )}
@@ -670,7 +670,7 @@ export function AddMovement({ onSubmit, driverOnly, vehicles, drivers, master, l
               onBack={() => setConfirmAction(null)}
             />
           ) : (
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, paddingTop: 16, marginTop: 16, borderTop: '2px solid var(--color-divider)' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, paddingTop: 16, marginTop: 16, borderTop: '1px solid var(--color-border)' }}>
               {isEditing ? (
                 <>
                   <button type="button" className="btn btn-primary" onClick={() => tryAction('save', isCompleted)}>Save changes</button>
@@ -696,24 +696,24 @@ export function AddMovement({ onSubmit, driverOnly, vehicles, drivers, master, l
         </div>
 
         <div className="movement-sidebar">
-          <div style={{ background: 'var(--color-bg)', padding: 20, border: '2px solid var(--color-divider)', display: 'grid', gap: 18 }}>
+          <div style={{ background: 'var(--color-surface)', padding: 20, border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', display: 'grid', gap: 18 }}>
             <div>
               <div className="stat-label" style={{ marginBottom: 4 }}>Distance</div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 22 }}>{km.toLocaleString('en-IN')} km</div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 22 }}>{km.toLocaleString('en-IN')} km</div>
             </div>
             <div>
               <div className="stat-label" style={{ marginBottom: 4 }}>Trip expense</div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 22 }}>{rupees(expense)}</div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 22 }}>{rupees(expense)}</div>
             </div>
             {showFinancials && (
               <div>
                 <div className="stat-label" style={{ marginBottom: 4 }}>Profit</div>
-                <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 22, color: profit >= 0 ? 'var(--color-profit)' : 'var(--color-accent-700)' }}>{rupees(profit)}</div>
+                <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 22, color: profit >= 0 ? 'var(--color-profit)' : 'var(--color-accent-700)' }}>{rupees(profit)}</div>
               </div>
             )}
             <div>
               <div className="stat-label" style={{ marginBottom: 4 }}>Mileage</div>
-              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 22 }}>{kmpl}</div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 22 }}>{kmpl}</div>
             </div>
           </div>
         </div>

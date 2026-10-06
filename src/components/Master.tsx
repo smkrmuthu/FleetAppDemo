@@ -206,14 +206,14 @@ export function Master({
     <section>
       <div style={{ marginBottom: 18 }}>
         <div className="kicker">Office and Manager</div>
-        <h1 style={{ fontSize: 34, letterSpacing: '-0.02em' }}>Master</h1>
+        <h1>Masters</h1>
         <p style={{ color: 'var(--color-neutral-700)', marginTop: 6, fontSize: 13 }}>
           Reference values the rest of the app picks up — set them once here instead of typing them on every movement.
         </p>
       </div>
 
-      <h2 style={{ fontSize: 20, marginBottom: 12 }}>Fuel rates</h2>
-      <div style={{ border: '2px solid var(--color-divider)', padding: 16, marginBottom: 30 }}>
+      <h2 style={{ fontSize: 'var(--fs-section)', margin: 'var(--space-8) 0 12px' }}>Fuel rates</h2>
+      <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 16, marginBottom: 30, background: 'var(--color-surface)' }}>
         <form
           className="filters-grid"
           onSubmit={(e) => { e.preventDefault(); saveRates(); }}
@@ -245,8 +245,8 @@ export function Master({
         </p>
       </div>
 
-      <h2 style={{ fontSize: 20, marginBottom: 12 }}>Default loading point</h2>
-      <div style={{ border: '2px solid var(--color-divider)', padding: 16, marginBottom: 30 }}>
+      <h2 style={{ fontSize: 'var(--fs-section)', margin: 'var(--space-8) 0 12px' }}>Default loading point</h2>
+      <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 16, marginBottom: 30, background: 'var(--color-surface)' }}>
         <form className="filters-grid" onSubmit={(e) => { e.preventDefault(); savePoint(); }}>
           <div className="field field-span-2">
             <label htmlFor="default-loading-point">Loading point</label>
@@ -267,12 +267,12 @@ export function Master({
         </p>
       </div>
 
-      <h2 style={{ fontSize: 20, marginBottom: 12 }}>Default drivers</h2>
+      <h2 style={{ fontSize: 'var(--fs-section)', margin: 'var(--space-8) 0 12px' }}>Default drivers</h2>
       <p style={{ color: 'var(--color-neutral-700)', fontSize: 13, marginTop: -4, marginBottom: 12, maxWidth: '74ch', lineHeight: 1.6 }}>
         When a truck is picked in Add Movement, its default driver is filled in for you. It's only a starting point — the driver
         can be changed on the movement. Changes here save as soon as you pick.
       </p>
-      <div className="scroll-x" style={{ border: '2px solid var(--color-divider)' }}>
+      <div className="scroll-x" style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', background: 'var(--color-surface)' }}>
         <table className="table" style={{ minWidth: 640 }}>
           <thead>
             <tr><th>Truck</th><th>Model</th><th>Default driver</th></tr>
@@ -313,11 +313,11 @@ export function Master({
         </table>
       </div>
 
-      <h2 style={{ fontSize: 20, marginBottom: 12 }}>Driver leave</h2>
+      <h2 style={{ fontSize: 'var(--fs-section)', margin: 'var(--space-8) 0 12px' }}>Driver leave</h2>
       <p style={{ color: 'var(--color-neutral-700)', fontSize: 13, marginTop: -4, marginBottom: 12, maxWidth: '74ch', lineHeight: 1.6 }}>
         Record when a driver is off, down to the date and time — a half-day, an overnight break, or several days away.
       </p>
-      <div style={{ border: '2px solid var(--color-divider)', padding: 16, marginBottom: 20 }}>
+      <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 16, marginBottom: 20, background: 'var(--color-surface)' }}>
         <form className="filters-grid" onSubmit={(e) => { e.preventDefault(); addLeave(); }}>
           <div className="field">
             <label htmlFor="leave-driver">Driver</label>
@@ -356,7 +356,7 @@ export function Master({
           {leaveError && <div role="alert" style={{ color: 'var(--color-accent-700)', fontSize: 13 }}>{leaveError}</div>}
         </form>
       </div>
-      <div className="scroll-x" style={{ border: '2px solid var(--color-divider)' }}>
+      <div className="scroll-x" style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', background: 'var(--color-surface)' }}>
         <table className="table" style={{ minWidth: 640 }}>
           <thead>
             <tr><th>Driver</th><th>From</th><th>To</th><th>Duration</th><th>Remarks</th><th className="col-actions"></th></tr>
@@ -381,12 +381,12 @@ export function Master({
         </table>
       </div>
 
-      <h2 style={{ fontSize: 20, marginBottom: 12 }}>Truck unavailability</h2>
+      <h2 style={{ fontSize: 'var(--fs-section)', margin: 'var(--space-8) 0 12px' }}>Truck unavailability</h2>
       <p style={{ color: 'var(--color-neutral-700)', fontSize: 13, marginTop: -4, marginBottom: 12, maxWidth: '74ch', lineHeight: 1.6 }}>
         Record when a truck is off the road — servicing, a breakdown, or any other downtime. A truck can't be picked in
         Add Movement for a trip that falls inside one of its recorded windows.
       </p>
-      <div style={{ border: '2px solid var(--color-divider)', padding: 16, marginBottom: 20 }}>
+      <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 16, marginBottom: 20, background: 'var(--color-surface)' }}>
         <form className="filters-grid" onSubmit={(e) => { e.preventDefault(); addUnavailability(); }}>
           <div className="field">
             <label htmlFor="unavail-vehicle">Truck</label>
@@ -430,7 +430,7 @@ export function Master({
           {unavailError && <div role="alert" style={{ color: 'var(--color-accent-700)', fontSize: 13 }}>{unavailError}</div>}
         </form>
       </div>
-      <div className="scroll-x" style={{ border: '2px solid var(--color-divider)', marginBottom: 30 }}>
+      <div className="scroll-x" style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', marginBottom: 30, background: 'var(--color-surface)' }}>
         <table className="table" style={{ minWidth: 640 }}>
           <thead>
             <tr><th>Truck</th><th>From</th><th>To</th><th>Duration</th><th>Remarks</th><th className="col-actions"></th></tr>
@@ -458,12 +458,12 @@ export function Master({
         </table>
       </div>
 
-      <h2 style={{ fontSize: 20, marginBottom: 12 }}>Transporters</h2>
+      <h2 style={{ fontSize: 'var(--fs-section)', margin: 'var(--space-8) 0 12px' }}>Transporters</h2>
       <p style={{ color: 'var(--color-neutral-700)', fontSize: 13, marginTop: -4, marginBottom: 12, maxWidth: '74ch', lineHeight: 1.6 }}>
         The list offered under "Transporter" in Add Movement. Removing one only stops it being offered for new movements —
         anything already logged under it keeps its name.
       </p>
-      <div style={{ border: '2px solid var(--color-divider)', padding: 16, marginBottom: 20 }}>
+      <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 16, marginBottom: 20, background: 'var(--color-surface)' }}>
         <form className="filters-grid" onSubmit={(e) => { e.preventDefault(); addTransporter(); }}>
           <div className="field field-span-2">
             <label htmlFor="new-transporter">Transporter name</label>
@@ -478,7 +478,7 @@ export function Master({
           {transporterError && <div role="alert" style={{ color: 'var(--color-accent-700)', fontSize: 13 }}>{transporterError}</div>}
         </form>
       </div>
-      <div className="scroll-x" style={{ border: '2px solid var(--color-divider)', marginBottom: 30 }}>
+      <div className="scroll-x" style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', marginBottom: 30, background: 'var(--color-surface)' }}>
         <table className="table" style={{ minWidth: 360 }}>
           <thead>
             <tr><th>Transporter</th><th className="col-actions"></th></tr>
@@ -499,12 +499,12 @@ export function Master({
         </table>
       </div>
 
-      <h2 style={{ fontSize: 20, marginBottom: 12 }}>Expense descriptions</h2>
+      <h2 style={{ fontSize: 'var(--fs-section)', margin: 'var(--space-8) 0 12px' }}>Expense descriptions</h2>
       <p style={{ color: 'var(--color-neutral-700)', fontSize: 13, marginTop: -4, marginBottom: 12, maxWidth: '74ch', lineHeight: 1.6 }}>
         The list offered under "Description" when logging a Monthly Expense. Removing one only stops it being offered for
         new entries — anything already logged under it is unaffected.
       </p>
-      <div style={{ border: '2px solid var(--color-divider)', padding: 16, marginBottom: 20 }}>
+      <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 16, marginBottom: 20, background: 'var(--color-surface)' }}>
         <form className="filters-grid" onSubmit={(e) => { e.preventDefault(); addCategory(); }}>
           <div className="field field-span-2">
             <label htmlFor="new-category">Description</label>
@@ -519,7 +519,7 @@ export function Master({
           {categoryError && <div role="alert" style={{ color: 'var(--color-accent-700)', fontSize: 13 }}>{categoryError}</div>}
         </form>
       </div>
-      <div className="scroll-x" style={{ border: '2px solid var(--color-divider)' }}>
+      <div className="scroll-x" style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', background: 'var(--color-surface)' }}>
         <table className="table" style={{ minWidth: 360 }}>
           <thead>
             <tr><th>Description</th><th className="col-actions"></th></tr>

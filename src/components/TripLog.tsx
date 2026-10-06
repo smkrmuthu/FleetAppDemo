@@ -1,4 +1,6 @@
 import { Fragment, useEffect, useState } from 'react';
+import { Plus } from 'lucide-react';
+import { TripStatusBadge } from './ui';
 import type { DriverLeave, DriverMaster, Role, Trip, Vehicle, VehicleUnavailability } from '../types';
 import { formFromTrip } from './AddMovement';
 import { MovementReview } from './MovementReview';
@@ -234,7 +236,7 @@ export function TripLog({ trips, vehicles, drivers, leaves, unavailability, vehi
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap', marginBottom: 18 }}>
         <div>
           <div className="kicker">{rows.length} movements · {formatDateRange(dateFrom, dateTo)}</div>
-          <h1 style={{ fontSize: 34, letterSpacing: '-0.02em' }}>Trip Log</h1>
+          <h1>Trip Log</h1>
           <p style={{ color: 'var(--color-neutral-700)', marginTop: 6, fontSize: 13 }}>Every movement in one place — open a draft to complete it, or delete what's still open. Completed movements can be viewed by everyone; only a Manager can correct them.</p>
         </div>
         {showActions && (
@@ -253,14 +255,14 @@ export function TripLog({ trips, vehicles, drivers, leaves, unavailability, vehi
             <button type="button" className="btn btn-secondary" disabled={!!exporting} onClick={() => runExport('backup', onBackup)}>
               {exporting === 'backup' ? 'Preparing backup…' : 'Backup data'}
             </button>
-            <button type="button" className="btn btn-primary" onClick={onAddMovement}>Add movement</button>
+            <button type="button" className="btn btn-primary" onClick={onAddMovement}><Plus size={16} aria-hidden="true" />Add Movement</button>
             </div>
             {exportError && <div role="alert" style={{ color: 'var(--color-accent-700)', fontSize: 12 }}>{exportError}</div>}
           </div>
         )}
       </div>
 
-      <div style={{ border: '2px solid var(--color-divider)', padding: 16, marginBottom: 20 }}>
+      <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 16, marginBottom: 20, background: 'var(--color-surface)' }}>
         <div className="filters-grid">
           <div className="field"><label>Loading date from</label><input className="input" type="date" value={dateFrom} onChange={(e) => onDateFrom(e.target.value)} /></div>
           <div className="field"><label>Loading date to</label><input className="input" type="date" value={dateTo} onChange={(e) => onDateTo(e.target.value)} /></div>
@@ -286,7 +288,7 @@ export function TripLog({ trips, vehicles, drivers, leaves, unavailability, vehi
       </div>
 
       {rows.length === 0 ? (
-        <div style={{ border: '2px solid var(--color-divider)', padding: 16, color: 'var(--color-neutral-700)' }}>
+        <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 16, color: 'var(--color-neutral-700)', background: 'var(--color-surface)' }}>
           No movements match the selected filters.
         </div>
       ) : (
@@ -320,29 +322,27 @@ export function TripLog({ trips, vehicles, drivers, leaves, unavailability, vehi
                           >
                             {isOpen ? '▾' : '▸'}
                           </button>
-                          <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 12, fontWeight: 600 }}>{t.waybillNo}</span>
+                          <span style={{ fontWeight: 600 }}>{t.waybillNo}</span>
                         </div>
                       </td>
                       <td style={{ whiteSpace: 'nowrap' }}>{t.loadDate}</td>
                       <td style={{ whiteSpace: 'nowrap', color: 'var(--color-neutral-700)' }}>{formatDuration(tripDurationDays(t.loadDate, t.unloadDate))}</td>
                       <td style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{t.vehicle}</td>
-                      <td>{t.driver}</td>
+                      <td style={{ whiteSpace: 'nowrap' }}>{t.driver}</td>
                       <td style={{ textAlign: 'right' }}>{formatNum(t.tons, 2)}</td>
                       <td style={{ textAlign: 'right' }}>{t.odoStart != null ? formatNum(t.odoStart) : '—'}</td>
                       <td style={{ textAlign: 'right' }}>{formatNum(t.km)}</td>
                       <td style={{ whiteSpace: 'nowrap' }}>
                         {t.status !== 'approved' ? (
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <span className={t.status === 'pending' ? 'tag tag-accent' : 'tag tag-outline'}>
-                              {t.status === 'pending' ? 'Pending' : 'Draft'}
-                            </span>
+                            <TripStatusBadge status={t.status} short />
                             {(isDriver || isOffice || isManager) && (
-                              <button type="button" className="btn btn-ghost" style={{ padding: '2px 8px', fontSize: 12 }} onClick={() => onEdit(t)}>
+                              <button type="button" className="btn btn-ghost" style={{ padding: '0 6px', fontSize: 12 }} onClick={() => onEdit(t)}>
                                 Edit
                               </button>
                             )}
                             {!isDriver && (
-                              <button type="button" className="btn btn-ghost" style={{ padding: '2px 8px', fontSize: 12 }} onClick={() => setCompleting(t)}>
+                              <button type="button" className="btn btn-ghost" style={{ padding: '0 6px', fontSize: 12 }} onClick={() => setCompleting(t)}>
                                 Complete Trip
                               </button>
                             )}
@@ -354,13 +354,13 @@ export function TripLog({ trips, vehicles, drivers, leaves, unavailability, vehi
                           </div>
                         ) : (
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <span className="tag tag-outline">Approved</span>
+                            <TripStatusBadge status="approved" />
                             {isManager ? (
-                              <button type="button" className="btn btn-ghost" style={{ padding: '2px 8px', fontSize: 12 }} onClick={() => onEdit(t)}>
+                              <button type="button" className="btn btn-ghost" style={{ padding: '0 6px', fontSize: 12 }} onClick={() => onEdit(t)}>
                                 View / Edit
                               </button>
                             ) : (
-                              <button type="button" className="btn btn-ghost" style={{ padding: '2px 8px', fontSize: 12 }} onClick={() => setViewing(t)}>
+                              <button type="button" className="btn btn-ghost" style={{ padding: '0 6px', fontSize: 12 }} onClick={() => setViewing(t)}>
                                 View
                               </button>
                             )}
@@ -388,10 +388,10 @@ export function TripLog({ trips, vehicles, drivers, leaves, unavailability, vehi
 
       {viewing && (
         <div
-          style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(32,30,29,0.55)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '4vh 16px', overflowY: 'auto' }}
+          style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(23, 33, 43, 0.45)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '4vh 16px', overflowY: 'auto' }}
           onMouseDown={(e) => { if (e.target === e.currentTarget) setViewing(null); }}
         >
-          <div role="dialog" aria-modal="true" aria-label="Movement details" style={{ width: '100%', maxWidth: 760, background: 'var(--color-bg)', border: '2px solid var(--color-divider)', padding: 24, display: 'grid', gap: 18 }}>
+          <div role="dialog" aria-modal="true" aria-label="Movement details" style={{ width: '100%', maxWidth: 760, background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 24, display: 'grid', gap: 18 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
               <div>
                 <div className="kicker">Completed movement · view only</div>
@@ -414,7 +414,7 @@ export function TripLog({ trips, vehicles, drivers, leaves, unavailability, vehi
         const c = tripCost(completing);
         return (
           <div
-            style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(32,30,29,0.55)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '4vh 16px', overflowY: 'auto' }}
+            style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(23, 33, 43, 0.45)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '4vh 16px', overflowY: 'auto' }}
             onMouseDown={(e) => { if (e.target === e.currentTarget && !completingBusy) setCompleting(null); }}
           >
             <div role="dialog" aria-modal="true" aria-label="Complete movement" style={{ width: '100%', maxWidth: 640 }}>

@@ -48,25 +48,31 @@ export const TRIP_EXPENSE_LABEL: Record<string, string> = {
   other: 'Other'
 };
 
+// Every screen a role can open. The first one is where that role lands after
+// signing in. 'addtrip' is the Add / Edit Movement form: it is reached from the
+// "+ Add Movement" buttons, not from the sidebar.
 export const ROLE_TABS: Record<Role, TabId[]> = {
-  Driver: ['addtrip', 'triplog'],
-  Office: ['addtrip', 'triplog', 'summary', 'expenses', 'report'],
-  Manager: ['dashboard', 'summary', 'addtrip', 'fuel', 'triplog', 'expenses', 'report', 'people', 'master', 'schema'],
+  Driver: ['addtrip', 'movements', 'triplog', 'settings', 'help'],
+  Office: ['addtrip', 'movements', 'triplog', 'summary', 'expenses', 'report', 'settings', 'help'],
+  Manager: ['dashboard', 'summary', 'addtrip', 'movements', 'fuel', 'triplog', 'expenses', 'report', 'people', 'master', 'schema', 'settings', 'help'],
   // Read-only: looks at the numbers, changes nothing.
-  Viewer: ['dashboard', 'summary', 'report']
+  Viewer: ['dashboard', 'summary', 'report', 'settings', 'help']
 };
 
 export const TAB_LABELS: Record<TabId, string> = {
   dashboard: 'Dashboard',
   summary: 'Movement Summary',
   addtrip: 'Add Movement',
-  fuel: 'Fuel Expenses',
+  movements: 'Movements',
+  fuel: 'Fuel & Expenses',
   triplog: 'Trip Log',
   expenses: 'Monthly Expenses',
   report: 'Monthly Report',
   people: 'People',
-  master: 'Master',
-  schema: 'Data Model'
+  master: 'Masters',
+  schema: 'Data Model',
+  settings: 'Settings',
+  help: 'Help'
 };
 
 export const USER_ROWS: UserAccount[] = [

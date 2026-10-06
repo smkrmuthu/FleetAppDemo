@@ -73,7 +73,7 @@ export function RecordDialog({ title, subtitle, fields, startInEdit, canEdit, on
 
   return (
     <div
-      style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(32,30,29,0.55)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '6vh 16px', overflowY: 'auto' }}
+      style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(23, 33, 43, 0.45)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '6vh 16px', overflowY: 'auto' }}
       onMouseDown={(e) => { if (e.target === e.currentTarget && !editing) onClose(); }}
     >
       <div
@@ -81,9 +81,9 @@ export function RecordDialog({ title, subtitle, fields, startInEdit, canEdit, on
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        style={{ background: 'var(--color-bg)', border: '2px solid var(--color-text)', width: '100%', maxWidth: 520 }}
+        style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', width: '100%', maxWidth: 520 }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, padding: '18px 20px 14px', borderBottom: '2px solid var(--color-divider)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, padding: '18px 20px 14px', borderBottom: '1px solid var(--color-border)' }}>
           <div>
             <div className="kicker">{editing ? 'Edit' : 'Details'}</div>
             <h2 id={titleId} style={{ fontSize: 22, letterSpacing: '-0.01em', marginTop: 2 }}>{title}</h2>
@@ -138,7 +138,7 @@ export function RecordDialog({ title, subtitle, fields, startInEdit, canEdit, on
                     <dt style={{ color: 'var(--color-neutral-700)', fontSize: 13 }}>{f.label}</dt>
                     <dd style={{ margin: 0, fontWeight: 600, textAlign: 'right', overflowWrap: 'anywhere' }}>
                       {f.display || '—'}
-                      {f.flag && <span className={f.flag.expired ? 'tag tag-accent' : 'tag tag-outline'} style={{ marginLeft: 8 }}>{f.flag.label}</span>}
+                      {f.flag && <span className={f.flag.expired ? 'badge badge-error' : 'badge badge-warning'} style={{ marginLeft: 8 }}>{f.flag.label}</span>}
                     </dd>
                   </div>
                 ))}

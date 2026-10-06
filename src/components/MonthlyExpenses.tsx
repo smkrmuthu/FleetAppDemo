@@ -170,11 +170,11 @@ export function MonthlyExpenses({ expenses: allExpenses, trips, vehicles, driver
     <section>
       <div style={{ marginBottom: 18 }}>
         <div className="kicker">Admin and documentation resource · {formatDateRange(dateFrom, dateTo)}</div>
-        <h1 style={{ fontSize: 34, letterSpacing: '-0.02em' }}>Monthly Expenses</h1>
+        <h1>Monthly Expenses</h1>
         <p style={{ color: 'var(--color-neutral-700)', marginTop: 6, fontSize: 13 }}>Record fixed costs — permits, insurance, EMIs — that aren't tied to a single trip.</p>
       </div>
 
-      <div id="expense-form" style={{ border: '2px solid var(--color-divider)', padding: 20, marginBottom: 24 }}>
+      <div id="expense-form" style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 20, marginBottom: 24, background: 'var(--color-surface)' }}>
         {editingId && (
           <div style={{ fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--color-accent-700)', marginBottom: 12 }}>Editing expense</div>
         )}
@@ -214,7 +214,7 @@ export function MonthlyExpenses({ expenses: allExpenses, trips, vehicles, driver
           )}
         </div>
 
-        <div style={{ marginTop: 16, borderTop: '2px solid var(--color-divider)', paddingTop: 16 }}>
+        <div style={{ marginTop: 16, borderTop: '1px solid var(--color-border)', paddingTop: 16 }}>
           <div style={{ fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--color-neutral-700)', marginBottom: 12 }}>Bills</div>
           <input ref={fileInputRef} type="file" multiple accept="image/*,.pdf" onChange={onFilesChosen} style={{ marginBottom: docErrorMsg || documents.length ? 10 : 0 }} />
           {docErrorMsg && (
@@ -249,7 +249,7 @@ export function MonthlyExpenses({ expenses: allExpenses, trips, vehicles, driver
         </div>
       </div>
 
-      <div style={{ border: '2px solid var(--color-divider)', padding: 16, marginBottom: 20 }}>
+      <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 16, marginBottom: 20, background: 'var(--color-surface)' }}>
         <div className="filters-grid">
           <div className="field"><label>Date from</label><input className="input" type="date" value={dateFrom} onChange={(e) => onDateFrom(e.target.value)} /></div>
           <div className="field"><label>Date to</label><input className="input" type="date" value={dateTo} onChange={(e) => onDateTo(e.target.value)} /></div>
@@ -266,26 +266,26 @@ export function MonthlyExpenses({ expenses: allExpenses, trips, vehicles, driver
       </div>
 
       {byKind.size > 0 && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', borderTop: '2px solid var(--color-divider)', borderLeft: '2px solid var(--color-divider)', marginBottom: 24 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', borderTop: '1px solid var(--color-border)', borderLeft: '1px solid var(--color-border)', marginBottom: 24 }}>
           {Array.from(byKind.entries()).map(([label, value]) => (
-            <div key={label} style={{ background: 'var(--color-bg)', padding: '14px 16px', display: 'flex', gap: 12, borderRight: '2px solid var(--color-divider)', borderBottom: '2px solid var(--color-divider)' }}>
+            <div key={label} style={{ background: 'var(--color-bg)', padding: '14px 16px', display: 'flex', gap: 12, borderRight: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
               <div style={{ width: 6, flex: 'none', background: categoryTint(label) }} />
               <div>
                 <div className="stat-label">{label}</div>
-                <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 22 }}>{rupees(value)}</div>
+                <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 22 }}>{rupees(value)}</div>
               </div>
             </div>
           ))}
         </div>
       )}
 
-      <h2 style={{ fontSize: 20, marginBottom: 12 }}>Monthly Expenses Log</h2>
+      <h2 style={{ fontSize: 'var(--fs-section)', marginBottom: 12 }}>Monthly Expenses Log</h2>
       {expenses.length === 0 ? (
-        <div style={{ border: '2px solid var(--color-divider)', padding: 16, color: 'var(--color-neutral-700)' }}>
+        <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 16, color: 'var(--color-neutral-700)', background: 'var(--color-surface)' }}>
           {truckFilter === 'all' ? 'No expenses recorded for this date range.' : `No expenses recorded for ${truckFilter} in this date range.`}
         </div>
       ) : (
-      <div className="scroll-x" style={{ border: '2px solid var(--color-divider)' }}>
+      <div className="scroll-x" style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', background: 'var(--color-surface)' }}>
         <table className="table" style={{ minWidth: 860 }}>
           <thead>
             <tr>

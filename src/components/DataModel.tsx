@@ -93,7 +93,7 @@ export function DataModel() {
     <section>
       <div style={{ marginBottom: 18 }}>
         <div className="kicker">Postgres · one schema, three clients</div>
-        <h1 style={{ fontSize: 34, letterSpacing: '-0.02em' }}>Data Model</h1>
+        <h1>Data Model</h1>
         <p style={{ maxWidth: '70ch', color: 'var(--color-neutral-800)', lineHeight: 1.6, marginTop: 12 }}>
           Web, iOS and Android write to the same API. A trip carries its own waybill and item reference directly — no
           separate shipment or container hierarchy — and a multi-day trip's fuel, AdBlue and toll stops are each their
@@ -103,11 +103,11 @@ export function DataModel() {
         </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 2, background: 'var(--color-divider)', border: '2px solid var(--color-divider)' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 2, background: 'var(--color-divider)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)' }}>
         {SCHEMA_ENTITIES.map((e) => (
           <div key={e.name} style={{ background: 'var(--color-bg)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 10, padding: '12px 16px', borderBottom: '2px solid var(--color-text)' }}>
-              <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 15, letterSpacing: '0.02em' }}>{e.name}</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 10, padding: '12px 16px', borderBottom: '1px solid var(--color-border)' }}>
+              <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 15, letterSpacing: '0.02em' }}>{e.name}</span>
               <span style={{ fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-accent-700)' }}>{e.tag}</span>
             </div>
             {e.fields.map((f) => (
@@ -121,25 +121,25 @@ export function DataModel() {
         ))}
       </div>
 
-      <h2 style={{ fontSize: 20, margin: '28px 0 12px' }}>Relationships</h2>
-      <div style={{ border: '2px solid var(--color-divider)' }}>
+      <h2 style={{ fontSize: 'var(--fs-section)', margin: '28px 0 12px' }}>Relationships</h2>
+      <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', background: 'var(--color-surface)' }}>
         {SCHEMA_RELATIONS.map((r) => (
           <div key={r} style={{ padding: '11px 16px', borderBottom: '1px solid var(--color-neutral-300)', fontFamily: 'ui-monospace, monospace', fontSize: 13 }}>{r}</div>
         ))}
       </div>
 
-      <h2 style={{ fontSize: 20, margin: '28px 0 12px' }}>Schema, as written</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(330px, 1fr))', gap: 2, background: 'var(--color-divider)', border: '2px solid var(--color-divider)' }}>
+      <h2 style={{ fontSize: 'var(--fs-section)', margin: '28px 0 12px' }}>Schema, as written</h2>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(330px, 1fr))', gap: 2, background: 'var(--color-divider)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)' }}>
         {DDL.map((d) => (
           <div key={d.name} style={{ background: 'var(--color-bg)' }}>
-            <div style={{ padding: '12px 16px', borderBottom: '2px solid var(--color-text)', fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 14 }}>{d.name}</div>
+            <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--color-border)', fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 14 }}>{d.name}</div>
             <pre style={{ margin: 0, padding: 16, overflowX: 'auto', fontFamily: 'ui-monospace, monospace', fontSize: 12, lineHeight: 1.65, color: 'var(--color-neutral-900)', whiteSpace: 'pre' }}>{d.sql}</pre>
           </div>
         ))}
       </div>
 
-      <h2 style={{ fontSize: 20, margin: '28px 0 12px' }}>How the clients fetch</h2>
-      <div style={{ border: '2px solid var(--color-divider)' }}>
+      <h2 style={{ fontSize: 'var(--fs-section)', margin: '28px 0 12px' }}>How the clients fetch</h2>
+      <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', background: 'var(--color-surface)' }}>
         {SCHEMA_ENDPOINTS.map((e) => (
           <div key={e.method + e.path} style={{ display: 'grid', gridTemplateColumns: '70px minmax(0,1.1fr) minmax(0,1.6fr)', gap: 16, padding: '12px 16px', borderBottom: '1px solid var(--color-neutral-300)', alignItems: 'baseline' }}>
             <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', color: 'var(--color-accent-700)' }}>{e.method}</span>
@@ -149,8 +149,8 @@ export function DataModel() {
         ))}
       </div>
 
-      <h2 style={{ fontSize: 20, margin: '28px 0 12px' }}>Scaling</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 2, background: 'var(--color-divider)', border: '2px solid var(--color-divider)' }}>
+      <h2 style={{ fontSize: 'var(--fs-section)', margin: '28px 0 12px' }}>Scaling</h2>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 2, background: 'var(--color-divider)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)' }}>
         {SCHEMA_SCALING.map((s) => (
           <div key={s.label} style={{ background: 'var(--color-bg)', padding: 18 }}>
             <div style={{ fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--color-accent-700)', marginBottom: 8 }}>{s.label}</div>

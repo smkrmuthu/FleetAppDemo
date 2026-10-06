@@ -3,7 +3,8 @@ import type {
   Role, TabId, Trip, TripDocument, TripExpenseKind, TripExpenseLine, TripStop, UserAccount, Vehicle
 } from '../types';
 
-const API_BASE = 'https://fleet-ledger-demo-api.smkrmuthu.workers.dev/v1';
+// VITE_API_BASE lets a local run point at `wrangler dev`; production builds use the deployed demo API.
+const API_BASE = import.meta.env.VITE_API_BASE ?? 'https://fleet-ledger-demo-api.smkrmuthu.workers.dev/v1';
 const TOKEN_KEY = 'fleet_ledger_token';
 
 export class ApiError extends Error {

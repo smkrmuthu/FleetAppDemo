@@ -66,7 +66,7 @@ export function MonthlyReport({ trips: allTrips, expenses: allExpenses, vehicles
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap', marginBottom: 18 }}>
         <div>
           <div className="kicker">Manager only · {rangeLabel}</div>
-          <h1 style={{ fontSize: 34, letterSpacing: '-0.02em' }}>Monthly Report</h1>
+          <h1>Monthly Report</h1>
           <p style={{ color: 'var(--color-neutral-700)', marginTop: 6, fontSize: 13 }}>The full financial picture — revenue, cost, profit and per-vehicle economics.</p>
         </div>
         <div style={{ display: 'grid', gap: 6, justifyItems: 'end' }}>
@@ -82,7 +82,7 @@ export function MonthlyReport({ trips: allTrips, expenses: allExpenses, vehicles
         </div>
       </div>
 
-      <div style={{ border: '2px solid var(--color-divider)', padding: 16, marginBottom: 20 }}>
+      <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 16, marginBottom: 20, background: 'var(--color-surface)' }}>
         <div className="filters-grid">
           <div className="field"><label>Loading date from</label><input className="input" type="date" value={dateFrom} onChange={(e) => onDateFrom(e.target.value)} /></div>
           <div className="field"><label>Loading date to</label><input className="input" type="date" value={dateTo} onChange={(e) => onDateTo(e.target.value)} /></div>
@@ -105,25 +105,25 @@ export function MonthlyReport({ trips: allTrips, expenses: allExpenses, vehicles
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 2, background: 'var(--color-divider)', border: '2px solid var(--color-divider)', marginBottom: 26 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 2, background: 'var(--color-divider)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', marginBottom: 26 }}>
         {headline.map((h) => (
           <div key={h.label} style={{ background: 'var(--color-bg)', padding: 20 }}>
             <div className="stat-label">{h.label}</div>
-            <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 34, letterSpacing: '-0.02em', lineHeight: 1, color: h.label === 'Profit' ? (h.pos ? 'var(--color-profit)' : 'var(--color-accent-700)') : undefined }}>{h.value}</div>
+            <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 'var(--fs-kpi)', letterSpacing: '-0.02em', lineHeight: 1, color: h.label === 'Profit' ? (h.pos ? 'var(--color-profit)' : 'var(--color-accent-700)') : undefined }}>{h.value}</div>
             <div style={{ fontSize: 12, color: 'var(--color-neutral-700)', marginTop: 8 }}>{h.note}</div>
           </div>
         ))}
       </div>
 
-      <h2 style={{ fontSize: 20, marginBottom: 12 }}>Cost per kilometre, by vehicle</h2>
-      <div style={{ border: '2px solid var(--color-divider)', padding: 20, marginBottom: 28 }}>
+      <h2 style={{ fontSize: 'var(--fs-section)', marginBottom: 12 }}>Cost per kilometre, by vehicle</h2>
+      <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 20, marginBottom: 28, background: 'var(--color-surface)' }}>
         {byVehicle.map((b) => {
           const perKm = b.km ? b.cost / b.km : 0;
           return (
             <div key={b.id} style={{ display: 'grid', gridTemplateColumns: '150px minmax(0,1fr) 90px', alignItems: 'center', gap: 14, padding: '9px 0', borderBottom: '1px solid var(--color-neutral-300)' }}>
               <div style={{ fontWeight: 600 }}>{b.id}</div>
-              <div style={{ height: 18, background: 'var(--color-neutral-200)' }}>
-                <div style={{ height: 18, background: 'var(--color-accent)', width: `${Math.round((perKm / maxPerKm) * 100)}%` }} />
+              <div style={{ height: 8, borderRadius: 4, overflow: 'hidden', background: 'var(--chart-track)' }}>
+                <div style={{ height: 8, borderRadius: 4, background: perKm === maxPerKm ? 'var(--chart-primary)' : 'var(--chart-neutral)', width: `${Math.round((perKm / maxPerKm) * 100)}%` }} />
               </div>
               <div style={{ textAlign: 'right', fontWeight: 700 }}>{rupees(perKm)}/km</div>
             </div>
@@ -131,8 +131,8 @@ export function MonthlyReport({ trips: allTrips, expenses: allExpenses, vehicles
         })}
       </div>
 
-      <h2 style={{ fontSize: 20, marginBottom: 12 }}>Vehicle-wise ledger</h2>
-      <div className="scroll-x" style={{ border: '2px solid var(--color-divider)' }}>
+      <h2 style={{ fontSize: 'var(--fs-section)', marginBottom: 12 }}>Vehicle-wise ledger</h2>
+      <div className="scroll-x" style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', background: 'var(--color-surface)' }}>
         <table className="table" style={{ minWidth: 1100 }}>
           <thead>
             <tr>
