@@ -51,7 +51,7 @@ class Svg:
 
 # ───────────────────────── 1. System architecture ─────────────────────────
 s = Svg(1560, 980, 'Fleet Ledger — System architecture')
-s.label(30, 72, 'Goods-movement and expense log for Shree Mira Trader · all components run on Cloudflare except the source code (GitHub) and the bill reader (Google Gemini)', 12)
+s.label(30, 72, 'Goods-movement and expense log for Demo Logistics (Fleet Ledger Demo) · all components run on Cloudflare except the source code (GitHub) and the bill reader (Google Gemini)', 12)
 
 # users
 s.box(30, 100, 250, 520, F_US, S_US, 'People (4 roles)', [], 15)

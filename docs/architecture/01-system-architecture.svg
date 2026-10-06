@@ -3,7 +3,7 @@
 <rect width="1560" height="980" fill="#ffffff"/>
 <text x="30" y="40" font-size="24" font-weight="700" fill="#201e1d">Fleet Ledger — System architecture</text>
 <rect x="30" y="50" width="70" height="4" fill="#EC3013"/>
-<text x="30" y="72" font-size="12" fill="#605d5d" text-anchor="start">Goods-movement and expense log for Shree Mira Trader · all components run on Cloudflare except the source code (GitHub) and the bill reader (Google Gemini)</text>
+<text x="30" y="72" font-size="12" fill="#605d5d" text-anchor="start">Goods-movement and expense log for Demo Logistics (Fleet Ledger Demo) · all components run on Cloudflare except the source code (GitHub) and the bill reader (Google Gemini)</text>
 <rect x="30" y="100" width="250" height="520" rx="8" fill="#eef6ec" stroke="#5a9a50" stroke-width="1.6"/>
 <text x="42" y="122" font-size="15" font-weight="700" fill="#201e1d" text-anchor="start">People (4 roles)</text>
 <rect x="46" y="140" width="218" height="98" rx="6" fill="#ffffff" stroke="#5a9a50" stroke-width="1.6"/>
