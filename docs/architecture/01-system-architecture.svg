@@ -85,7 +85,7 @@
 <text x="768" y="864" font-size="12" fill="#201e1d" text-anchor="start">Secrets: JWT_SECRET · GEMINI_API_KEY (never in code or backups)</text>
 <text x="768" y="881" font-size="12" fill="#201e1d" text-anchor="start">Variable: ALLOWED_ORIGIN (the sites allowed to call the API)</text>
 <text x="768" y="898" font-size="12" fill="#605d5d" text-anchor="start">Static site: the web app is also served by a Cloudflare Worker</text>
-<text x="768" y="915" font-size="12" fill="#605d5d" text-anchor="start">(fleetapp) behind the domain fleet.oneuptech.co</text>
+<text x="768" y="915" font-size="12" fill="#605d5d" text-anchor="start">(fleetappdemo) behind the domain fleet.oneuptech.co</text>
 <rect x="1320" y="100" width="210" height="150" rx="6" fill="#f3ecf8" stroke="#8a5cb0" stroke-width="1.6"/>
 <text x="1332" y="122" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">Google Gemini API</text>
 <text x="1332" y="147" font-size="12" fill="#605d5d" text-anchor="start">Reads a fuel-bill photo</text>

@@ -3,12 +3,14 @@ main = "src/index.ts"
 compatibility_date = "2026-01-01"
 
 # Comma-separated list of origins allowed to call this API — the demo frontend
-# is deployed to GitHub Pages (smkrmuthu.github.io/FleetAppDemo) and (via
-# Capacitor) the iOS and Android apps, which serve their bundled web content
-# from fixed origins regardless of device. Never list the SMT production
-# origins here: this demo API is separate from FleetApp-SMT.
+# is deployed to GitHub Pages (smkrmuthu.github.io/FleetAppDemo), the
+# Cloudflare Worker `fleetappdemo` behind the custom domain fleet.oneuptech.co,
+# and (via Capacitor) the iOS and Android apps, which serve their bundled web
+# content from fixed origins regardless of device. Never list the SMT
+# production origins (smt.oneuptech.co, fleetapp.smkrmuthu.workers.dev) here:
+# this demo API is separate from FleetApp-SMT.
 [vars]
-ALLOWED_ORIGIN = "https://smkrmuthu.github.io,capacitor://localhost,https://localhost,http://localhost:5180"
+ALLOWED_ORIGIN = "https://smkrmuthu.github.io,https://fleet.oneuptech.co,https://fleetappdemo.smkrmuthu.workers.dev,capacitor://localhost,https://localhost,http://localhost:5180"
 
 # Nightly backup at 21:00 UTC (02:30 IST) — see src/lib/backup.ts
 [triggers]

@@ -9,7 +9,7 @@ Last updated: 2026-10-04.
 
 | Part | Where | Notes |
 |---|---|---|
-| Web app (React) | GitHub Pages `smkrmuthu.github.io/FleetAppDemo` and Cloudflare `fleet.oneuptech.co` / `fleetapp.smkrmuthu.workers.dev` | Both rebuild when `main` changes |
+| Web app (React) | GitHub Pages `smkrmuthu.github.io/FleetAppDemo` and Cloudflare `fleet.oneuptech.co` / `fleetappdemo.smkrmuthu.workers.dev` | Both rebuild when `main` changes |
 | API (Cloudflare Worker) | `fleet-ledger-demo-api.smkrmuthu.workers.dev` | Deployed by hand (section 3) |
 | Database | Cloudflare D1 `fleet-ledger-demo-db` | Migrations in `worker/migrations/` |
 | Uploaded bills, nightly backups | Cloudflare R2 bucket `fleet-ledger-demo-docs` | Backups under `backups/` |
