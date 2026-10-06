@@ -373,6 +373,15 @@ export function TripLog({ trips, vehicles, drivers, leaves, unavailability, vehi
                 );
               })}
             </tbody>
+            <tfoot>
+              <tr style={{ fontWeight: 700, background: 'var(--color-surface)' }}>
+                <td colSpan={5}>Total ({rows.length} {rows.length === 1 ? 'movement' : 'movements'})</td>
+                <td style={{ textAlign: 'right' }}>{formatNum(rows.reduce((s, t) => s + t.tons, 0), 2)}</td>
+                <td></td>
+                <td style={{ textAlign: 'right' }}>{formatNum(rows.reduce((s, t) => s + t.km, 0))}</td>
+                <td></td>
+              </tr>
+            </tfoot>
           </table>
         </DualScroll>
       )}

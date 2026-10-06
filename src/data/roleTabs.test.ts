@@ -8,9 +8,13 @@ describe('which tabs each role gets', () => {
     expect(ROLE_TABS.Driver).toEqual(['addtrip', 'triplog']);
   });
 
-  it('gives Fuel Expenses to Office and Manager', () => {
-    expect(ROLE_TABS.Office).toContain('fuel');
+  it('gives Fuel Expenses to the Manager only', () => {
     expect(ROLE_TABS.Manager).toContain('fuel');
+    expect(ROLE_TABS.Office).not.toContain('fuel');
+  });
+
+  it('gives Monthly Report to Office', () => {
+    expect(ROLE_TABS.Office).toContain('report');
   });
 
   it('limits a Viewer to the three read-only reports', () => {
