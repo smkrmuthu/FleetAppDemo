@@ -1,0 +1,240 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;800&display=swap');
+
+:root {
+  --color-bg: #f3f2f2;
+  --color-surface: #eae9e9;
+  --color-text: #201e1d;
+  --color-accent: #ec3013;
+  --color-divider: color-mix(in srgb, #201e1d 40%, transparent);
+
+  --color-neutral-100: #f8f4f4;
+  --color-neutral-200: #eae7e7;
+  --color-neutral-300: #d7d3d3;
+  --color-neutral-400: #bab6b6;
+  --color-neutral-500: #9b9797;
+  --color-neutral-600: #7d7979;
+  --color-neutral-700: #605d5d;
+  --color-neutral-800: #444141;
+  --color-neutral-900: #2d2b2b;
+
+  --color-accent-100: #fff2ef;
+  --color-accent-200: #ffe0d9;
+  --color-accent-300: #ffc4b8;
+  --color-accent-400: #ff9783;
+  --color-accent-500: #ff563c;
+  --color-accent-600: #dd2b0f;
+  --color-accent-700: #ae1800;
+  --color-accent-800: #7c1405;
+  --color-accent-900: #4d170e;
+
+  --color-profit: oklch(0.46 0.10 152);
+
+  --font-heading: "Archivo", system-ui, sans-serif;
+  --font-body: "Archivo", system-ui, sans-serif;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+}
+
+* , *::before, *::after { box-sizing: border-box; }
+
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 800; margin: 0; }
+
+a { color: var(--color-accent-700); text-decoration: none; }
+a:hover { color: var(--color-accent); text-decoration: underline; }
+
+input, select, textarea { font-family: var(--font-body); }
+
+:focus { outline: none; }
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+
+/* — buttons — */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  cursor: pointer; text-decoration: none;
+  font-family: var(--font-heading); font-weight: 800;
+  font-size: 14px; line-height: 1.2; color: var(--color-text);
+  background: transparent; border: 1px solid transparent;
+  padding: var(--space-2) calc(var(--space-3) * 1.2);
+  border-radius: 0;
+  white-space: nowrap;
+}
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-primary { background: var(--color-accent); color: #fff; }
+.btn-primary:hover { background: var(--color-accent-600); }
+.btn-primary:active { background: var(--color-accent-700); }
+.btn-secondary { border-color: var(--color-divider); }
+.btn-secondary:hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
+.btn-ghost { color: var(--color-accent); padding-inline: var(--space-1); }
+.btn-ghost:hover { background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
+.btn-block { width: 100%; margin-top: var(--space-2); justify-content: center; }
+
+/* — forms — */
+.field > label {
+  display: block; font-size: 12px; margin-bottom: 5px;
+  color: color-mix(in srgb, var(--color-text) 70%, transparent);
+}
+.input {
+  width: 100%; min-height: 36px; padding: 6px 10px; font: inherit;
+  font-size: 14px; color: var(--color-text); caret-color: var(--color-accent);
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider); border-radius: 0;
+}
+.input:hover { border-color: color-mix(in srgb, var(--color-text) 45%, transparent); }
+.input:focus-visible { border-color: var(--color-accent); outline-offset: 0; }
+.input-error, .input-error:hover { border: 2px solid var(--color-accent); background: var(--color-accent-100); }
+
+/* — tags — */
+.tag {
+  display: inline-flex; align-items: center; font-size: 11px;
+  letter-spacing: 0.02em; padding: 3px 10px;
+}
+.tag-accent { background: var(--color-accent-100); color: var(--color-accent-800); }
+.tag-neutral { background: var(--color-neutral-100); color: var(--color-neutral-800); }
+.tag-outline { border: 1px solid var(--color-accent); color: var(--color-accent); }
+
+/* — tables — */
+.table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.table th {
+  text-align: left; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-text) 60%, transparent);
+  padding: var(--space-2); border-bottom: 2px solid var(--color-divider);
+  white-space: nowrap;
+}
+.table td {
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--color-divider);
+}
+/* First column that stays in view while a wide table scrolls sideways. */
+.table th.col-first, .table td.col-first {
+  position: sticky; left: 0; z-index: 1; background: var(--color-bg);
+  box-shadow: 10px 0 8px -8px color-mix(in srgb, var(--color-text) 22%, transparent);
+}
+/* Row-action column that stays in view while a wide table scrolls sideways. */
+.table th.col-actions, .table td.col-actions {
+  position: sticky; right: 0; background: var(--color-bg);
+  box-shadow: -10px 0 8px -8px color-mix(in srgb, var(--color-text) 22%, transparent);
+}
+.table tbody tr:hover { background: color-mix(in srgb, var(--color-text) 4%, transparent); }
+
+.kicker {
+  font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--color-accent-700); margin-bottom: 6px;
+}
+
+.stat-label {
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--color-neutral-700); margin-bottom: 10px;
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px;
+  align-items: end;
+}
+.field-span-2 { grid-column: span 2; }
+
+.scroll-x { overflow-x: auto; }
+
+/* Second scrollbar above a wide table (see DualScroll). It stays pinned to the
+   top of the screen while a long table scrolls beneath it. */
+.scroll-top {
+  overflow-x: auto; overflow-y: hidden; height: 16px;
+  position: sticky; top: 0; z-index: 5;
+  background: var(--color-bg);
+  border: 2px solid var(--color-divider); border-bottom: 0;
+}
+/* Always-visible scrollbars (macOS otherwise hides them until you scroll) */
+.scroll-top::-webkit-scrollbar, .scroll-body::-webkit-scrollbar { height: 12px; }
+.scroll-top::-webkit-scrollbar-track, .scroll-body::-webkit-scrollbar-track { background: var(--color-neutral-200); }
+.scroll-top::-webkit-scrollbar-thumb, .scroll-body::-webkit-scrollbar-thumb { background: var(--color-neutral-600); border-radius: 0; }
+.scroll-top::-webkit-scrollbar-thumb:hover, .scroll-body::-webkit-scrollbar-thumb:hover { background: var(--color-neutral-800); }
+
+/* iOS/Android devices with a notch, dynamic island, or home-indicator gesture
+   bar report their unsafe edges via env(safe-area-inset-*) once the viewport
+   meta declares viewport-fit=cover (see index.html) — these keep the header,
+   footer and main content clear of them instead of sitting flush underneath. */
+.app-shell-main {
+  padding: 24px max(24px, env(safe-area-inset-right)) 24px max(24px, env(safe-area-inset-left));
+  max-width: 1680px; margin: 0 auto;
+}
+.app-shell-bar {
+  padding: max(14px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
+}
+
+/* — responsive layout helpers — */
+.sign-in-grid {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+  min-height: 100vh;
+}
+.sign-in-brand { padding: 56px 48px; min-height: 100vh; position: relative; overflow: hidden; display: grid; grid-template-rows: auto 1fr auto; }
+.sign-in-watermark { position: absolute; right: -12%; bottom: -10%; width: 88%; height: auto; max-width: 640px; opacity: 0.08; pointer-events: none; transform: rotate(-6deg); }
+.sign-in-watermark-fleet { position: absolute; right: -6%; top: -8%; width: 46%; height: auto; max-width: 340px; opacity: 0.07; pointer-events: none; transform: rotate(8deg); }
+.sign-in-brand > *:not(.sign-in-watermark):not(.sign-in-watermark-fleet) { position: relative; z-index: 1; }
+.sign-in-form-panel { padding: 56px 48px; max-width: 560px; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+  display: inline-block; width: 13px; height: 13px; vertical-align: -2px;
+  border: 2px solid currentColor; border-right-color: transparent;
+  border-radius: 50%; animation: spin 0.6s linear infinite;
+}
+
+.movement-grid {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) 260px;
+  gap: 20px;
+  align-items: start;
+}
+.movement-sidebar { position: sticky; top: 20px; }
+
+@media (max-width: 760px) {
+  .app-shell-main { padding: 14px max(14px, env(safe-area-inset-right)) 14px max(14px, env(safe-area-inset-left)); }
+  .app-shell-bar { padding: max(10px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left)); }
+
+  .sign-in-grid { grid-template-columns: 1fr; }
+  .sign-in-brand { min-height: auto; padding: 28px 20px 24px; grid-template-rows: auto auto auto; gap: 28px; }
+  .sign-in-watermark { width: 78%; right: -16%; bottom: -8%; opacity: 0.07; }
+  .sign-in-watermark-fleet { width: 40%; right: -8%; top: -6%; opacity: 0.06; }
+  .sign-in-divider { display: none; }
+  .sign-in-form-panel { padding: 24px 20px 36px; max-width: none; }
+
+  .movement-grid { grid-template-columns: minmax(0,1fr); }
+  .movement-sidebar { position: static; }
+  /* nested inside movement-grid's flexible track, auto-fit's column count
+     can resolve against a stale available width — pin it explicitly */
+  .movement-grid .filters-grid { grid-template-columns: minmax(0,1fr); }
+  /* a field spanning 2 columns forces an implicit 2nd column into
+     existence even when the grid itself is down to one */
+  .field-span-2 { grid-column: span 1; }
+
+  .table { font-size: 13px; }
+  .table th, .table td { padding: 6px; }
+
+  /* No frozen column on a phone — it would take half the screen */
+  .table th.col-first, .table td.col-first { position: static; box-shadow: none; }
+
+  /* Route rows wrap on a phone: no column captions or alignment spacers */
+  .route-head, .route-spacer { display: none !important; }
+
+  /* Decorative header/footer restatements — the logo already says who this
+     is; dropping them stops the bar wrapping into a ragged multi-line mess. */
+  .app-header-subtitle, .app-user-sub { display: none; }
+}

@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+ios/App/Pods/
+ios/App/build/
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+.wrangler/
+worker/.dev.vars
+worker/backups/
+# Database backups and exports hold real company data (incl. password hashes) — never commit them
+backups/
+fleet-ledger-backup_*.xlsx
+*.dump.sql

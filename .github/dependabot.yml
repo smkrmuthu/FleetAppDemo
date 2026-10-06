@@ -1,0 +1,24 @@
+# Weekly check for outdated dependencies, grouped into one pull request per
+# project so they are easy to review. CI runs on each one before it can merge.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    groups:
+      app-dependencies:
+        patterns: ['*']
+  - package-ecosystem: npm
+    directory: /worker
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    groups:
+      api-dependencies:
+        patterns: ['*']
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

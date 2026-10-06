@@ -1,0 +1,97 @@
+name: Bug report
+description: Something in Fleet Ledger isn't working right
+labels: ["bug"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: What's wrong
+      description: One or two sentences.
+      placeholder: e.g. Approving a trip doesn't clear its notification
+    validations:
+      required: true
+
+  - type: dropdown
+    id: role
+    attributes:
+      label: Which role were you signed in as
+      options:
+        - Driver
+        - Office
+        - Manager
+        - Not signed in / sign-in itself
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where it happened
+      options:
+        - Sign in
+        - Movement Summary
+        - Add Movement
+        - Trip Log
+        - Monthly Expenses
+        - Monthly Report
+        - People (trucks / drivers / accounts)
+        - Data Model
+        - Notifications
+        - Backend / API
+        - Android app
+        - iOS app
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Exact clicks/taps and what you entered, in order.
+      placeholder: |
+        1. Sign in as Office
+        2. Go to Add Movement
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - Critical — blocks work, no workaround
+        - Major — wrong data or a broken feature, workaround exists
+        - Minor — cosmetic or a small annoyance
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: platform
+    attributes:
+      label: Where you saw it (check all that apply)
+      options:
+        - label: Web / PWA (browser)
+        - label: Android app
+        - label: iOS app
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Screenshots or anything else
+      description: Drag images in here — GitHub attaches them automatically.

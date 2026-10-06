@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1560" height="920" viewBox="0 0 1560 920" font-family="Helvetica, Arial, sans-serif">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a8785"/></marker></defs>
+<rect width="1560" height="920" fill="#ffffff"/>
+<text x="30" y="40" font-size="24" font-weight="700" fill="#201e1d">Fleet Ledger — Build, deploy and backup</text>
+<rect x="30" y="50" width="70" height="4" fill="#EC3013"/>
+<text x="30" y="72" font-size="12" fill="#605d5d" text-anchor="start">A change moves left to right: written and tested on a branch, merged to main, published; the database and the nightly backup live in Cloudflare.</text>
+<rect x="30" y="100" width="220" height="150" rx="8" fill="#f1f1f0" stroke="#9a9896" stroke-width="1.6"/>
+<text x="42" y="122" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Developer machine</text>
+<text x="42" y="147" font-size="12" fill="#605d5d" text-anchor="start">Code + Claude Code</text>
+<text x="42" y="164" font-size="12" fill="#605d5d" text-anchor="start">Branch per change</text>
+<text x="42" y="181" font-size="12" fill="#605d5d" text-anchor="start">npx tsc · npm test</text>
+<text x="42" y="198" font-size="12" fill="#605d5d" text-anchor="start">Local browser checks</text>
+<rect x="300" y="100" width="260" height="150" rx="8" fill="#f3ecf8" stroke="#8a5cb0" stroke-width="1.6"/>
+<text x="312" y="122" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">GitHub  smkrmuthu/FleetAppDemo</text>
+<text x="312" y="147" font-size="12" fill="#201e1d" text-anchor="start">Branches → merge to main</text>
+<text x="312" y="164" font-size="12" fill="#605d5d" text-anchor="start">CI on every push:</text>
+<text x="312" y="181" font-size="12" fill="#605d5d" text-anchor="start"> type-check · tests · build</text>
+<text x="312" y="198" font-size="12" fill="#605d5d" text-anchor="start"> (app and API, Node 22)</text>
+<rect x="610" y="100" width="270" height="150" rx="8" fill="#f3ecf8" stroke="#8a5cb0" stroke-width="1.6"/>
+<text x="622" y="122" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Publish the web app</text>
+<text x="622" y="147" font-size="12" fill="#201e1d" text-anchor="start">GitHub Pages workflow</text>
+<text x="622" y="164" font-size="12" fill="#605d5d" text-anchor="start"> type-check + tests + build,</text>
+<text x="622" y="181" font-size="12" fill="#605d5d" text-anchor="start"> deploys only if they pass</text>
+<text x="622" y="198" font-size="12" fill="#201e1d" text-anchor="start">Cloudflare Git build (fleetapp)</text>
+<rect x="930" y="100" width="270" height="150" rx="8" fill="#e8f0fb" stroke="#4a7bc8" stroke-width="1.6"/>
+<text x="942" y="122" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Websites (same bundle)</text>
+<text x="942" y="147" font-size="12" fill="#605d5d" text-anchor="start">smkrmuthu.github.io/FleetAppDemo</text>
+<text x="942" y="164" font-size="12" fill="#605d5d" text-anchor="start">fleet.oneuptech.co</text>
+<text x="942" y="181" font-size="12" fill="#605d5d" text-anchor="start">fleetapp.smkrmuthu.workers.dev</text>
+<text x="942" y="198" font-size="12" fill="#605d5d" text-anchor="start">Android app built from dist/</text>
+<line x1="250" y1="175" x2="300" y2="175" stroke="#8a8785" stroke-width="1.8" marker-end="url(#a)"/>
+<text x="275" y="165" font-size="11" fill="#605d5d" text-anchor="middle">push</text>
+<line x1="560" y1="175" x2="610" y2="175" stroke="#8a8785" stroke-width="1.8" marker-end="url(#a)"/>
+<line x1="880" y1="175" x2="930" y2="175" stroke="#8a8785" stroke-width="1.8" marker-end="url(#a)"/>
+<rect x="300" y="300" width="260" height="150" rx="8" fill="#fdf0e6" stroke="#e8873d" stroke-width="1.6"/>
+<text x="312" y="322" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Deploy the API (by hand)</text>
+<text x="312" y="347" font-size="12" fill="#201e1d" text-anchor="start">cd worker</text>
+<text x="312" y="364" font-size="12" fill="#201e1d" text-anchor="start">npx wrangler deploy</text>
+<text x="312" y="381" font-size="12" fill="#605d5d" text-anchor="start">Done before the web app</text>
+<text x="312" y="398" font-size="12" fill="#605d5d" text-anchor="start">that needs it. Roll back with</text>
+<text x="312" y="415" font-size="12" fill="#605d5d" text-anchor="start">npx wrangler rollback</text>
+<rect x="610" y="300" width="270" height="150" rx="8" fill="#fff6d6" stroke="#c9a227" stroke-width="1.6"/>
+<text x="622" y="322" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Change the database</text>
+<text x="622" y="347" font-size="12" fill="#201e1d" text-anchor="start">npm run db:generate</text>
+<text x="622" y="364" font-size="12" fill="#201e1d" text-anchor="start">Back up first, then</text>
+<text x="622" y="381" font-size="12" fill="#201e1d" text-anchor="start">npm run db:migrate:remote</text>
+<text x="622" y="398" font-size="12" fill="#605d5d" text-anchor="start">Files in worker/migrations/</text>
+<text x="622" y="415" font-size="12" fill="#605d5d" text-anchor="start">are never edited once applied</text>
+<line x1="250" y1="220" x2="300" y2="350" stroke="#8a8785" stroke-width="1.8" marker-end="url(#a)"/>
+<text x="232" y="300" font-size="11" fill="#605d5d" text-anchor="end">wrangler</text>
+<rect x="930" y="300" width="600" height="150" rx="8" fill="#fdf0e6" stroke="#e8873d" stroke-width="1.6"/>
+<text x="942" y="322" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Cloudflare account (production)</text>
+<text x="942" y="347" font-size="12" fill="#201e1d" text-anchor="start">Worker fleet-ledger-demo-api  ·  D1 fleet-ledger-demo-db  ·  R2 fleet-ledger-demo-docs</text>
+<text x="942" y="364" font-size="12" fill="#605d5d" text-anchor="start">Secrets set with wrangler secret put (JWT_SECRET, GEMINI_API_KEY)</text>
+<text x="942" y="381" font-size="12" fill="#605d5d" text-anchor="start">Cron trigger: 0 21 * * *   (02:30 India time)</text>
+<line x1="880" y1="375" x2="930" y2="375" stroke="#8a8785" stroke-width="1.8" marker-end="url(#a)"/>
+<polyline points="430,450 430,478 1230,478 1230,450" fill="none" stroke="#8a8785" stroke-width="1.8" marker-end="url(#a)"/>
+<text x="830" y="470" font-size="11" fill="#605d5d" text-anchor="middle">deploy</text>
+<rect x="30" y="500" width="1500" height="390" rx="8" fill="#ffffff" stroke="#c9a227" stroke-width="1.6"/>
+<text x="42" y="522" font-size="15" font-weight="700" fill="#201e1d" text-anchor="start">Backup and recovery — three layers</text>
+<rect x="50" y="540" width="470" height="200" rx="8" fill="#fff6d6" stroke="#c9a227" stroke-width="1.6"/>
+<text x="62" y="562" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">1 · Time Travel (automatic)</text>
+<text x="62" y="587" font-size="12" fill="#605d5d" text-anchor="start">Cloudflare keeps the database history</text>
+<text x="62" y="604" font-size="12" fill="#605d5d" text-anchor="start">7 days (free plan) / 30 days (paid).</text>
+<text x="62" y="621" font-size="12" fill="#605d5d" text-anchor="start">Restore the whole database to a moment:</text>
+<text x="62" y="638" font-size="12" fill="#201e1d" text-anchor="start">wrangler d1 time-travel restore</text>
+<text x="62" y="655" font-size="12" fill="#605d5d" text-anchor="start">Use it to undo a bad change.</text>
+<rect x="540" y="540" width="470" height="200" rx="8" fill="#fdf0e6" stroke="#e8873d" stroke-width="1.6"/>
+<text x="552" y="562" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">2 · Nightly backup (automatic)</text>
+<text x="552" y="587" font-size="12" fill="#605d5d" text-anchor="start">02:30 India time the Worker copies every table</text>
+<text x="552" y="604" font-size="12" fill="#605d5d" text-anchor="start">to R2: backups/&lt;date&gt;/&lt;table&gt;.ndjson.gz</text>
+<text x="552" y="621" font-size="12" fill="#605d5d" text-anchor="start">+ schema.sql + manifest.json (written last),</text>
+<text x="552" y="638" font-size="12" fill="#605d5d" text-anchor="start">and new uploaded files to backups/files/.</text>
+<text x="552" y="655" font-size="12" fill="#605d5d" text-anchor="start">Keeps 30 nights. Master → Data backup shows</text>
+<text x="552" y="672" font-size="12" fill="#605d5d" text-anchor="start">the last run, warns if it is old or failed.</text>
+<text x="552" y="689" font-size="12" fill="#605d5d" text-anchor="start">Table load order and circular links are in the manifest.</text>
+<rect x="1030" y="540" width="480" height="200" rx="8" fill="#f1f1f0" stroke="#9a9896" stroke-width="1.6"/>
+<text x="1042" y="562" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">3 · Off-site copy (manual, monthly)</text>
+<text x="1042" y="587" font-size="12" fill="#605d5d" text-anchor="start">The backups share the Cloudflare account,</text>
+<text x="1042" y="604" font-size="12" fill="#605d5d" text-anchor="start">so they do not cover losing the account.</text>
+<text x="1042" y="621" font-size="12" fill="#605d5d" text-anchor="start">Download one and keep it elsewhere, encrypted:</text>
+<text x="1042" y="638" font-size="12" fill="#201e1d" text-anchor="start">scripts/download-backup.sh &lt;date&gt; &lt;folder&gt;</text>
+<text x="1042" y="655" font-size="12" fill="#605d5d" text-anchor="start">Never put it in the repository (gitignored).</text>
+<rect x="50" y="760" width="1460" height="110" rx="8" fill="#ffffff" stroke="#9a9896" stroke-width="1.6"/>
+<text x="62" y="782" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Restore from a nightly backup</text>
+<text x="62" y="807" font-size="12" fill="#605d5d" text-anchor="start">download-backup.sh → migrations build the empty tables → restore-from-backup.mjs writes SQL (parents first, circular links filled last)</text>
+<text x="62" y="824" font-size="12" fill="#605d5d" text-anchor="start">→ wrangler d1 execute --file restore.sql → compare row counts with manifest.json → sign in and check the latest trips.  Tested end to end on a local copy, 4 Oct 2026.</text>
+</svg>

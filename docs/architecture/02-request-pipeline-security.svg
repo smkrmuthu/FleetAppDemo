@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1560" height="760" viewBox="0 0 1560 760" font-family="Helvetica, Arial, sans-serif">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a8785"/></marker></defs>
+<rect width="1560" height="760" fill="#ffffff"/>
+<text x="30" y="40" font-size="24" font-weight="700" fill="#201e1d">Fleet Ledger — What happens to every request (security layers)</text>
+<rect x="30" y="50" width="70" height="4" fill="#EC3013"/>
+<text x="30" y="72" font-size="12" fill="#605d5d" text-anchor="start">Every call to the API passes the same gates, in this order. A failure at any gate stops the request and returns an error; nothing reaches the database.</text>
+<rect x="30" y="110" width="188" height="118" rx="8" fill="#f1f1f0" stroke="#9a9896" stroke-width="1.6"/>
+<text x="42" y="132" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">1  CORS</text>
+<text x="42" y="157" font-size="12" fill="#605d5d" text-anchor="start">Only the listed websites</text>
+<text x="42" y="174" font-size="12" fill="#605d5d" text-anchor="start">and the mobile app origin</text>
+<text x="42" y="191" font-size="12" fill="#605d5d" text-anchor="start">may call the API</text>
+<text x="124.0" y="252" font-size="11" fill="#605d5d" text-anchor="middle">blocked by browser</text>
+<line x1="218" y1="169" x2="246" y2="169" stroke="#8a8785" stroke-width="1.8" marker-end="url(#a)"/>
+<rect x="246" y="110" width="188" height="118" rx="8" fill="#fdeaea" stroke="#c0392b" stroke-width="1.6"/>
+<text x="258" y="132" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">2  Verify token</text>
+<text x="258" y="157" font-size="12" fill="#605d5d" text-anchor="start">Signed token (HS256)</text>
+<text x="258" y="174" font-size="12" fill="#605d5d" text-anchor="start">valid for 12 hours</text>
+<text x="258" y="191" font-size="12" fill="#605d5d" text-anchor="start">signed with JWT_SECRET</text>
+<text x="340.0" y="252" font-size="11" fill="#c0392b" text-anchor="middle">401 invalid / expired</text>
+<line x1="434" y1="169" x2="462" y2="169" stroke="#8a8785" stroke-width="1.8" marker-end="url(#a)"/>
+<rect x="462" y="110" width="188" height="118" rx="8" fill="#fdeaea" stroke="#c0392b" stroke-width="1.6"/>
+<text x="474" y="132" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">3  Check the account</text>
+<text x="474" y="157" font-size="12" fill="#605d5d" text-anchor="start">Look the user up in D1:</text>
+<text x="474" y="174" font-size="12" fill="#605d5d" text-anchor="start">exists · not disabled ·</text>
+<text x="474" y="191" font-size="12" fill="#605d5d" text-anchor="start">same company · role from DB</text>
+<text x="556.0" y="252" font-size="11" fill="#c0392b" text-anchor="middle">401 account no longer active</text>
+<line x1="650" y1="169" x2="678" y2="169" stroke="#8a8785" stroke-width="1.8" marker-end="url(#a)"/>
+<rect x="678" y="110" width="188" height="118" rx="8" fill="#fdeaea" stroke="#c0392b" stroke-width="1.6"/>
+<text x="690" y="132" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">4  Viewer rule</text>
+<text x="690" y="157" font-size="12" fill="#605d5d" text-anchor="start">Viewer: GET only,</text>
+<text x="690" y="174" font-size="12" fill="#605d5d" text-anchor="start">no bills, no notifications</text>
+<text x="772.0" y="252" font-size="11" fill="#c0392b" text-anchor="middle">403 read-only</text>
+<line x1="866" y1="169" x2="894" y2="169" stroke="#8a8785" stroke-width="1.8" marker-end="url(#a)"/>
+<rect x="894" y="110" width="188" height="118" rx="8" fill="#fdeaea" stroke="#c0392b" stroke-width="1.6"/>
+<text x="906" y="132" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">5  Role check</text>
+<text x="906" y="157" font-size="12" fill="#605d5d" text-anchor="start">requireRole on the route,</text>
+<text x="906" y="174" font-size="12" fill="#605d5d" text-anchor="start">e.g. Office / Manager for</text>
+<text x="906" y="191" font-size="12" fill="#605d5d" text-anchor="start">writes, Manager for users</text>
+<text x="988.0" y="252" font-size="11" fill="#c0392b" text-anchor="middle">403 not allowed</text>
+<line x1="1082" y1="169" x2="1110" y2="169" stroke="#8a8785" stroke-width="1.8" marker-end="url(#a)"/>
+<rect x="1110" y="110" width="188" height="118" rx="8" fill="#fdf0e6" stroke="#e8873d" stroke-width="1.6"/>
+<text x="1122" y="132" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">6  Handler</text>
+<text x="1122" y="157" font-size="12" fill="#605d5d" text-anchor="start">Validate input (zod) ·</text>
+<text x="1122" y="174" font-size="12" fill="#605d5d" text-anchor="start">apply business rules ·</text>
+<text x="1122" y="191" font-size="12" fill="#605d5d" text-anchor="start">scope to the token’s company</text>
+<text x="1204.0" y="252" font-size="11" fill="#c0392b" text-anchor="middle">404 / 409 / 422</text>
+<line x1="1298" y1="169" x2="1326" y2="169" stroke="#8a8785" stroke-width="1.8" marker-end="url(#a)"/>
+<rect x="1326" y="110" width="188" height="118" rx="8" fill="#fff6d6" stroke="#c9a227" stroke-width="1.6"/>
+<text x="1338" y="132" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">7  Database / files</text>
+<text x="1338" y="157" font-size="12" fill="#605d5d" text-anchor="start">D1 read or write ·</text>
+<text x="1338" y="174" font-size="12" fill="#605d5d" text-anchor="start">R2 file store ·</text>
+<text x="1338" y="191" font-size="12" fill="#605d5d" text-anchor="start">audit_log entry on change</text>
+<text x="1420.0" y="252" font-size="11" fill="#605d5d" text-anchor="middle">500 generic message</text>
+<text x="30" y="292" font-size="12" fill="#605d5d" text-anchor="start">Failure responses are JSON: { "error": { "code", "message" } }. Unexpected errors return a generic message and are logged on the server only.</text>
+<rect x="30" y="330" width="740" height="168" rx="8" fill="#ffffff" stroke="#c0392b" stroke-width="1.6"/>
+<text x="42" y="352" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Sign-in (POST /v1/auth/password) — extra protection</text>
+<text x="42" y="377" font-size="12" fill="#605d5d" text-anchor="start">1. Rate limit: 10 attempts / minute per network address and 5 / minute per account.</text>
+<text x="42" y="394" font-size="12" fill="#605d5d" text-anchor="start">    Counts live in the D1 table rate_limits, so they are shared by all Worker instances and survive restarts.</text>
+<text x="42" y="411" font-size="12" fill="#605d5d" text-anchor="start">2. Find the user by mobile number or User ID; refuse if no password or the account is disabled.</text>
+<text x="42" y="428" font-size="12" fill="#605d5d" text-anchor="start">3. Check the password: PBKDF2-SHA-256, 100,000 iterations, a random salt per user, constant-time compare.</text>
+<text x="42" y="445" font-size="12" fill="#605d5d" text-anchor="start">4. Return a 12-hour token holding only company, user id, role and driver id.</text>
+<text x="42" y="462" font-size="12" fill="#605d5d" text-anchor="start">The same limiter protects the bill-scan endpoint (10 / min per user, 20 / min per network).</text>
+<rect x="800" y="330" width="730" height="168" rx="8" fill="#ffffff" stroke="#c0392b" stroke-width="1.6"/>
+<text x="812" y="352" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Uploaded files — checked before they are stored or served</text>
+<text x="812" y="377" font-size="12" fill="#605d5d" text-anchor="start">• Only JPEG, PNG, WebP, HEIC/HEIF and PDF are accepted. HTML, SVG and scripts are rejected outright.</text>
+<text x="812" y="394" font-size="12" fill="#605d5d" text-anchor="start">• The file’s real first bytes (“magic bytes”) must match the type it claims to be.</text>
+<text x="812" y="411" font-size="12" fill="#605d5d" text-anchor="start">• Maximum size about 9 MB per file (12 million base64 characters).</text>
+<text x="812" y="428" font-size="12" fill="#605d5d" text-anchor="start">• Files are stored in R2 under &lt;company&gt;/&lt;trip&gt;/&lt;id&gt;__&lt;name&gt;; the database holds only the pointer.</text>
+<text x="812" y="445" font-size="12" fill="#605d5d" text-anchor="start">• Downloads are served with a safe content type and “nosniff”; a Viewer cannot download bills.</text>
+<rect x="30" y="528" width="1500" height="200" rx="8" fill="#f1f1f0" stroke="#9a9896" stroke-width="1.6"/>
+<text x="42" y="550" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Who can do what (summary — detail is in the Technical Document)</text>
+<rect x="46" y="568" width="356" height="140" rx="6" fill="#ffffff" stroke="#9a9896" stroke-width="1.6"/>
+<text x="58" y="590" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Driver</text>
+<text x="58" y="615" font-size="12" fill="#605d5d" text-anchor="start">Add and edit own open movements</text>
+<text x="58" y="632" font-size="12" fill="#605d5d" text-anchor="start">May add "other" expenses to them</text>
+<text x="58" y="649" font-size="12" fill="#605d5d" text-anchor="start">No fuel, no fixed costs, no revenue / profit</text>
+<rect x="418" y="568" width="356" height="140" rx="6" fill="#ffffff" stroke="#9a9896" stroke-width="1.6"/>
+<text x="430" y="590" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Office</text>
+<text x="430" y="615" font-size="12" fill="#605d5d" text-anchor="start">Movements, fuel, monthly expenses</text>
+<text x="430" y="632" font-size="12" fill="#605d5d" text-anchor="start">Trucks, drivers, leave, availability</text>
+<text x="430" y="649" font-size="12" fill="#605d5d" text-anchor="start">Cannot change approved movements</text>
+<rect x="790" y="568" width="356" height="140" rx="6" fill="#ffffff" stroke="#9a9896" stroke-width="1.6"/>
+<text x="802" y="590" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Manager</text>
+<text x="802" y="615" font-size="12" fill="#605d5d" text-anchor="start">Everything above, plus:</text>
+<text x="802" y="632" font-size="12" fill="#605d5d" text-anchor="start">Users, passwords, Master, backups</text>
+<text x="802" y="649" font-size="12" fill="#605d5d" text-anchor="start">Corrects completed movements</text>
+<rect x="1162" y="568" width="356" height="140" rx="6" fill="#ffffff" stroke="#9a9896" stroke-width="1.6"/>
+<text x="1174" y="590" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Viewer</text>
+<text x="1174" y="615" font-size="12" fill="#605d5d" text-anchor="start">Dashboard, Movement Summary,</text>
+<text x="1174" y="632" font-size="12" fill="#605d5d" text-anchor="start">Monthly Report (view, export)</text>
+<text x="1174" y="649" font-size="12" fill="#605d5d" text-anchor="start">Never changes anything</text>
+</svg>

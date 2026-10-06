@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1560" height="1080" viewBox="0 0 1560 1080" font-family="Helvetica, Arial, sans-serif">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a8785"/></marker></defs>
+<rect width="1560" height="1080" fill="#ffffff"/>
+<text x="30" y="40" font-size="24" font-weight="700" fill="#201e1d">Fleet Ledger — Data model (22 tables in D1)</text>
+<rect x="30" y="50" width="70" height="4" fill="#EC3013"/>
+<text x="30" y="72" font-size="12" fill="#605d5d" text-anchor="start">Every table carries org_id (the company), so one deployment can hold several companies. Money is stored as whole paise (integers); dates as ISO text. Arrows point from the child table to the table it refers to.</text>
+<rect x="30" y="96" width="480" height="284" rx="8" fill="#eef6ec" stroke="#5a9a50" stroke-width="1.6"/>
+<text x="42" y="118" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Company and people</text>
+<rect x="46" y="130" width="140" height="72" rx="6" fill="#fff" stroke="#5a9a50" stroke-width="1.6"/>
+<text x="58" y="152" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">orgs</text>
+<text x="58" y="174" font-size="11" fill="#605d5d" text-anchor="start">id · name</text>
+<text x="58" y="190" font-size="11" fill="#605d5d" text-anchor="start">currency · fy_start_month</text>
+<rect x="46" y="214" width="140" height="56" rx="6" fill="#fff" stroke="#5a9a50" stroke-width="1.6"/>
+<text x="58" y="236" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">branches</text>
+<text x="58" y="258" font-size="11" fill="#605d5d" text-anchor="start">id · org_id · name</text>
+<rect x="46" y="280" width="140" height="88" rx="6" fill="#fff" stroke="#5a9a50" stroke-width="1.6"/>
+<text x="58" y="302" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">settings</text>
+<text x="58" y="324" font-size="11" fill="#605d5d" text-anchor="start">org_id · key · value</text>
+<text x="58" y="340" font-size="11" fill="#605d5d" text-anchor="start">(diesel rate, loading</text>
+<text x="58" y="356" font-size="11" fill="#605d5d" text-anchor="start"> point …)</text>
+<rect x="206" y="130" width="290" height="104" rx="6" fill="#fff" stroke="#5a9a50" stroke-width="1.6"/>
+<text x="218" y="152" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">users</text>
+<text x="218" y="174" font-size="11" fill="#605d5d" text-anchor="start">id · org_id · role (driver, office,</text>
+<text x="218" y="190" font-size="11" fill="#605d5d" text-anchor="start">   manager, viewer) · full_name</text>
+<text x="218" y="206" font-size="11" fill="#605d5d" text-anchor="start">phone · user_id · password_hash/salt</text>
+<text x="218" y="222" font-size="11" fill="#605d5d" text-anchor="start">driver_id · disabled_at · last_seen_at</text>
+<rect x="206" y="260" width="290" height="72" rx="6" fill="#fff" stroke="#5a9a50" stroke-width="1.6"/>
+<text x="218" y="282" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">counters</text>
+<text x="218" y="304" font-size="11" fill="#605d5d" text-anchor="start">org_id · key (trip_no) · value</text>
+<text x="218" y="320" font-size="11" fill="#605d5d" text-anchor="start">→ next trip number DEMO-#####</text>
+<rect x="540" y="96" width="500" height="284" rx="8" fill="#e8f0fb" stroke="#4a7bc8" stroke-width="1.6"/>
+<text x="552" y="118" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Fleet master data</text>
+<rect x="556" y="130" width="230" height="120" rx="6" fill="#fff" stroke="#4a7bc8" stroke-width="1.6"/>
+<text x="568" y="152" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">vehicles</text>
+<text x="568" y="174" font-size="11" fill="#605d5d" text-anchor="start">id · org_id · reg_no (unique per org)</text>
+<text x="568" y="190" font-size="11" fill="#605d5d" text-anchor="start">model · owner · reg_date · batch_no</text>
+<text x="568" y="206" font-size="11" fill="#605d5d" text-anchor="start">tax / inspection(=Insurance) / np /</text>
+<text x="568" y="222" font-size="11" fill="#605d5d" text-anchor="start">  fc / pollution dates</text>
+<text x="568" y="238" font-size="11" fill="#605d5d" text-anchor="start">default_driver · active</text>
+<rect x="800" y="130" width="226" height="104" rx="6" fill="#fff" stroke="#4a7bc8" stroke-width="1.6"/>
+<text x="812" y="152" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">drivers</text>
+<text x="812" y="174" font-size="11" fill="#605d5d" text-anchor="start">id · org_id · branch_id</text>
+<text x="812" y="190" font-size="11" fill="#605d5d" text-anchor="start">full_name · phone · licence_no</text>
+<text x="812" y="206" font-size="11" fill="#605d5d" text-anchor="start">licence_expiry · credential</text>
+<text x="812" y="222" font-size="11" fill="#605d5d" text-anchor="start">default_vehicle · active</text>
+<rect x="556" y="280" width="230" height="56" rx="6" fill="#fff" stroke="#4a7bc8" stroke-width="1.6"/>
+<text x="568" y="302" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">vehicle_unavailability</text>
+<text x="568" y="324" font-size="11" fill="#605d5d" text-anchor="start">vehicle_id · starts_at · ends_at</text>
+<rect x="800" y="280" width="226" height="56" rx="6" fill="#fff" stroke="#4a7bc8" stroke-width="1.6"/>
+<text x="812" y="302" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">driver_leaves</text>
+<text x="812" y="324" font-size="11" fill="#605d5d" text-anchor="start">driver_id · starts_at · ends_at</text>
+<rect x="1070" y="96" width="460" height="284" rx="8" fill="#f1f1f0" stroke="#9a9896" stroke-width="1.6"/>
+<text x="1082" y="118" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Pick-lists (name is the id)</text>
+<rect x="1086" y="130" width="200" height="72" rx="6" fill="#fff" stroke="#9a9896" stroke-width="1.6"/>
+<text x="1098" y="152" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">expense_categories</text>
+<text x="1098" y="174" font-size="11" fill="#605d5d" text-anchor="start">id (= name) · org_id · active</text>
+<text x="1098" y="190" font-size="11" fill="#605d5d" text-anchor="start">e.g. Fastag, Permit, EMI</text>
+<rect x="1300" y="130" width="214" height="56" rx="6" fill="#fff" stroke="#9a9896" stroke-width="1.6"/>
+<text x="1312" y="152" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">transporters</text>
+<text x="1312" y="174" font-size="11" fill="#605d5d" text-anchor="start">id (= name) · org_id · active</text>
+<rect x="1086" y="220" width="428" height="72" rx="6" fill="#fff" stroke="#9a9896" stroke-width="1.6"/>
+<text x="1098" y="242" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">notifications</text>
+<text x="1098" y="264" font-size="11" fill="#605d5d" text-anchor="start">id · org_id · kind · message · tab</text>
+<text x="1098" y="280" font-size="11" fill="#605d5d" text-anchor="start">related_trip_id · target_user_id · read</text>
+<rect x="30" y="400" width="1010" height="412" rx="8" fill="#fdf0e6" stroke="#e8873d" stroke-width="1.6"/>
+<text x="42" y="422" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Operations</text>
+<rect x="46" y="434" width="330" height="136" rx="6" fill="#fff" stroke="#e8873d" stroke-width="1.6"/>
+<text x="58" y="456" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">trips</text>
+<text x="58" y="478" font-size="11" fill="#605d5d" text-anchor="start">id · org_id · vehicle_id · driver_id</text>
+<text x="58" y="494" font-size="11" fill="#605d5d" text-anchor="start">waybill_no (DEMO-#####) · item_no</text>
+<text x="58" y="510" font-size="11" fill="#605d5d" text-anchor="start">load_date · unload_date · from/to + notes</text>
+<text x="58" y="526" font-size="11" fill="#605d5d" text-anchor="start">weight_kg · odo_start · odo_end</text>
+<text x="58" y="542" font-size="11" fill="#605d5d" text-anchor="start">revenue_paise · status (draft/pending/approved)</text>
+<text x="58" y="558" font-size="11" fill="#605d5d" text-anchor="start">transporter · remarks · created/updated</text>
+<rect x="396" y="434" width="300" height="104" rx="6" fill="#fff" stroke="#e8873d" stroke-width="1.6"/>
+<text x="408" y="456" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">trip_expenses</text>
+<text x="408" y="478" font-size="11" fill="#605d5d" text-anchor="start">id · trip_id · spent_on · kind</text>
+<text x="408" y="494" font-size="11" fill="#605d5d" text-anchor="start">   (diesel, adblue, toll, other)</text>
+<text x="408" y="510" font-size="11" fill="#605d5d" text-anchor="start">litres · rate_paise · amount_paise</text>
+<text x="408" y="526" font-size="11" fill="#605d5d" text-anchor="start">details (remarks) · receipt_id</text>
+<rect x="396" y="568" width="300" height="72" rx="6" fill="#fff" stroke="#e8873d" stroke-width="1.6"/>
+<text x="408" y="590" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">trip_stops</text>
+<text x="408" y="612" font-size="11" fill="#605d5d" text-anchor="start">trip_id · seq · location · date</text>
+<text x="408" y="628" font-size="11" fill="#605d5d" text-anchor="start">odo · note</text>
+<rect x="716" y="434" width="308" height="88" rx="6" fill="#fff" stroke="#e8873d" stroke-width="1.6"/>
+<text x="728" y="456" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">monthly_expenses</text>
+<text x="728" y="478" font-size="11" fill="#605d5d" text-anchor="start">id · vehicle_id · driver_id · spent_on</text>
+<text x="728" y="494" font-size="11" fill="#605d5d" text-anchor="start">category (e.g. Fastag) · amount_paise</text>
+<text x="728" y="510" font-size="11" fill="#605d5d" text-anchor="start">remarks · voided_at (soft delete)</text>
+<rect x="46" y="620" width="330" height="56" rx="6" fill="#fff" stroke="#e8873d" stroke-width="1.6"/>
+<text x="58" y="642" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">trip_documents</text>
+<text x="58" y="664" font-size="11" fill="#605d5d" text-anchor="start">trip_id · receipt_id · doc_type</text>
+<rect x="46" y="694" width="330" height="104" rx="6" fill="#fff" stroke="#e8873d" stroke-width="1.6"/>
+<text x="58" y="716" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">fuel_entries</text>
+<text x="58" y="738" font-size="11" fill="#605d5d" text-anchor="start">id · vehicle_id · spent_on · litres</text>
+<text x="58" y="754" font-size="11" fill="#605d5d" text-anchor="start">rate_paise · amount_paise · details</text>
+<text x="58" y="770" font-size="11" fill="#605d5d" text-anchor="start">→ a fill with no trip yet; moved onto a trip</text>
+<text x="58" y="786" font-size="11" fill="#605d5d" text-anchor="start">   (as a trip_expenses line) when assigned</text>
+<rect x="716" y="560" width="308" height="56" rx="6" fill="#fff" stroke="#e8873d" stroke-width="1.6"/>
+<text x="728" y="582" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">monthly_expense_documents</text>
+<text x="728" y="604" font-size="11" fill="#605d5d" text-anchor="start">monthly_expense_id · receipt_id</text>
+<rect x="396" y="664" width="300" height="72" rx="6" fill="#fff6d6" stroke="#c9a227" stroke-width="1.6"/>
+<text x="408" y="686" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">receipts</text>
+<text x="408" y="708" font-size="11" fill="#605d5d" text-anchor="start">id · storage_key (R2 object) · mime_type</text>
+<text x="408" y="724" font-size="11" fill="#605d5d" text-anchor="start">ocr_json · confidence · uploaded_by</text>
+<rect x="1070" y="400" width="460" height="412" rx="8" fill="#fdeaea" stroke="#c0392b" stroke-width="1.6"/>
+<text x="1082" y="422" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">System tables</text>
+<rect x="1086" y="434" width="428" height="88" rx="6" fill="#fff" stroke="#c0392b" stroke-width="1.6"/>
+<text x="1098" y="456" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">audit_log</text>
+<text x="1098" y="478" font-size="11" fill="#605d5d" text-anchor="start">id · org_id · entity · entity_id · action (insert,</text>
+<text x="1098" y="494" font-size="11" fill="#605d5d" text-anchor="start">   update, delete, void) · diff · actor_id · at</text>
+<text x="1098" y="510" font-size="11" fill="#605d5d" text-anchor="start">→ who changed what, and when</text>
+<rect x="1086" y="540" width="428" height="72" rx="6" fill="#fff" stroke="#c0392b" stroke-width="1.6"/>
+<text x="1098" y="562" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">rate_limits</text>
+<text x="1098" y="584" font-size="11" fill="#605d5d" text-anchor="start">key · count · reset_at</text>
+<text x="1098" y="600" font-size="11" fill="#605d5d" text-anchor="start">→ sign-in and bill-scan attempt counters (disposable)</text>
+<rect x="1086" y="620" width="428" height="72" rx="6" fill="#fff" stroke="#c0392b" stroke-width="1.6"/>
+<text x="1098" y="642" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">d1_migrations</text>
+<text x="1098" y="664" font-size="11" fill="#605d5d" text-anchor="start">name · applied_at</text>
+<text x="1098" y="680" font-size="11" fill="#605d5d" text-anchor="start">→ which migration files have run (0000 … 0015)</text>
+<line x1="396" y1="490" x2="376" y2="490" stroke="#8a8785" stroke-width="1.8" marker-end="url(#a)"/>
+<line x1="236" y1="620" x2="236" y2="574" stroke="#8a8785" stroke-width="1.8" marker-end="url(#a)"/>
+<line x1="870" y1="560" x2="870" y2="526" stroke="#8a8785" stroke-width="1.8" marker-end="url(#a)"/>
+<text x="30" y="834" font-size="12" fill="#605d5d" text-anchor="start">Main relationships: trips → vehicles, drivers · trip_expenses, trip_stops, trip_documents → trips · monthly_expenses → vehicles, drivers · documents → receipts (file pointer) · fuel_entries → vehicles · users, vehicles, drivers, trips … → orgs (company).</text>
+<text x="30" y="854" font-size="12" fill="#605d5d" text-anchor="start">A circular link exists on purpose: vehicles.default_driver ↔ drivers.default_vehicle. Backups record this so a restore can load it correctly.</text>
+<text x="30" y="874" font-size="12" fill="#605d5d" text-anchor="start">Soft deletes: monthly expenses are voided (voided_at), pick-list items are made inactive; trips and fuel lines can be deleted while open, and every change is written to audit_log.</text>
+<rect x="30" y="900" width="1500" height="140" rx="8" fill="#ffffff" stroke="#9a9896" stroke-width="1.6"/>
+<text x="42" y="922" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Design notes</text>
+<text x="42" y="947" font-size="12" fill="#605d5d" text-anchor="start">• Money in paise (integer) avoids rounding errors; litres are decimal, shown to 2 places; amounts are rounded to 2 places when posted (litres × rate).</text>
+<text x="42" y="964" font-size="12" fill="#605d5d" text-anchor="start">• Trip numbers come from an atomic counter row (insert … on conflict update … returning), so two people saving at once never get the same number.</text>
+<text x="42" y="981" font-size="12" fill="#605d5d" text-anchor="start">• Indexes cover the common screens: trips by company+vehicle+date, by company+driver+date, and pending trips; monthly expenses by month+category; expiry dates for reminders.</text>
+<text x="42" y="998" font-size="12" fill="#605d5d" text-anchor="start">• Deleting a company would cascade to its rows (ON DELETE CASCADE on org_id); child rows of a trip cascade when the trip is deleted.</text>
+</svg>

@@ -1,0 +1,30 @@
+name = "fleet-ledger-demo-api"
+main = "src/index.ts"
+compatibility_date = "2026-01-01"
+
+# Comma-separated list of origins allowed to call this API — the demo frontend
+# is deployed to GitHub Pages (smkrmuthu.github.io/FleetAppDemo) and (via
+# Capacitor) the iOS and Android apps, which serve their bundled web content
+# from fixed origins regardless of device. Never list the SMT production
+# origins here: this demo API is separate from FleetApp-SMT.
+[vars]
+ALLOWED_ORIGIN = "https://smkrmuthu.github.io,capacitor://localhost,https://localhost,http://localhost:5180"
+
+# Nightly backup at 21:00 UTC (02:30 IST) — see src/lib/backup.ts
+[triggers]
+crons = ["0 21 * * *"]
+
+[[d1_databases]]
+binding = "DB"
+# Demo-only database. Create it with `npx wrangler d1 create fleet-ledger-demo-db`
+# and paste the id it prints below. Never reuse the SMT production database id.
+database_name = "fleet-ledger-demo-db"
+database_id = "REPLACE_WITH_DEMO_D1_DATABASE_ID"
+
+[[r2_buckets]]
+binding = "DOCS"
+bucket_name = "fleet-ledger-demo-docs"
+
+# JWT_SECRET is NOT set here — it's a secret, set once via:
+#   npx wrangler secret put JWT_SECRET
+# (run from this worker/ directory, after `wrangler login`)

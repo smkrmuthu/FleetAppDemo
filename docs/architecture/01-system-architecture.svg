@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1560" height="980" viewBox="0 0 1560 980" font-family="Helvetica, Arial, sans-serif">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8a8785"/></marker></defs>
+<rect width="1560" height="980" fill="#ffffff"/>
+<text x="30" y="40" font-size="24" font-weight="700" fill="#201e1d">Fleet Ledger — System architecture</text>
+<rect x="30" y="50" width="70" height="4" fill="#EC3013"/>
+<text x="30" y="72" font-size="12" fill="#605d5d" text-anchor="start">Goods-movement and expense log for Shree Mira Trader · all components run on Cloudflare except the source code (GitHub) and the bill reader (Google Gemini)</text>
+<rect x="30" y="100" width="250" height="520" rx="8" fill="#eef6ec" stroke="#5a9a50" stroke-width="1.6"/>
+<text x="42" y="122" font-size="15" font-weight="700" fill="#201e1d" text-anchor="start">People (4 roles)</text>
+<rect x="46" y="140" width="218" height="98" rx="6" fill="#ffffff" stroke="#5a9a50" stroke-width="1.6"/>
+<text x="58" y="162" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Driver</text>
+<text x="58" y="187" font-size="12" fill="#605d5d" text-anchor="start">Own trips, fuel, trip log</text>
+<rect x="46" y="255" width="218" height="98" rx="6" fill="#ffffff" stroke="#5a9a50" stroke-width="1.6"/>
+<text x="58" y="277" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Office (Documentation)</text>
+<text x="58" y="302" font-size="12" fill="#605d5d" text-anchor="start">Movements, fuel, expenses, summary</text>
+<rect x="46" y="370" width="218" height="98" rx="6" fill="#ffffff" stroke="#5a9a50" stroke-width="1.6"/>
+<text x="58" y="392" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Manager</text>
+<text x="58" y="417" font-size="12" fill="#605d5d" text-anchor="start">Everything: users, Master, reports</text>
+<rect x="46" y="485" width="218" height="98" rx="6" fill="#ffffff" stroke="#5a9a50" stroke-width="1.6"/>
+<text x="58" y="507" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Viewer</text>
+<text x="58" y="532" font-size="12" fill="#605d5d" text-anchor="start">Read-only reports</text>
+<rect x="340" y="100" width="330" height="520" rx="8" fill="#e8f0fb" stroke="#4a7bc8" stroke-width="1.6"/>
+<text x="352" y="122" font-size="15" font-weight="700" fill="#201e1d" text-anchor="start">Clients (one codebase)</text>
+<rect x="356" y="140" width="298" height="140" rx="6" fill="#ffffff" stroke="#4a7bc8" stroke-width="1.6"/>
+<text x="368" y="162" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">Web app (React + TypeScript + Vite)</text>
+<text x="368" y="187" font-size="12" fill="#605d5d" text-anchor="start">Single-page app, tabs by role</text>
+<text x="368" y="204" font-size="12" fill="#605d5d" text-anchor="start">smkrmuthu.github.io/FleetAppDemo</text>
+<text x="368" y="221" font-size="12" fill="#605d5d" text-anchor="start">fleet.oneuptech.co (Cloudflare)</text>
+<text x="368" y="238" font-size="12" fill="#605d5d" text-anchor="start">Sign-in token kept in browser storage</text>
+<rect x="356" y="296" width="298" height="130" rx="6" fill="#ffffff" stroke="#4a7bc8" stroke-width="1.6"/>
+<text x="368" y="318" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">Installed web app (PWA)</text>
+<text x="368" y="343" font-size="12" fill="#605d5d" text-anchor="start">Add to Home Screen</text>
+<text x="368" y="360" font-size="12" fill="#605d5d" text-anchor="start">Service worker: network-first,</text>
+<text x="368" y="377" font-size="12" fill="#605d5d" text-anchor="start">so a new deploy is never hidden</text>
+<rect x="356" y="442" width="298" height="160" rx="6" fill="#ffffff" stroke="#4a7bc8" stroke-width="1.6"/>
+<text x="368" y="464" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">Android app (Capacitor)</text>
+<text x="368" y="489" font-size="12" fill="#605d5d" text-anchor="start">Same web bundle in a native shell</text>
+<text x="368" y="506" font-size="12" fill="#605d5d" text-anchor="start">App id com.smkrmuthu.fleetledgerdemo</text>
+<text x="368" y="523" font-size="12" fill="#605d5d" text-anchor="start">Debug build today; no Play Store</text>
+<text x="368" y="540" font-size="12" fill="#605d5d" text-anchor="start">or iPhone app yet</text>
+<rect x="740" y="100" width="520" height="850" rx="8" fill="#fdf0e6" stroke="#e8873d" stroke-width="1.6"/>
+<text x="752" y="122" font-size="15" font-weight="700" fill="#201e1d" text-anchor="start">Cloudflare account</text>
+<rect x="756" y="136" width="488" height="438" rx="6" fill="#ffffff" stroke="#e8873d" stroke-width="1.6"/>
+<text x="768" y="158" font-size="14" font-weight="700" fill="#201e1d" text-anchor="start">Worker  fleet-ledger-demo-api   (Hono · TypeScript)</text>
+<rect x="772" y="176" width="456" height="96" rx="6" fill="#fdeaea" stroke="#c0392b" stroke-width="1.6"/>
+<text x="784" y="198" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">Middleware (every request)</text>
+<text x="784" y="223" font-size="12" fill="#605d5d" text-anchor="start">CORS allowlist  →  verify JWT (HS256, 12 h)</text>
+<text x="784" y="240" font-size="12" fill="#605d5d" text-anchor="start">→ look up the user in the database (exists, not disabled,</text>
+<text x="784" y="257" font-size="12" fill="#605d5d" text-anchor="start">role from DB)  →  Viewer read-only rule  →  role check</text>
+<rect x="772" y="284" width="456" height="150" rx="6" fill="#f1f1f0" stroke="#9a9896" stroke-width="1.6"/>
+<text x="784" y="306" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">Routes  /v1/…</text>
+<text x="784" y="331" font-size="12" fill="#201e1d" text-anchor="start">auth · trips · monthly-expenses · vehicles · drivers</text>
+<text x="784" y="348" font-size="12" fill="#201e1d" text-anchor="start">users · settings · transporters · expense-categories</text>
+<text x="784" y="365" font-size="12" fill="#201e1d" text-anchor="start">driver-leaves · vehicle-unavailability</text>
+<text x="784" y="382" font-size="12" fill="#201e1d" text-anchor="start">notifications · receipts (bill scan) · admin (backups)</text>
+<text x="784" y="399" font-size="12" fill="#605d5d" text-anchor="start">org_id always taken from the token, never the request</text>
+<rect x="772" y="446" width="220" height="112" rx="6" fill="#f1f1f0" stroke="#9a9896" stroke-width="1.6"/>
+<text x="784" y="468" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">Libraries</text>
+<text x="784" y="493" font-size="12" fill="#201e1d" text-anchor="start">password (PBKDF2) · jwt</text>
+<text x="784" y="510" font-size="12" fill="#201e1d" text-anchor="start">rate limiter (D1)</text>
+<text x="784" y="527" font-size="12" fill="#201e1d" text-anchor="start">file checks (magic bytes)</text>
+<text x="784" y="544" font-size="12" fill="#201e1d" text-anchor="start">audit log · backup job</text>
+<rect x="1008" y="446" width="220" height="112" rx="6" fill="#fdeaea" stroke="#c0392b" stroke-width="1.6"/>
+<text x="1020" y="468" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">Scheduled job (cron)</text>
+<text x="1020" y="493" font-size="12" fill="#201e1d" text-anchor="start">21:00 UTC = 02:30 IST</text>
+<text x="1020" y="510" font-size="12" fill="#605d5d" text-anchor="start">Nightly backup, 30 nights</text>
+<text x="1020" y="527" font-size="12" fill="#605d5d" text-anchor="start">Cleans expired rate limits</text>
+<rect x="756" y="604" width="236" height="176" rx="6" fill="#fff6d6" stroke="#c9a227" stroke-width="1.6"/>
+<text x="768" y="626" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">D1 database (SQLite)</text>
+<text x="768" y="651" font-size="12" fill="#201e1d" text-anchor="start">fleet-ledger-demo-db · 22 tables</text>
+<text x="768" y="668" font-size="12" fill="#605d5d" text-anchor="start">Trips, expenses, vehicles,</text>
+<text x="768" y="685" font-size="12" fill="#605d5d" text-anchor="start">drivers, users, settings,</text>
+<text x="768" y="702" font-size="12" fill="#605d5d" text-anchor="start">audit log, rate limits …</text>
+<text x="768" y="719" font-size="12" fill="#605d5d" text-anchor="start">Time Travel: 7 / 30 days</text>
+<text x="768" y="736" font-size="12" fill="#605d5d" text-anchor="start">Versioned migrations</text>
+<rect x="1008" y="604" width="236" height="176" rx="6" fill="#fff6d6" stroke="#c9a227" stroke-width="1.6"/>
+<text x="1020" y="626" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">R2 bucket</text>
+<text x="1020" y="651" font-size="12" fill="#201e1d" text-anchor="start">fleet-ledger-demo-docs</text>
+<text x="1020" y="668" font-size="12" fill="#605d5d" text-anchor="start">Uploaded bills &amp; photos</text>
+<text x="1020" y="685" font-size="12" fill="#605d5d" text-anchor="start">(&lt;org&gt;/&lt;trip&gt;/&lt;file&gt;)</text>
+<text x="1020" y="702" font-size="12" fill="#605d5d" text-anchor="start">backups/&lt;date&gt;/ …</text>
+<text x="1020" y="719" font-size="12" fill="#605d5d" text-anchor="start">backups/files/ (copies)</text>
+<rect x="756" y="800" width="488" height="130" rx="6" fill="#ffffff" stroke="#e8873d" stroke-width="1.6"/>
+<text x="768" y="822" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">Worker configuration</text>
+<text x="768" y="847" font-size="12" fill="#201e1d" text-anchor="start">Bindings: DB (D1) · DOCS (R2)</text>
+<text x="768" y="864" font-size="12" fill="#201e1d" text-anchor="start">Secrets: JWT_SECRET · GEMINI_API_KEY (never in code or backups)</text>
+<text x="768" y="881" font-size="12" fill="#201e1d" text-anchor="start">Variable: ALLOWED_ORIGIN (the sites allowed to call the API)</text>
+<text x="768" y="898" font-size="12" fill="#605d5d" text-anchor="start">Static site: the web app is also served by a Cloudflare Worker</text>
+<text x="768" y="915" font-size="12" fill="#605d5d" text-anchor="start">(fleetapp) behind the domain fleet.oneuptech.co</text>
+<rect x="1320" y="100" width="210" height="150" rx="6" fill="#f3ecf8" stroke="#8a5cb0" stroke-width="1.6"/>
+<text x="1332" y="122" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">Google Gemini API</text>
+<text x="1332" y="147" font-size="12" fill="#605d5d" text-anchor="start">Reads a fuel-bill photo</text>
+<text x="1332" y="164" font-size="12" fill="#605d5d" text-anchor="start">(litres, rate, amount, date)</text>
+<text x="1332" y="181" font-size="12" fill="#605d5d" text-anchor="start">Called only from the Worker</text>
+<text x="1332" y="198" font-size="12" fill="#605d5d" text-anchor="start">Key is a Worker secret</text>
+<rect x="1320" y="290" width="210" height="190" rx="6" fill="#f3ecf8" stroke="#8a5cb0" stroke-width="1.6"/>
+<text x="1332" y="312" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">GitHub</text>
+<text x="1332" y="337" font-size="12" fill="#605d5d" text-anchor="start">smkrmuthu/FleetAppDemo</text>
+<text x="1332" y="354" font-size="12" fill="#605d5d" text-anchor="start">Actions: type-check, tests,</text>
+<text x="1332" y="371" font-size="12" fill="#605d5d" text-anchor="start">build · Pages hosting</text>
+<text x="1332" y="388" font-size="12" fill="#605d5d" text-anchor="start">Dependabot weekly updates</text>
+<rect x="1320" y="520" width="210" height="130" rx="6" fill="#f3ecf8" stroke="#8a5cb0" stroke-width="1.6"/>
+<text x="1332" y="542" font-size="13" font-weight="700" fill="#201e1d" text-anchor="start">Cloudflare Git build</text>
+<text x="1332" y="567" font-size="12" fill="#605d5d" text-anchor="start">Rebuilds the web app on</text>
+<text x="1332" y="584" font-size="12" fill="#605d5d" text-anchor="start">fleet.oneuptech.co when</text>
+<text x="1332" y="601" font-size="12" fill="#605d5d" text-anchor="start">main changes</text>
+<line x1="280" y1="190" x2="340" y2="190" stroke="#8a8785" stroke-width="1.8" marker-end="url(#a)"/>
+<text x="310" y="180" font-size="11" fill="#605d5d" text-anchor="middle">use</text>
+<line x1="280" y1="305" x2="340" y2="305" stroke="#8a8785" stroke-width="1.8" marker-end="url(#a)"/>
+<line x1="280" y1="420" x2="340" y2="420" stroke="#8a8785" stroke-width="1.8" marker-end="url(#a)"/>
+<line x1="280" y1="535" x2="340" y2="535" stroke="#8a8785" stroke-width="1.8" marker-end="url(#a)"/>
+<line x1="670" y1="280" x2="740" y2="280" stroke="#8a8785" stroke-width="1.8" marker-end="url(#a)" marker-start="url(#a)"/>
+<text x="705" y="262" font-size="11" fill="#605d5d" text-anchor="middle">HTTPS + Bearer token</text>
+<line x1="874" y1="574" x2="874" y2="604" stroke="#8a8785" stroke-width="1.8" marker-end="url(#a)" marker-start="url(#a)"/>
+<text x="900" y="592" font-size="11" fill="#605d5d" text-anchor="middle">queries</text>
+<line x1="1126" y1="574" x2="1126" y2="604" stroke="#8a8785" stroke-width="1.8" marker-end="url(#a)" marker-start="url(#a)"/>
+<text x="1150" y="592" font-size="11" fill="#605d5d" text-anchor="middle">files</text>
+<line x1="1244" y1="330" x2="1320" y2="175" stroke="#8a8785" stroke-width="1.8" marker-end="url(#a)"/>
+<text x="1290" y="235" font-size="11" fill="#605d5d" text-anchor="middle">bill photo</text>
+<line x1="1425" y1="480" x2="1425" y2="520" stroke="#8a8785" stroke-width="1.8" stroke-dasharray="6,4" marker-end="url(#a)"/>
+<text x="1425" y="504" font-size="11" fill="#605d5d" text-anchor="middle">main changes</text>
+<line x1="1320" y1="585" x2="1260" y2="585" stroke="#8a8785" stroke-width="1.8" stroke-dasharray="6,4" marker-end="url(#a)"/>
+<text x="1290" y="578" font-size="11" fill="#605d5d" text-anchor="middle">serves site</text>
+</svg>

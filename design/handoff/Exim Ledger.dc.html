@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/modernist-305b4164-8b21-4533-bf3e-207358ab4a84/styles.css">
+<script src="_ds/modernist-305b4164-8b21-4533-bf3e-207358ab4a84/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+body { margin: 0; background: #f3f2f2; }
+:root { --color-profit: oklch(0.46 0.10 152); }
+a { color: var(--color-accent-700); text-decoration: none; }
+a:hover { color: var(--color-accent); text-decoration: underline; }
+input, select, textarea { font-family: var(--font-body); }
+</style>
+</helmet>
+<div style="min-height:100vh; background:var(--color-bg); color:var(--color-text); font-family:var(--font-body); font-size:14px;">
+
+  <sc-if value="{{ loggedOut }}" hint-placeholder-val="{{ false }}">
+    <div style="min-height:100vh; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr);">
+      <div style="background:var(--color-accent); color:#fff; padding:56px 48px; display:flex; flex-direction:column; justify-content:space-between; min-height:100vh;">
+        <div style="font-family:var(--font-heading); font-weight:800; font-size:18px; letter-spacing:0.02em; text-transform:uppercase;">Exim Ledger</div>
+        <div>
+          <div style="font-family:var(--font-heading); font-weight:800; font-size:clamp(34px, 4.4vw, 62px); line-height:0.98; letter-spacing:-0.03em;">Every container,<br>every rupee,<br>one ledger.</div>
+          <div style="height:2px; background:#fff; opacity:0.6; margin:28px 0 20px; max-width:340px;"></div>
+          <div style="font-size:15px; line-height:1.6; max-width:44ch;">Drivers log the movement at the port gate. Documentation posts the CFS, CHA and duty lines. The manager closes the month — from the same numbers.</div>
+        </div>
+        <div style="font-size:12px; letter-spacing:0.1em; text-transform:uppercase; opacity:0.85;">Meridian Exim · Chennai &amp; Cochin</div>
+      </div>
+
+      <div style="padding:56px 48px; display:flex; flex-direction:column; justify-content:center; max-width:560px;">
+        <h1 style="font-family:var(--font-heading); font-weight:800; font-size:32px; letter-spacing:-0.02em; margin:0 0 6px;">Sign in</h1>
+        <p style="color:var(--color-neutral-700); margin:0 0 28px;">Use the mobile number registered with your branch.</p>
+
+        <div style="display:grid; gap:16px;">
+          <div class="field"><label>Mobile number</label><input class="input" type="tel" placeholder="+91 98xxx xxxxx" value="{{ auth.phone }}" onChange="{{ setPhone }}"></div>
+          <div class="field"><label>Password</label><input class="input" type="password" placeholder="••••••••" value="{{ auth.pass }}" onChange="{{ setPass }}"></div>
+          <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+            <input type="checkbox" checked="checked">
+            <span>Keep me signed in on this device</span>
+          </label>
+          <button type="button" class="btn btn-primary btn-block" onClick="{{ signIn }}">Sign in</button>
+          <div style="display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+            <a href="#reset">Forgot password</a>
+            <a href="#otp">Sign in with OTP instead</a>
+          </div>
+        </div>
+
+        <div style="margin-top:36px; border-top:2px solid var(--color-divider); padding-top:18px;">
+          <div style="font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--color-neutral-700); margin-bottom:12px;">Prototype — sign in as</div>
+          <div style="display:grid; gap:2px; background:var(--color-divider); border:2px solid var(--color-divider);">
+            <sc-for list="{{ demoAccounts }}" as="a" hint-placeholder-count="3">
+              <button type="button" onClick="{{ a.select }}" style="appearance:none; border:0; background:var(--color-bg); text-align:left; padding:13px 16px; cursor:pointer; display:flex; justify-content:space-between; gap:14px; align-items:baseline; font-family:var(--font-body); font-size:14px;" style-hover="background:var(--color-accent-100);">
+                <span style="font-weight:600;">{{ a.name }}</span>
+                <span style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--color-accent-700);">{{ a.role }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ loggedIn }}" hint-placeholder-val="{{ true }}">
+  <header style="display:flex; align-items:center; justify-content:space-between; gap:24px; padding:14px 24px; border-bottom:2px solid var(--color-divider); flex-wrap:wrap;">
+    <div style="display:flex; align-items:baseline; gap:14px;">
+      <div style="font-family:var(--font-heading); font-weight:800; font-size:20px; letter-spacing:-0.02em; text-transform:uppercase;">Exim Ledger</div>
+      <div style="font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--color-neutral-700);">Container movement &amp; expense log</div>
+    </div>
+    <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--color-neutral-700);">Signed in as</span>
+        <div style="display:flex; border:2px solid var(--color-text);">
+          <sc-for list="{{ roles }}" as="r" hint-placeholder-count="3">
+            <button type="button" onClick="{{ r.select }}" style="appearance:none; border:0; border-left:2px solid var(--color-text); background:transparent; font-family:var(--font-body); font-weight:600; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; padding:7px 14px; cursor:pointer; position:relative;" style-hover="background:var(--color-accent-200);">
+              <sc-if value="{{ r.active }}" hint-placeholder-val="{{ false }}">
+                <span style="position:absolute; inset:0; background:var(--color-accent);"></span>
+              </sc-if>
+              <span style="position:relative;">{{ r.label }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div style="text-align:right; line-height:1.25;">
+          <div style="font-weight:600;">{{ userName }}</div>
+          <div style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--color-neutral-700);">{{ orgName }}</div>
+        </div>
+        <button type="button" class="btn btn-ghost" onClick="{{ signOut }}">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <nav style="display:flex; gap:0; border-bottom:2px solid var(--color-divider); padding:0 12px; overflow-x:auto;">
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+      <button type="button" onClick="{{ t.select }}" style="appearance:none; background:transparent; border:0; padding:14px 14px 12px; font-family:var(--font-body); font-size:13px; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; color:var(--color-neutral-700); cursor:pointer; white-space:nowrap; position:relative;" style-hover="color:var(--color-text);">
+        {{ t.label }}
+        <sc-if value="{{ t.active }}" hint-placeholder-val="{{ false }}">
+          <span style="position:absolute; left:14px; right:14px; bottom:-2px; height:4px; background:var(--color-accent);"></span>
+        </sc-if>
+      </button>
+    </sc-for>
+  </nav>
+
+  <main style="padding:24px; max-width:1680px;">
+
+    <!-- ══ FLEET SUMMARY ══ -->
+    <sc-if value="{{ isSummary }}" hint-placeholder-val="{{ true }}">
+      <section>
+        <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:18px;">
+          <div>
+            <div style="font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--color-accent-700); margin-bottom:6px;">September 2026 · month to date</div>
+            <h1 style="font-family:var(--font-heading); font-weight:800; font-size:34px; letter-spacing:-0.02em; margin:0;">Movement Summary</h1>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <button type="button" class="btn btn-secondary">Export Excel</button>
+            <button type="button" class="btn btn-primary">Print / Save PDF</button>
+          </div>
+        </div>
+
+        <div style="border:2px solid var(--color-divider); padding:16px; margin-bottom:20px;">
+          <div style="font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--color-neutral-700); margin-bottom:12px;">Filters</div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:14px; align-items:end;">
+            <div class="field"><label>Loading date from</label><input class="input" type="date" value="2026-09-01" readonly="readonly"></div>
+            <div class="field"><label>Loading date to</label><input class="input" type="date" value="2026-09-30" readonly="readonly"></div>
+            <div class="field">
+              <label>Vehicle</label>
+              <select class="input" value="{{ vehicleFilter }}" onChange="{{ onVehicleFilter }}">
+                <option value="all">All vehicles</option>
+                <sc-for list="{{ vehicles }}" as="v" hint-placeholder-count="4">
+                  <option value="{{ v.id }}">{{ v.id }}</option>
+                </sc-for>
+              </select>
+            </div>
+            <div class="field"><label>Driver</label><input class="input" type="text" placeholder="Driver name" value="{{ driverFilter }}" onChange="{{ onDriverFilter }}"></div>
+            <button type="button" class="btn btn-ghost" style="justify-self:start; justify-content:flex-start; text-align:left;" onClick="{{ resetFilters }}">Reset filters</button>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:2px; background:var(--color-divider); border:2px solid var(--color-divider); margin-bottom:28px;">
+          <sc-for list="{{ stats }}" as="s" hint-placeholder-count="9">
+            <div style="background:var(--color-bg); padding:16px 18px 18px;">
+              <div style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--color-neutral-700); margin-bottom:10px;">{{ s.label }}</div>
+              <div style="font-family:var(--font-heading); font-weight:800; font-size:28px; letter-spacing:-0.02em; line-height:1;">{{ s.value }}</div>
+              <div style="font-size:12px; color:var(--color-neutral-700); margin-top:8px;">{{ s.note }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:12px;">
+          <h2 style="font-family:var(--font-heading); font-weight:800; font-size:20px; margin:0;">Vehicle-wise</h2>
+          <span style="font-size:12px; color:var(--color-neutral-700);">{{ filterNote }}</span>
+        </div>
+        <div style="overflow-x:auto; border:2px solid var(--color-divider);">
+          <table class="table" style="width:100%; min-width:940px;">
+            <thead><tr>
+              <th style="text-align:left;">Vehicle</th><th style="text-align:left;">Model</th><th style="text-align:right;">Trips</th><th style="text-align:right;">KM</th><th style="text-align:right;">Tons</th><th style="text-align:right;">Trip expense</th><th style="text-align:right;">Monthly expense</th><th style="text-align:right;">Revenue</th><th style="text-align:right;">Profit</th><th style="text-align:right;">₹/km</th>
+            </tr></thead>
+            <tbody>
+              <sc-for list="{{ vehicleRows }}" as="v" hint-placeholder-count="4">
+                <tr>
+                  <td style="font-weight:600; white-space:nowrap;">{{ v.id }}</td>
+                  <td style="color:var(--color-neutral-700);">{{ v.model }}</td>
+                  <td style="text-align:right;">{{ v.trips }}</td>
+                  <td style="text-align:right;">{{ v.km }}</td>
+                  <td style="text-align:right;">{{ v.tons }}</td>
+                  <td style="text-align:right;">{{ v.tripExpense }}</td>
+                  <td style="text-align:right;">{{ v.monthlyExpense }}</td>
+                  <td style="text-align:right;">{{ v.revenue }}</td>
+                  <td style="text-align:right;">
+                    <sc-if value="{{ v.pos }}" hint-placeholder-val="{{ true }}">
+                      <span style="color:var(--color-profit); font-weight:700;">{{ v.profit }}</span>
+                    </sc-if>
+                    <sc-if value="{{ v.neg }}" hint-placeholder-val="{{ false }}">
+                      <span style="color:var(--color-accent-700); font-weight:700;">{{ v.profit }}</span>
+                    </sc-if>
+                  </td>
+                  <td style="text-align:right;">{{ v.perKm }}</td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </sc-if>
+
+    <!-- ══ ADD TRIP ══ -->
+    <sc-if value="{{ isAddTrip }}" hint-placeholder-val="{{ false }}">
+      <section>
+        <div style="margin-bottom:18px;">
+          <div style="font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--color-accent-700); margin-bottom:6px;">Driver or documentation resource</div>
+          <h1 style="font-family:var(--font-heading); font-weight:800; font-size:34px; letter-spacing:-0.02em; margin:0;">Add Movement</h1>
+        </div>
+        <div style="display:grid; grid-template-columns:minmax(0,2.2fr) minmax(0,1fr); gap:2px; background:var(--color-divider); border:2px solid var(--color-divider);">
+
+          <div style="background:var(--color-bg); padding:20px;">
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:14px;">
+              <div class="field"><label>Loading date</label><input class="input" type="date" value="{{ form.loadDate }}" onChange="{{ setLoadDate }}"></div>
+              <div class="field"><label>Unloading date</label><input class="input" type="date" value="{{ form.unloadDate }}" onChange="{{ setUnloadDate }}"></div>
+              <div class="field">
+                <label>Vehicle *</label>
+                <select class="input" value="{{ form.vehicle }}" onChange="{{ setVehicle }}">
+                  <option value="">Select vehicle</option>
+                  <sc-for list="{{ vehicles }}" as="v" hint-placeholder-count="4">
+                    <option value="{{ v.id }}">{{ v.id }}</option>
+                  </sc-for>
+                </select>
+              </div>
+              <div class="field"><label>Driver *</label><input class="input" type="text" placeholder="Driver name" value="{{ form.driver }}" onChange="{{ setDriver }}"></div>
+              <div class="field">
+                <label>Direction *</label>
+                <select class="input" value="{{ form.dir }}" onChange="{{ setDir }}">
+                  <option value="Import">Import</option>
+                  <option value="Export">Export</option>
+                </select>
+              </div>
+              <div class="field"><label>Shipment / BL no *</label><input class="input" type="text" placeholder="MAEU-0000000" value="{{ form.bl }}" onChange="{{ setBl }}"></div>
+              <div class="field"><label>Container no</label><input class="input" type="text" placeholder="MSKU 000000-0" value="{{ form.cont }}" onChange="{{ setCont }}"></div>
+              <div class="field"><label>Loading location</label><input class="input" type="text" placeholder="Port / factory" value="{{ form.from }}" onChange="{{ setFrom }}"></div>
+              <div class="field"><label>Unloading location</label><input class="input" type="text" placeholder="CFS / warehouse / port" value="{{ form.to }}" onChange="{{ setTo }}"></div>
+              <div class="field"><label>Loading weight (tons)</label><input class="input" type="number" value="{{ form.tons }}" onChange="{{ setTons }}"></div>
+              <div class="field"><label>Odometer start (km)</label><input class="input" type="number" value="{{ form.odoStart }}" onChange="{{ setOdoStart }}"></div>
+              <div class="field"><label>Odometer end (km)</label><input class="input" type="number" value="{{ form.odoEnd }}" onChange="{{ setOdoEnd }}"></div>
+              <div class="field"><label>Diesel litres</label><input class="input" type="number" value="{{ form.litres }}" onChange="{{ setLitres }}"></div>
+              <div class="field"><label>Diesel price / litre (₹)</label><input class="input" type="number" value="{{ form.price }}" onChange="{{ setPrice }}"></div>
+              <div class="field"><label>Toll (₹)</label><input class="input" type="number" value="{{ form.toll }}" onChange="{{ setToll }}"></div>
+              <div class="field"><label>Other expense (₹)</label><input class="input" type="number" value="{{ form.other }}" onChange="{{ setOther }}"></div>
+              <div class="field"><label>Revenue (₹)</label><input class="input" type="number" value="{{ form.revenue }}" onChange="{{ setRevenue }}"></div>
+              <div class="field" style="grid-column:span 2;"><label>Remarks</label><input class="input" type="text" placeholder="Remarks" value="{{ form.remarks }}" onChange="{{ setRemarks }}"></div>
+            </div>
+
+            <div style="display:flex; gap:2px; background:var(--color-divider); margin:20px -20px -20px; border-top:2px solid var(--color-divider);"></div>
+            <div style="display:flex; flex-wrap:wrap; gap:10px; padding-top:20px;">
+              <button type="button" class="btn btn-primary" onClick="{{ addTrip }}">Add movement</button>
+              <button type="button" class="btn btn-secondary" onClick="{{ clearForm }}">Clear</button>
+              <button type="button" class="btn btn-ghost">Save draft</button>
+            </div>
+            <div style="margin-top:16px; display:flex; gap:28px; flex-wrap:wrap; border-top:2px solid var(--color-divider); padding-top:16px;">
+              <div>
+                <div style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--color-neutral-700);">Distance</div>
+                <div style="font-family:var(--font-heading); font-weight:800; font-size:22px;">{{ live.km }}</div>
+              </div>
+              <div>
+                <div style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--color-neutral-700);">Trip expense</div>
+                <div style="font-family:var(--font-heading); font-weight:800; font-size:22px;">{{ live.expense }}</div>
+              </div>
+              <div>
+                <div style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--color-neutral-700);">Profit</div>
+                <sc-if value="{{ live.profitPos }}" hint-placeholder-val="{{ true }}">
+                  <div style="font-family:var(--font-heading); font-weight:800; font-size:22px; color:var(--color-profit);">{{ live.profit }}</div>
+                </sc-if>
+                <sc-if value="{{ live.profitNeg }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-family:var(--font-heading); font-weight:800; font-size:22px; color:var(--color-accent-700);">{{ live.profit }}</div>
+                </sc-if>
+              </div>
+              <div>
+                <div style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--color-neutral-700);">Mileage</div>
+                <div style="font-family:var(--font-heading); font-weight:800; font-size:22px;">{{ live.kmpl }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:var(--color-bg); padding:20px;">
+            <div style="font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--color-neutral-700); margin-bottom:12px;">Or scan a receipt</div>
+            <div style="border:2px dashed var(--color-divider); padding:26px 18px; text-align:left;">
+              <div style="font-family:var(--font-heading); font-weight:800; font-size:17px; margin-bottom:6px;">Drop a fuel bill or toll slip</div>
+              <div style="color:var(--color-neutral-700); margin-bottom:16px;">JPG, PNG or PDF. Fields are read and filled in below — you confirm before saving.</div>
+              <button type="button" class="btn btn-secondary" onClick="{{ scanReceipt }}">Scan receipt</button>
+            </div>
+            <sc-if value="{{ scanned }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top:18px; border:2px solid var(--color-text);">
+                <div style="background:var(--color-text); color:var(--color-bg); padding:8px 12px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase;">Parsed — confirm</div>
+                <sc-for list="{{ scanFields }}" as="f" hint-placeholder-count="4">
+                  <div style="display:flex; justify-content:space-between; gap:12px; padding:10px 12px; border-bottom:1px solid var(--color-neutral-300);">
+                    <span style="color:var(--color-neutral-700);">{{ f.label }}</span>
+                    <span style="font-weight:600;">{{ f.value }}</span>
+                  </div>
+                </sc-for>
+                <div style="padding:12px;">
+                  <button type="button" class="btn btn-primary btn-block" onClick="{{ applyScan }}">Fill the form</button>
+                </div>
+              </div>
+            </sc-if>
+            <div style="margin-top:22px; border-top:2px solid var(--color-divider); padding-top:14px; font-size:12px; color:var(--color-neutral-700); line-height:1.6;">
+              Movements entered by a driver land as <strong>pending</strong>. Documentation and manager entries post straight to the log. Every edit is written to the audit trail.
+            </div>
+          </div>
+        </div>
+      </section>
+    </sc-if>
+
+    <!-- ══ TRIP LOG ══ -->
+    <sc-if value="{{ isTripLog }}" hint-placeholder-val="{{ false }}">
+      <section>
+        <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:18px;">
+          <div>
+            <div style="font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--color-accent-700); margin-bottom:6px;">{{ tripCountNote }}</div>
+            <h1 style="font-family:var(--font-heading); font-weight:800; font-size:34px; letter-spacing:-0.02em; margin:0;">Trip Log</h1>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <button type="button" class="btn btn-secondary">Export Excel</button>
+            <button type="button" class="btn btn-secondary">Backup data</button>
+            <button type="button" class="btn btn-primary" onClick="{{ goAddTrip }}">Add movement</button>
+          </div>
+        </div>
+
+        <div style="border:2px solid var(--color-divider); padding:16px; margin-bottom:20px;">
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:14px; align-items:end;">
+            <div class="field"><label>Loading date from</label><input class="input" type="date" value="2026-09-01" readonly="readonly"></div>
+            <div class="field"><label>Loading date to</label><input class="input" type="date" value="2026-09-30" readonly="readonly"></div>
+            <div class="field">
+              <label>Vehicle</label>
+              <select class="input" value="{{ vehicleFilter }}" onChange="{{ onVehicleFilter }}">
+                <option value="all">All vehicles</option>
+                <sc-for list="{{ vehicles }}" as="v" hint-placeholder-count="4">
+                  <option value="{{ v.id }}">{{ v.id }}</option>
+                </sc-for>
+              </select>
+            </div>
+            <div class="field"><label>Driver</label><input class="input" type="text" placeholder="Driver name" value="{{ driverFilter }}" onChange="{{ onDriverFilter }}"></div>
+            <button type="button" class="btn btn-ghost" style="justify-self:start; justify-content:flex-start; text-align:left;" onClick="{{ resetFilters }}">Reset filters</button>
+          </div>
+        </div>
+
+        <div style="overflow-x:auto; border:2px solid var(--color-divider);">
+          <table class="table" style="width:100%; min-width:1560px;">
+            <thead><tr>
+              <th style="text-align:left;">Gated</th><th style="text-align:left;">Dir</th><th style="text-align:left;">Shipment / BL</th><th style="text-align:left;">Container</th><th style="text-align:left;">Vehicle</th><th style="text-align:left;">Driver</th><th style="text-align:left;">Route</th><th style="text-align:right;">Tons</th><th style="text-align:right;">KM</th><th style="text-align:right;">Diesel</th><th style="text-align:right;">Toll</th><th style="text-align:right;">Other</th><th style="text-align:right;">Expense</th><th style="text-align:right;">Revenue</th><th style="text-align:right;">Profit</th><th style="text-align:left;">Status</th>
+            </tr></thead>
+            <tbody>
+              <sc-for list="{{ tripRows }}" as="t" hint-placeholder-count="8">
+                <tr>
+                  <td style="white-space:nowrap;">{{ t.loaded }}</td>
+                  <td>
+                    <sc-if value="{{ t.isImport }}" hint-placeholder-val="{{ true }}">
+                      <span class="tag tag-neutral">IMP</span>
+                    </sc-if>
+                    <sc-if value="{{ t.isExport }}" hint-placeholder-val="{{ false }}">
+                      <span class="tag tag-outline">EXP</span>
+                    </sc-if>
+                  </td>
+                  <td style="font-family:ui-monospace, monospace; font-size:12px; white-space:nowrap;">{{ t.bl }}</td>
+                  <td style="font-family:ui-monospace, monospace; font-size:12px; white-space:nowrap; color:var(--color-neutral-700);">{{ t.cont }}</td>
+                  <td style="font-weight:600; white-space:nowrap;">{{ t.vehicle }}</td>
+                  <td>{{ t.driver }}</td>
+                  <td style="color:var(--color-neutral-700); white-space:nowrap;">{{ t.route }}</td>
+                  <td style="text-align:right;">{{ t.tons }}</td>
+                  <td style="text-align:right;">{{ t.km }}</td>
+                  <td style="text-align:right;">{{ t.diesel }}</td>
+                  <td style="text-align:right;">{{ t.toll }}</td>
+                  <td style="text-align:right;">{{ t.other }}</td>
+                  <td style="text-align:right;">{{ t.expense }}</td>
+                  <td style="text-align:right;">{{ t.revenue }}</td>
+                  <td style="text-align:right;">
+                    <sc-if value="{{ t.pos }}" hint-placeholder-val="{{ true }}">
+                      <span style="color:var(--color-profit); font-weight:700;">{{ t.profit }}</span>
+                    </sc-if>
+                    <sc-if value="{{ t.neg }}" hint-placeholder-val="{{ false }}">
+                      <span style="color:var(--color-accent-700); font-weight:700;">{{ t.profit }}</span>
+                    </sc-if>
+                  </td>
+                  <td>
+                    <sc-if value="{{ t.pending }}" hint-placeholder-val="{{ false }}">
+                      <span class="tag tag-accent">Pending</span>
+                    </sc-if>
+                    <sc-if value="{{ t.approved }}" hint-placeholder-val="{{ true }}">
+                      <span class="tag tag-outline">Approved</span>
+                    </sc-if>
+                  </td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </sc-if>
+
+    <!-- ══ MONTHLY EXPENSES ══ -->
+    <sc-if value="{{ isExpenses }}" hint-placeholder-val="{{ false }}">
+      <section>
+        <div style="margin-bottom:18px;">
+          <div style="font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--color-accent-700); margin-bottom:6px;">Admin and documentation resource</div>
+          <h1 style="font-family:var(--font-heading); font-weight:800; font-size:34px; letter-spacing:-0.02em; margin:0;">Monthly Expenses</h1>
+        </div>
+
+        <div style="border:2px solid var(--color-divider); padding:20px; margin-bottom:24px;">
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); gap:14px; align-items:end;">
+            <div class="field"><label>Date</label><input class="input" type="date" value="{{ exp.date }}" onChange="{{ setExpDate }}"></div>
+            <div class="field">
+              <label>Vehicle</label>
+              <select class="input" value="{{ exp.vehicle }}" onChange="{{ setExpVehicle }}">
+                <sc-for list="{{ vehicles }}" as="v" hint-placeholder-count="4">
+                  <option value="{{ v.id }}">{{ v.id }}</option>
+                </sc-for>
+              </select>
+            </div>
+            <div class="field"><label>Driver</label><input class="input" type="text" placeholder="Driver name" value="{{ exp.driver }}" onChange="{{ setExpDriver }}"></div>
+            <div class="field">
+              <label>Description</label>
+              <select class="input" value="{{ exp.desc }}" onChange="{{ setExpDesc }}">
+                <sc-for list="{{ expenseKinds }}" as="k" hint-placeholder-count="6">
+                  <option value="{{ k }}">{{ k }}</option>
+                </sc-for>
+              </select>
+            </div>
+            <div class="field"><label>Amount (₹)</label><input class="input" type="number" value="{{ exp.amount }}" onChange="{{ setExpAmount }}"></div>
+            <div class="field"><label>Remarks</label><input class="input" type="text" placeholder="Remarks" value="{{ exp.remarks }}" onChange="{{ setExpRemarks }}"></div>
+            <button type="button" class="btn btn-primary" style="justify-self:start; justify-content:flex-start; text-align:left;" onClick="{{ addExpense }}">Add expense</button>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:2px; background:var(--color-divider); border:2px solid var(--color-divider); margin-bottom:24px;">
+          <sc-for list="{{ expenseByKind }}" as="k" hint-placeholder-count="6">
+            <div style="background:var(--color-bg); padding:14px 16px; display:flex; gap:12px; align-items:stretch;">
+              <div style="width:6px; flex:none; background:{{ k.tint }};"></div>
+              <div>
+                <div style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--color-neutral-700); margin-bottom:8px;">{{ k.label }}</div>
+                <div style="font-family:var(--font-heading); font-weight:800; font-size:22px;">{{ k.value }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <h2 style="font-family:var(--font-heading); font-weight:800; font-size:20px; margin:0 0 12px;">Monthly Expenses Log</h2>
+        <div style="overflow-x:auto; border:2px solid var(--color-divider);">
+          <table class="table" style="width:100%; min-width:860px;">
+            <thead><tr>
+              <th style="text-align:left;">Date</th><th style="text-align:left;">Vehicle</th><th style="text-align:left;">Driver</th><th style="text-align:left;">Description</th><th style="text-align:left;">Remarks</th><th style="text-align:right;">Amount</th>
+            </tr></thead>
+            <tbody>
+              <sc-for list="{{ expenseRows }}" as="e" hint-placeholder-count="6">
+                <tr>
+                  <td style="white-space:nowrap;">{{ e.date }}</td>
+                  <td style="font-weight:600; white-space:nowrap;">{{ e.vehicle }}</td>
+                  <td>{{ e.driver }}</td>
+                  <td>
+                    <span style="display:inline-flex; align-items:center; gap:9px;">
+                      <span style="width:4px; height:15px; background:{{ e.tint }};"></span>
+                      {{ e.desc }}
+                    </span>
+                  </td>
+                  <td style="color:var(--color-neutral-700);">{{ e.remarks }}</td>
+                  <td style="text-align:right; font-weight:700;">{{ e.amount }}</td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </sc-if>
+
+    <!-- ══ MONTHLY REPORT ══ -->
+    <sc-if value="{{ isReport }}" hint-placeholder-val="{{ false }}">
+      <section>
+        <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:18px;">
+          <div>
+            <div style="font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--color-accent-700); margin-bottom:6px;">Manager only · September 2026</div>
+            <h1 style="font-family:var(--font-heading); font-weight:800; font-size:34px; letter-spacing:-0.02em; margin:0;">Monthly Report</h1>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <button type="button" class="btn btn-secondary">Export Excel</button>
+            <button type="button" class="btn btn-primary">Print / Save PDF</button>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:2px; background:var(--color-divider); border:2px solid var(--color-divider); margin-bottom:26px;">
+          <sc-for list="{{ reportHeadline }}" as="h" hint-placeholder-count="4">
+            <div style="background:var(--color-bg); padding:20px;">
+              <div style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--color-neutral-700); margin-bottom:10px;">{{ h.label }}</div>
+              <div style="font-family:var(--font-heading); font-weight:800; font-size:34px; letter-spacing:-0.02em; line-height:1;">{{ h.value }}</div>
+              <div style="font-size:12px; color:var(--color-neutral-700); margin-top:8px;">{{ h.note }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <h2 style="font-family:var(--font-heading); font-weight:800; font-size:20px; margin:0 0 12px;">Cost per kilometre, by vehicle</h2>
+        <div style="border:2px solid var(--color-divider); padding:20px; margin-bottom:28px;">
+          <sc-for list="{{ chartRows }}" as="c" hint-placeholder-count="4">
+            <div style="display:grid; grid-template-columns:150px minmax(0,1fr) 90px; align-items:center; gap:14px; padding:9px 0; border-bottom:1px solid var(--color-neutral-300);">
+              <div style="font-weight:600;">{{ c.id }}</div>
+              <div style="height:18px; background:var(--color-neutral-200);">
+                <div style="height:18px; background:var(--color-accent); width:{{ c.width }};"></div>
+              </div>
+              <div style="text-align:right; font-weight:700;">{{ c.value }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <h2 style="font-family:var(--font-heading); font-weight:800; font-size:20px; margin:0 0 12px;">Vehicle-wise ledger</h2>
+        <div style="overflow-x:auto; border:2px solid var(--color-divider);">
+          <table class="table" style="width:100%; min-width:1100px;">
+            <thead><tr>
+              <th style="text-align:left;">Vehicle</th><th style="text-align:right;">Trips</th><th style="text-align:right;">KM</th><th style="text-align:right;">Tons</th><th style="text-align:right;">Diesel</th><th style="text-align:right;">Toll</th><th style="text-align:right;">Other</th><th style="text-align:right;">Monthly</th><th style="text-align:right;">Total cost</th><th style="text-align:right;">Revenue</th><th style="text-align:right;">Profit</th><th style="text-align:right;">Margin</th>
+            </tr></thead>
+            <tbody>
+              <sc-for list="{{ reportRows }}" as="r" hint-placeholder-count="4">
+                <tr>
+                  <td style="font-weight:600; white-space:nowrap;">{{ r.id }}</td>
+                  <td style="text-align:right;">{{ r.trips }}</td>
+                  <td style="text-align:right;">{{ r.km }}</td>
+                  <td style="text-align:right;">{{ r.tons }}</td>
+                  <td style="text-align:right;">{{ r.diesel }}</td>
+                  <td style="text-align:right;">{{ r.toll }}</td>
+                  <td style="text-align:right;">{{ r.other }}</td>
+                  <td style="text-align:right;">{{ r.monthly }}</td>
+                  <td style="text-align:right;">{{ r.cost }}</td>
+                  <td style="text-align:right;">{{ r.revenue }}</td>
+                  <td style="text-align:right;">
+                    <sc-if value="{{ r.pos }}" hint-placeholder-val="{{ true }}">
+                      <span style="color:var(--color-profit); font-weight:700;">{{ r.profit }}</span>
+                    </sc-if>
+                    <sc-if value="{{ r.neg }}" hint-placeholder-val="{{ false }}">
+                      <span style="color:var(--color-accent-700); font-weight:700;">{{ r.profit }}</span>
+                    </sc-if>
+                  </td>
+                  <td style="text-align:right;">{{ r.margin }}</td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </sc-if>
+
+    <!-- ══ PEOPLE ══ -->
+    <sc-if value="{{ isPeople }}" hint-placeholder-val="{{ false }}">
+      <section>
+        <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:18px;">
+          <div>
+            <div style="font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--color-accent-700); margin-bottom:6px;">Meridian Exim · 7 accounts, 3 branches</div>
+            <h1 style="font-family:var(--font-heading); font-weight:800; font-size:34px; letter-spacing:-0.02em; margin:0;">People</h1>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <button type="button" class="btn btn-secondary">Add driver</button>
+            <button type="button" class="btn btn-primary">Invite user</button>
+          </div>
+        </div>
+
+        <h2 style="font-family:var(--font-heading); font-weight:800; font-size:20px; margin:0 0 12px;">User accounts</h2>
+        <div style="overflow-x:auto; border:2px solid var(--color-divider); margin-bottom:30px;">
+          <table class="table" style="width:100%; min-width:1000px;">
+            <thead><tr>
+              <th style="text-align:left;">Name</th><th style="text-align:left;">Role</th><th style="text-align:left;">Mobile</th><th style="text-align:left;">Branch</th><th style="text-align:left;">Can see</th><th style="text-align:left;">Last active</th>
+            </tr></thead>
+            <tbody>
+              <sc-for list="{{ userRows }}" as="u" hint-placeholder-count="7">
+                <tr>
+                  <td style="font-weight:600; white-space:nowrap;">{{ u.name }}</td>
+                  <td>
+                    <sc-if value="{{ u.mgr }}" hint-placeholder-val="{{ false }}">
+                      <span class="tag tag-accent">{{ u.role }}</span>
+                    </sc-if>
+                    <sc-if value="{{ u.notMgr }}" hint-placeholder-val="{{ true }}">
+                      <span class="tag tag-outline">{{ u.role }}</span>
+                    </sc-if>
+                  </td>
+                  <td style="font-family:ui-monospace, monospace; font-size:12px; white-space:nowrap;">{{ u.phone }}</td>
+                  <td>{{ u.branch }}</td>
+                  <td style="color:var(--color-neutral-700);">{{ u.access }}</td>
+                  <td style="white-space:nowrap;">{{ u.seen }}</td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 style="font-family:var(--font-heading); font-weight:800; font-size:20px; margin:0 0 12px;">Drivers</h2>
+        <div style="overflow-x:auto; border:2px solid var(--color-divider);">
+          <table class="table" style="width:100%; min-width:1120px;">
+            <thead><tr>
+              <th style="text-align:left;">Driver</th><th style="text-align:left;">Licence no</th><th style="text-align:left;">Expiry</th><th style="text-align:left;">Assigned vehicle</th><th style="text-align:left;">Credential</th><th style="text-align:right;">Movements</th><th style="text-align:right;">Pending</th><th style="text-align:right;">KM</th><th style="text-align:right;">₹/km</th><th style="text-align:right;">Revenue</th>
+            </tr></thead>
+            <tbody>
+              <sc-for list="{{ driverRows }}" as="d" hint-placeholder-count="4">
+                <tr>
+                  <td style="font-weight:600; white-space:nowrap;">{{ d.name }}</td>
+                  <td style="font-family:ui-monospace, monospace; font-size:12px; white-space:nowrap;">{{ d.lic }}</td>
+                  <td style="white-space:nowrap;">
+                    <sc-if value="{{ d.expiring }}" hint-placeholder-val="{{ false }}">
+                      <span class="tag tag-accent">{{ d.exp }}</span>
+                    </sc-if>
+                    <sc-if value="{{ d.valid }}" hint-placeholder-val="{{ true }}">
+                      <span>{{ d.exp }}</span>
+                    </sc-if>
+                  </td>
+                  <td style="white-space:nowrap;">{{ d.veh }}</td>
+                  <td style="color:var(--color-neutral-700);">{{ d.badge }}</td>
+                  <td style="text-align:right;">{{ d.trips }}</td>
+                  <td style="text-align:right;">{{ d.pending }}</td>
+                  <td style="text-align:right;">{{ d.km }}</td>
+                  <td style="text-align:right;">{{ d.perKm }}</td>
+                  <td style="text-align:right; font-weight:700;">{{ d.revenue }}</td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+        <p style="color:var(--color-neutral-700); max-width:74ch; line-height:1.6; margin:16px 0 0;">Licences inside 60 days of expiry are flagged; the same check runs nightly and pushes a notification to the manager. A driver account only ever reads its own movements — enforced in the database, not the client.</p>
+      </section>
+    </sc-if>
+
+    <!-- ══ DATA MODEL ══ -->
+    <sc-if value="{{ isSchema }}" hint-placeholder-val="{{ false }}">
+      <section>
+        <div style="margin-bottom:18px;">
+          <div style="font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--color-accent-700); margin-bottom:6px;">Postgres · one schema, three clients</div>
+          <h1 style="font-family:var(--font-heading); font-weight:800; font-size:34px; letter-spacing:-0.02em; margin:0;">Data Model</h1>
+          <p style="max-width:70ch; color:var(--color-neutral-800); line-height:1.6; margin:12px 0 0;">Web, iOS and Android write to the same API. A shipment (BL) is the trade root; containers and truck movements hang off it, so landed cost per consignment and cost per kilometre both come from one set of rows. Money is stored in paise as integers, every row carries <strong>org_id</strong>, and edits are append-only with an audit row.</p>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:2px; background:var(--color-divider); border:2px solid var(--color-divider);">
+          <sc-for list="{{ entities }}" as="e" hint-placeholder-count="9">
+            <div style="background:var(--color-bg); padding:0;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; gap:10px; padding:12px 16px; border-bottom:2px solid var(--color-text);">
+                <span style="font-family:var(--font-heading); font-weight:800; font-size:15px; letter-spacing:0.02em;">{{ e.name }}</span>
+                <span style="font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--color-accent-700);">{{ e.tag }}</span>
+              </div>
+              <sc-for list="{{ e.fields }}" as="f" hint-placeholder-count="6">
+                <div style="display:flex; justify-content:space-between; gap:12px; padding:7px 16px; border-bottom:1px solid var(--color-neutral-300); font-size:13px;">
+                  <span>{{ f.n }}</span>
+                  <span style="color:var(--color-neutral-700); font-variant-numeric:tabular-nums;">{{ f.t }}</span>
+                </div>
+              </sc-for>
+              <div style="padding:10px 16px 14px; font-size:12px; color:var(--color-neutral-700); line-height:1.5;">{{ e.note }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <h2 style="font-family:var(--font-heading); font-weight:800; font-size:20px; margin:28px 0 12px;">Relationships</h2>
+        <div style="border:2px solid var(--color-divider);">
+          <sc-for list="{{ relations }}" as="r" hint-placeholder-count="5">
+            <div style="padding:11px 16px; border-bottom:1px solid var(--color-neutral-300); font-family:ui-monospace, monospace; font-size:13px;">{{ r }}</div>
+          </sc-for>
+        </div>
+
+        <h2 style="font-family:var(--font-heading); font-weight:800; font-size:20px; margin:28px 0 12px;">Schema, as written</h2>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(330px, 1fr)); gap:2px; background:var(--color-divider); border:2px solid var(--color-divider);">
+          <sc-for list="{{ ddl }}" as="d" hint-placeholder-count="3">
+            <div style="background:var(--color-bg);">
+              <div style="padding:12px 16px; border-bottom:2px solid var(--color-text); font-family:var(--font-heading); font-weight:800; font-size:14px;">{{ d.name }}</div>
+              <pre style="margin:0; padding:16px; overflow-x:auto; font-family:ui-monospace, monospace; font-size:12px; line-height:1.65; color:var(--color-neutral-900); white-space:pre;">{{ d.sql }}</pre>
+            </div>
+          </sc-for>
+        </div>
+
+        <h2 style="font-family:var(--font-heading); font-weight:800; font-size:20px; margin:28px 0 12px;">How the clients fetch</h2>
+        <div style="border:2px solid var(--color-divider);">
+          <sc-for list="{{ endpoints }}" as="e" hint-placeholder-count="6">
+            <div style="display:grid; grid-template-columns:70px minmax(0,1.1fr) minmax(0,1.6fr); gap:16px; padding:12px 16px; border-bottom:1px solid var(--color-neutral-300); align-items:baseline;">
+              <span style="font-size:11px; font-weight:700; letter-spacing:0.1em; color:var(--color-accent-700);">{{ e.m }}</span>
+              <span style="font-family:ui-monospace, monospace; font-size:13px;">{{ e.p }}</span>
+              <span style="color:var(--color-neutral-700); line-height:1.5;">{{ e.d }}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <h2 style="font-family:var(--font-heading); font-weight:800; font-size:20px; margin:28px 0 12px;">Scaling</h2>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:2px; background:var(--color-divider); border:2px solid var(--color-divider);">
+          <sc-for list="{{ scaling }}" as="s" hint-placeholder-count="4">
+            <div style="background:var(--color-bg); padding:18px;">
+              <div style="font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--color-accent-700); margin-bottom:8px;">{{ s.label }}</div>
+              <div style="line-height:1.6; color:var(--color-neutral-800);">{{ s.body }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+    </sc-if>
+
+  </main>
+
+  <footer style="border-top:2px solid var(--color-divider); padding:16px 24px; display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; font-size:12px; color:var(--color-neutral-700);">
+    <span>Exim Ledger — prototype</span>
+    <span>{{ roleNote }}</span>
+  </footer>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;defaultRole&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Driver&quot;,&quot;Office&quot;,&quot;Manager&quot;],&quot;default&quot;:&quot;Office&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Prototype&quot;},&quot;startSignedIn&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Prototype&quot;}}">
+const VEHICLES = [
+  { id: "TN38 AB 4412", model: "Tata Signa 4825" },
+  { id: "TN45 CQ 9087", model: "Ashok Leyland 3520" },
+  { id: "KA01 MD 7731", model: "BharatBenz 2823" },
+  { id: "TN52 BK 2290", model: "Eicher Pro 6028" }
+];
+
+const TRIPS = [
+  { d: "02 Sep", u: "03 Sep", v: "TN38 AB 4412", dr: "Murugan S", dir: "Import", bl: "MAEU-2290184", cont: "MSKU 704118-2", f: "Chennai Port", t: "Sriperumbudur ICD", tons: 24.5, km: 342, lit: 118, pr: 95, toll: 1840, oth: 900, rev: 34500, st: "approved" },
+  { d: "03 Sep", u: "04 Sep", v: "TN45 CQ 9087", dr: "Rafiq A", dir: "Export", bl: "CMDU-7741903", cont: "CMAU 338206-4", f: "Tirupur factory", t: "Cochin Port", tons: 18.0, km: 372, lit: 131, pr: 94, toll: 2100, oth: 1250, rev: 31800, st: "approved" },
+  { d: "05 Sep", u: "05 Sep", v: "KA01 MD 7731", dr: "Prakash N", dir: "Import", bl: "HLCU-5512760", cont: "HLXU 901744-8", f: "Ennore Port", t: "Hosur warehouse", tons: 21.2, km: 208, lit: 74, pr: 96, toll: 980, oth: 450, rev: 19400, st: "approved" },
+  { d: "06 Sep", u: "08 Sep", v: "TN52 BK 2290", dr: "Ilango R", dir: "Export", bl: "ONEY-3308472", cont: "TCNU 662015-3", f: "Hosur warehouse", t: "Cochin Port", tons: 26.0, km: 692, lit: 246, pr: 95, toll: 3640, oth: 2100, rev: 68200, st: "approved" },
+  { d: "08 Sep", u: "09 Sep", v: "TN38 AB 4412", dr: "Murugan S", dir: "Import", bl: "MAEU-2291736", cont: "MRKU 448190-1", f: "Chennai Port", t: "Vijayawada CFS", tons: 25.0, km: 456, lit: 162, pr: 95, toll: 2380, oth: 1150, rev: 41900, st: "approved" },
+  { d: "09 Sep", u: "10 Sep", v: "TN45 CQ 9087", dr: "Rafiq A", dir: "Export", bl: "MSCU-6604821", cont: "MSCU 512377-6", f: "Hyderabad plant", t: "Krishnapatnam Port", tons: 19.5, km: 574, lit: 205, pr: 96, toll: 2960, oth: 1400, rev: 47600, st: "approved" },
+  { d: "10 Sep", u: "10 Sep", v: "KA01 MD 7731", dr: "Prakash N", dir: "Import", bl: "HLCU-5514028", cont: "HLBU 220964-7", f: "Ennore Port", t: "Erode CFS", tons: 22.0, km: 98, lit: 36, pr: 95, toll: 420, oth: 260, rev: 8600, st: "pending" },
+  { d: "11 Sep", u: "12 Sep", v: "TN52 BK 2290", dr: "Ilango R", dir: "Export", bl: "ONEY-3309915", cont: "TGHU 774301-9", f: "Madurai factory", t: "Tuticorin Port", tons: 23.4, km: 268, lit: 97, pr: 95, toll: 1180, oth: 640, rev: 24800, st: "pending" }
+];
+
+const MONTHLY = [
+  { date: "01 Sep", v: "TN38 AB 4412", dr: "Murugan S", desc: "CFS / port charges", amt: 28600, rm: "MAEU-2290184 · ground rent" },
+  { date: "02 Sep", v: "TN45 CQ 9087", dr: "Rafiq A", desc: "CHA fee", amt: 12400, rm: "Sept clearances" },
+  { date: "04 Sep", v: "KA01 MD 7731", dr: "Prakash N", desc: "Detention / demurrage", amt: 19800, rm: "2 days, HLCU-5512760" },
+  { date: "06 Sep", v: "TN52 BK 2290", dr: "Ilango R", desc: "Loan / lease", amt: 56200, rm: "EMI" },
+  { date: "07 Sep", v: "TN38 AB 4412", dr: "Murugan S", desc: "Insurance", amt: 18400, rm: "Marine cargo, Q3" },
+  { date: "09 Sep", v: "TN45 CQ 9087", dr: "Rafiq A", desc: "Maintenance", amt: 5200, rm: "Oil change" }
+];
+
+const KINDS = ["CFS / port charges", "Customs duty", "CHA fee", "Detention / demurrage", "Maintenance", "Insurance", "Tyres", "Permit / tax", "Loan / lease", "Fine", "Other"];
+
+const ROLE_TABS = {
+  Driver: ["addtrip", "triplog"],
+  Office: ["addtrip", "triplog", "summary", "expenses", "people"],
+  Manager: ["summary", "triplog", "expenses", "report", "people", "schema"]
+};
+const TAB_LABELS = { summary: "Movement Summary", addtrip: "Add Movement", triplog: "Trip Log", expenses: "Monthly Expenses", report: "Monthly Report", people: "People", schema: "Data Model" };
+const ROLE_USER = { Driver: "Murugan S · Driver", Office: "Kavitha R · Documentation", Manager: "A. Balan · Manager" };
+const ROLE_NOTE = {
+  Driver: "Driver view — enter trips, see your own log.",
+  Office: "Documentation view — enter movements for any driver, post shipment costs, read the summary.",
+  Manager: "Manager view — full access including the monthly report and the data model."
+};
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const role = props.defaultRole || "Manager";
+    this.state = {
+      role,
+      tab: ROLE_TABS[role][0],
+      trips: TRIPS.slice(),
+      expenses: MONTHLY.slice(),
+      vehicleFilter: "all",
+      driverFilter: "",
+      scanned: false,
+      authed: !!props.startSignedIn,
+      auth: { phone: "", pass: "" },
+      form: this.blankForm(),
+      exp: { date: "2026-09-11", vehicle: VEHICLES[0].id, driver: "", desc: KINDS[0], amount: 0, remarks: "" }
+    };
+  }
+
+  blankForm() {
+    return { loadDate: "2026-09-11", unloadDate: "", vehicle: "", driver: "", dir: "Import", bl: "", cont: "", from: "", to: "", tons: "", odoStart: "", odoEnd: "", litres: "", price: 95, toll: 0, other: 0, revenue: 0, remarks: "" };
+  }
+
+  n(v) { return Number(v) || 0; }
+  rup(v) { return "₹" + Math.round(this.n(v)).toLocaleString("en-IN"); }
+  num(v, d) { return this.n(v).toLocaleString("en-IN", { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 }); }
+
+  tint(kind) {
+    const map = {
+      "CFS / port charges": "var(--color-accent-700)",
+      "Customs duty": "var(--color-neutral-900)",
+      "CHA fee": "var(--color-neutral-600)",
+      "Detention / demurrage": "var(--color-accent)",
+      "Maintenance": "var(--color-neutral-500)",
+      "Insurance": "var(--color-neutral-800)",
+      "Tyres": "var(--color-accent-300)",
+      "Permit / tax": "var(--color-neutral-300)",
+      "Loan / lease": "var(--color-accent-400)",
+      "Fine": "var(--color-accent-600)"
+    };
+    return map[kind] || "var(--color-neutral-600)";
+  }
+
+  calc(t) {
+    const diesel = this.n(t.lit) * this.n(t.pr);
+    const expense = diesel + this.n(t.toll) + this.n(t.oth);
+    return { diesel, expense, profit: this.n(t.rev) - expense };
+  }
+
+  filtered() {
+    const f = this.state.driverFilter.trim().toLowerCase();
+    return this.state.trips.filter(t =>
+      (this.state.vehicleFilter === "all" || t.v === this.state.vehicleFilter) &&
+      (!f || t.dr.toLowerCase().includes(f)) &&
+      (this.state.role !== "Driver" || t.dr === "Murugan S"));
+  }
+
+  set(k) { return e => this.setState({ form: Object.assign({}, this.state.form, { [k]: e.target.value }) }); }
+  setExp(k) { return e => this.setState({ exp: Object.assign({}, this.state.exp, { [k]: e.target.value }) }); }
+
+  renderVals() {
+    const st = this.state;
+    const rows = this.filtered();
+    const totals = rows.reduce((a, t) => {
+      const c = this.calc(t);
+      a.km += this.n(t.km); a.tons += this.n(t.tons); a.exp += c.expense; a.rev += this.n(t.rev); a.profit += c.profit;
+      return a;
+    }, { km: 0, tons: 0, exp: 0, rev: 0, profit: 0 });
+    const monthlyTotal = st.expenses.reduce((a, e) => a + this.n(e.amt), 0);
+
+    const byVehicle = VEHICLES.map(v => {
+      const tr = rows.filter(t => t.v === v.id);
+      const agg = tr.reduce((a, t) => {
+        const c = this.calc(t);
+        a.km += this.n(t.km); a.tons += this.n(t.tons); a.diesel += c.diesel; a.toll += this.n(t.toll);
+        a.other += this.n(t.oth); a.exp += c.expense; a.rev += this.n(t.rev);
+        return a;
+      }, { km: 0, tons: 0, diesel: 0, toll: 0, other: 0, exp: 0, rev: 0 });
+      const monthly = st.expenses.filter(e => e.v === v.id).reduce((a, e) => a + this.n(e.amt), 0);
+      const cost = agg.exp + monthly;
+      return Object.assign({ v, trips: tr.length, monthly, cost, profit: agg.rev - cost }, agg);
+    });
+    const maxPerKm = Math.max.apply(null, byVehicle.map(b => (b.km ? b.cost / b.km : 0)).concat([1]));
+
+    const live = (() => {
+      const f = st.form;
+      const km = Math.max(0, this.n(f.odoEnd) - this.n(f.odoStart));
+      const expense = this.n(f.litres) * this.n(f.price) + this.n(f.toll) + this.n(f.other);
+      return {
+        km: this.num(km) + " km",
+        expense: this.rup(expense),
+        profit: this.rup(this.n(f.revenue) - expense),
+        profitPos: this.n(f.revenue) - expense >= 0,
+        profitNeg: this.n(f.revenue) - expense < 0,
+        kmpl: this.n(f.litres) ? (km / this.n(f.litres)).toFixed(2) + " km/l" : "—"
+      };
+    })();
+
+    const tabs = ROLE_TABS[st.role].map(id => ({
+      label: TAB_LABELS[id], active: st.tab === id, select: () => this.setState({ tab: id })
+    }));
+
+    return {
+      loggedIn: st.authed,
+      loggedOut: !st.authed,
+      auth: st.auth,
+      setPhone: e => this.setState({ auth: Object.assign({}, st.auth, { phone: e.target.value }) }),
+      setPass: e => this.setState({ auth: Object.assign({}, st.auth, { pass: e.target.value }) }),
+      signIn: () => this.setState({ authed: true }),
+      signOut: () => this.setState({ authed: false, auth: { phone: "", pass: "" } }),
+      demoAccounts: [
+        { name: "Murugan S · +91 98431 20114", role: "Driver", key: "Driver" },
+        { name: "Kavitha R · +91 90031 77402", role: "Documentation", key: "Office" },
+        { name: "A. Balan · +91 94440 61928", role: "Manager", key: "Manager" }
+      ].map(a => Object.assign(a, {
+        select: () => this.setState({ authed: true, role: a.key, tab: ROLE_TABS[a.key][0] })
+      })),
+      roles: ["Driver", "Office", "Manager"].map(r => ({
+        label: r, active: st.role === r,
+        select: () => this.setState({ role: r, tab: ROLE_TABS[r][0] })
+      })),
+      tabs,
+      userName: ROLE_USER[st.role],
+      orgName: "Meridian Exim · Chennai",
+      roleNote: ROLE_NOTE[st.role],
+      vehicles: VEHICLES,
+      expenseKinds: KINDS,
+      isSummary: st.tab === "summary", isAddTrip: st.tab === "addtrip", isTripLog: st.tab === "triplog",
+      isExpenses: st.tab === "expenses", isReport: st.tab === "report", isPeople: st.tab === "people", isSchema: st.tab === "schema",
+
+      vehicleFilter: st.vehicleFilter,
+      driverFilter: st.driverFilter,
+      onVehicleFilter: e => this.setState({ vehicleFilter: e.target.value }),
+      onDriverFilter: e => this.setState({ driverFilter: e.target.value }),
+      resetFilters: () => this.setState({ vehicleFilter: "all", driverFilter: "" }),
+      filterNote: st.vehicleFilter === "all" ? "All vehicles, September 2026" : st.vehicleFilter + ", September 2026",
+      tripCountNote: rows.length + " movements · September 2026",
+      goAddTrip: () => this.setState({ tab: "addtrip" }),
+
+      stats: [
+        { label: "Movements", value: this.num(rows.length), note: "gated this month" },
+        { label: "Vehicles", value: this.num(byVehicle.filter(b => b.trips).length), note: "active of " + VEHICLES.length },
+        { label: "Total km", value: this.num(totals.km), note: "odometer based" },
+        { label: "Total tons", value: this.num(totals.tons, 1), note: "loading weight" },
+        { label: "Trip expense", value: this.rup(totals.exp), note: "diesel, toll, other" },
+        { label: "Shipment costs", value: this.rup(monthlyTotal), note: "CFS, CHA, duty, fixed" },
+        { label: "Avg ₹/km", value: totals.km ? this.rup(totals.exp / totals.km) : "₹0", note: "running cost" },
+        { label: "Revenue", value: this.rup(totals.rev), note: "billed to consignee" },
+        { label: "Profit", value: this.rup(totals.profit - monthlyTotal), note: "after monthly expenses" }
+      ],
+
+      vehicleRows: byVehicle.map(b => ({
+        id: b.v.id, model: b.v.model, trips: this.num(b.trips), km: this.num(b.km), tons: this.num(b.tons, 1),
+        tripExpense: this.rup(b.exp), monthlyExpense: this.rup(b.monthly), revenue: this.rup(b.rev),
+        profit: this.rup(b.profit), pos: b.profit >= 0, neg: b.profit < 0, perKm: b.km ? this.rup(b.cost / b.km) : "—"
+      })),
+
+      tripRows: rows.map(t => {
+        const c = this.calc(t);
+        return {
+          loaded: t.d + " → " + t.u, vehicle: t.v, driver: t.dr, route: t.f + " → " + t.t,
+          bl: t.bl || "—", cont: t.cont || "—", isImport: t.dir === "Import", isExport: t.dir === "Export",
+          tons: this.num(t.tons, 1), km: this.num(t.km), diesel: this.rup(c.diesel), toll: this.rup(t.toll),
+          other: this.rup(t.oth), expense: this.rup(c.expense), revenue: this.rup(t.rev), profit: this.rup(c.profit),
+          pos: c.profit >= 0, neg: c.profit < 0,
+          pending: t.st === "pending", approved: t.st !== "pending"
+        };
+      }),
+
+      form: st.form,
+      live,
+      setLoadDate: this.set("loadDate"), setUnloadDate: this.set("unloadDate"), setVehicle: this.set("vehicle"),
+      setDriver: this.set("driver"), setDir: this.set("dir"), setBl: this.set("bl"), setCont: this.set("cont"), setFrom: this.set("from"), setTo: this.set("to"), setTons: this.set("tons"),
+      setOdoStart: this.set("odoStart"), setOdoEnd: this.set("odoEnd"), setLitres: this.set("litres"),
+      setPrice: this.set("price"), setToll: this.set("toll"), setOther: this.set("other"),
+      setRevenue: this.set("revenue"), setRemarks: this.set("remarks"),
+      clearForm: () => this.setState({ form: this.blankForm(), scanned: false }),
+      addTrip: () => {
+        const f = st.form;
+        if (!f.vehicle || !f.driver) return;
+        const trip = {
+          d: "11 Sep", u: "12 Sep", v: f.vehicle, dr: f.driver, dir: f.dir, bl: f.bl || "—", cont: f.cont || "—", f: f.from || "—", t: f.to || "—",
+          tons: this.n(f.tons), km: Math.max(0, this.n(f.odoEnd) - this.n(f.odoStart)), lit: this.n(f.litres),
+          pr: this.n(f.price), toll: this.n(f.toll), oth: this.n(f.other), rev: this.n(f.revenue),
+          st: st.role === "Driver" ? "pending" : "approved"
+        };
+        this.setState({ trips: [trip].concat(st.trips), form: this.blankForm(), scanned: false, tab: "triplog" });
+      },
+
+      scanned: st.scanned,
+      scanReceipt: () => this.setState({ scanned: true }),
+      scanFields: [
+        { label: "Vendor", value: "IOCL Krishnagiri" },
+        { label: "Date", value: "11 Sep 2026" },
+        { label: "Diesel litres", value: "162.40" },
+        { label: "Price / litre", value: "₹95.00" },
+        { label: "Amount", value: "₹15,428" },
+        { label: "Vehicle on bill", value: "TN38 AB 4412" }
+      ],
+      applyScan: () => this.setState({
+        scanned: false,
+        form: Object.assign({}, st.form, { vehicle: "TN38 AB 4412", litres: 162.4, price: 95, loadDate: "2026-09-11" })
+      }),
+
+      exp: st.exp,
+      setExpDate: this.setExp("date"), setExpVehicle: this.setExp("vehicle"), setExpDriver: this.setExp("driver"),
+      setExpDesc: this.setExp("desc"), setExpAmount: this.setExp("amount"), setExpRemarks: this.setExp("remarks"),
+      addExpense: () => {
+        const e = st.exp;
+        if (!this.n(e.amount)) return;
+        const row = { date: "11 Sep", v: e.vehicle, dr: e.driver || "—", desc: e.desc, amt: this.n(e.amount), rm: e.remarks || "—" };
+        this.setState({ expenses: [row].concat(st.expenses), exp: Object.assign({}, e, { amount: 0, remarks: "" }) });
+      },
+      expenseRows: st.expenses.map(e => ({
+        date: e.date, vehicle: e.v, driver: e.dr, desc: e.desc, remarks: e.rm, amount: this.rup(e.amt), tint: this.tint(e.desc)
+      })),
+      expenseByKind: (() => {
+        const m = {};
+        st.expenses.forEach(e => { m[e.desc] = (m[e.desc] || 0) + this.n(e.amt); });
+        return Object.keys(m).map(k => ({ label: k, value: this.rup(m[k]), tint: this.tint(k) }));
+      })(),
+
+      reportHeadline: [
+        { label: "Revenue", value: this.rup(totals.rev), note: "8 movements billed" },
+        { label: "Total cost", value: this.rup(totals.exp + monthlyTotal), note: "haulage + shipment" },
+        { label: "Profit", value: this.rup(totals.rev - totals.exp - monthlyTotal), note: "before overheads", pos: totals.rev - totals.exp - monthlyTotal >= 0 },
+        { label: "Cost / ton", value: totals.tons ? this.rup((totals.exp + monthlyTotal) / totals.tons) : "₹0", note: "all-in" }
+      ],
+      chartRows: byVehicle.map(b => {
+        const perKm = b.km ? b.cost / b.km : 0;
+        return { id: b.v.id, value: this.rup(perKm) + "/km", width: Math.round((perKm / maxPerKm) * 100) + "%" };
+      }),
+      reportRows: byVehicle.map(b => ({
+        id: b.v.id, trips: this.num(b.trips), km: this.num(b.km), tons: this.num(b.tons, 1),
+        diesel: this.rup(b.diesel), toll: this.rup(b.toll), other: this.rup(b.other), monthly: this.rup(b.monthly),
+        cost: this.rup(b.cost), revenue: this.rup(b.rev), profit: this.rup(b.profit),
+        pos: b.profit >= 0, neg: b.profit < 0,
+        margin: b.rev ? Math.round((b.profit / b.rev) * 100) + "%" : "—"
+      })),
+
+      userRows: [
+        { name: "A. Balan", role: "Manager", phone: "+91 94440 61928", branch: "Chennai HQ", seen: "Today, 09:12", access: "All screens, month close", mgr: true },
+        { name: "Kavitha R", role: "Documentation", phone: "+91 90031 77402", branch: "Chennai HQ", seen: "Today, 08:40", access: "Movements, expenses, summary", mgr: false },
+        { name: "Suresh V", role: "Documentation", phone: "+91 98847 30215", branch: "Cochin", seen: "Yesterday, 18:22", access: "Movements, expenses, summary", mgr: false },
+        { name: "Murugan S", role: "Driver", phone: "+91 98431 20114", branch: "Chennai HQ", seen: "Today, 07:05", access: "Own movements only", mgr: false },
+        { name: "Rafiq A", role: "Driver", phone: "+91 99401 55380", branch: "Cochin", seen: "Today, 06:48", access: "Own movements only", mgr: false },
+        { name: "Prakash N", role: "Driver", phone: "+91 94433 71206", branch: "Hosur", seen: "2 days ago", access: "Own movements only", mgr: false },
+        { name: "Ilango R", role: "Driver", phone: "+91 90805 44117", branch: "Chennai HQ", seen: "Today, 11:30", access: "Own movements only", mgr: false }
+      ].map(u => Object.assign({}, u, { notMgr: !u.mgr })),
+      driverRows: [
+        { name: "Murugan S", lic: "TN38 20110004412", exp: "14 Mar 2028", expiring: false, veh: "TN38 AB 4412", badge: "Port pass · valid" },
+        { name: "Rafiq A", lic: "KL07 20140091877", exp: "02 Nov 2026", expiring: true, veh: "TN45 CQ 9087", badge: "Port pass · valid" },
+        { name: "Prakash N", lic: "KA01 20090037741", exp: "27 Jun 2027", expiring: false, veh: "KA01 MD 7731", badge: "Hazmat endorsed" },
+        { name: "Ilango R", lic: "TN52 20160112290", exp: "09 Oct 2026", expiring: true, veh: "TN52 BK 2290", badge: "Port pass · renew" }
+      ].map(d => {
+        const tr = st.trips.filter(t => t.dr === d.name);
+        const agg = tr.reduce((a, t) => {
+          const c = this.calc(t);
+          a.km += this.n(t.km); a.rev += this.n(t.rev); a.exp += c.expense;
+          return a;
+        }, { km: 0, rev: 0, exp: 0 });
+        return Object.assign({}, d, {
+          trips: this.num(tr.length),
+          km: this.num(agg.km),
+          revenue: this.rup(agg.rev),
+          perKm: agg.km ? this.rup(agg.exp / agg.km) : "—",
+          pending: this.num(tr.filter(t => t.st === "pending").length),
+          valid: !d.expiring
+        });
+      }),
+      entities: [
+        { name: "orgs", tag: "tenant root", note: "Every other table carries org_id; row-level security keys off it.", fields: [{ n: "id", t: "uuid pk" }, { n: "name", t: "text" }, { n: "currency", t: "char(3)" }, { n: "fy_start_month", t: "int" }] },
+        { name: "users", tag: "auth", note: "Role decides which screens and which rows are visible.", fields: [{ n: "id", t: "uuid pk" }, { n: "org_id", t: "fk orgs" }, { n: "role", t: "driver|office|manager" }, { n: "phone", t: "text unique" }, { n: "driver_id", t: "fk drivers" }] },
+        { name: "vehicles", tag: "master", note: "Soft-deleted, never removed — old trips must still resolve.", fields: [{ n: "id", t: "uuid pk" }, { n: "org_id", t: "fk orgs" }, { n: "reg_no", t: "text" }, { n: "model", t: "text" }, { n: "tare_kg", t: "int" }, { n: "active", t: "bool" }] },
+        { name: "drivers", tag: "master", note: "Licence expiry drives a reminder job.", fields: [{ n: "id", t: "uuid pk" }, { n: "org_id", t: "fk orgs" }, { n: "name", t: "text" }, { n: "licence_no", t: "text" }, { n: "licence_expiry", t: "date" }] },
+        { name: "shipments", tag: "trade root", note: "A BL can need several movements; costs hang off the shipment, not the truck.", fields: [{ n: "id", t: "uuid pk" }, { n: "org_id", t: "fk orgs" }, { n: "bl_no", t: "text" }, { n: "direction", t: "import|export" }, { n: "port_code", t: "text (UN/LOCODE)" }, { n: "consignee_id", t: "fk parties" }, { n: "cha_id", t: "fk parties" }, { n: "cleared_on", t: "date" }, { n: "incoterm", t: "text" }] },
+        { name: "containers", tag: "master", note: "One shipment, many containers; size decides the haulage rate.", fields: [{ n: "id", t: "uuid pk" }, { n: "shipment_id", t: "fk shipments" }, { n: "container_no", t: "text" }, { n: "size_type", t: "20GP|40HC|…" }, { n: "seal_no", t: "text" }, { n: "gross_kg", t: "int" }] },
+        { name: "trips", tag: "fact · hot", note: "Partitioned monthly on load_date; index (org_id, vehicle_id, load_date).", fields: [{ n: "id", t: "uuid pk" }, { n: "org_id", t: "fk orgs" }, { n: "vehicle_id", t: "fk vehicles" }, { n: "driver_id", t: "fk drivers" }, { n: "shipment_id", t: "fk shipments" }, { n: "container_id", t: "fk containers" }, { n: "load_date", t: "date" }, { n: "unload_date", t: "date" }, { n: "from_loc / to_loc", t: "text" }, { n: "weight_kg", t: "int" }, { n: "odo_start / odo_end", t: "int" }, { n: "revenue_paise", t: "bigint" }, { n: "status", t: "draft|pending|approved" }] },
+        { name: "trip_expenses", tag: "fact · hot", note: "One row per cost line so diesel, toll and other stay separable.", fields: [{ n: "id", t: "uuid pk" }, { n: "trip_id", t: "fk trips" }, { n: "kind", t: "diesel|toll|other" }, { n: "litres", t: "numeric" }, { n: "rate_paise", t: "bigint" }, { n: "amount_paise", t: "bigint" }, { n: "receipt_id", t: "fk receipts" }] },
+        { name: "monthly_expenses", tag: "fact", note: "Shipment-side and fixed costs: CFS, CHA, duty, detention, EMI. Either a vehicle or a shipment, never both required.", fields: [{ n: "id", t: "uuid pk" }, { n: "org_id", t: "fk orgs" }, { n: "vehicle_id", t: "fk vehicles" }, { n: "shipment_id", t: "fk shipments" }, { n: "spent_on", t: "date" }, { n: "category", t: "enum" }, { n: "amount_paise", t: "bigint" }, { n: "remarks", t: "text" }] },
+        { name: "receipts", tag: "blob + OCR", note: "File in object storage; parsed fields kept with a confidence score.", fields: [{ n: "id", t: "uuid pk" }, { n: "org_id", t: "fk orgs" }, { n: "storage_key", t: "text" }, { n: "ocr_json", t: "jsonb" }, { n: "confidence", t: "numeric" }, { n: "uploaded_by", t: "fk users" }] },
+        { name: "audit_log", tag: "append only", note: "Who changed what, when — a closed month can still be explained.", fields: [{ n: "id", t: "bigserial pk" }, { n: "org_id", t: "fk orgs" }, { n: "entity / entity_id", t: "text / uuid" }, { n: "action", t: "text" }, { n: "diff", t: "jsonb" }, { n: "actor_id", t: "fk users" }, { n: "at", t: "timestamptz" }] }
+      ],
+      relations: [
+        "orgs 1 ──< users · vehicles · drivers · shipments · trips · monthly_expenses",
+        "shipments 1 ──< containers 1 ──< trips (one BL, many moves)",
+        "shipments 1 ──< monthly_expenses (CFS, CHA, duty, detention)",
+        "vehicles 1 ──< trips ──< trip_expenses >── receipts",
+        "drivers 1 ──< trips (driver_id nullable for office entries)",
+        "vehicles 1 ──< monthly_expenses (no trip link — fixed cost)",
+        "users 1 ──< audit_log (actor_id) · receipts (uploaded_by)"
+      ],
+      ddl: [
+        { name: "trips — the hot table", sql: "create table trips (\n  id            uuid primary key,\n  org_id        uuid not null references orgs,\n  vehicle_id    uuid not null references vehicles,\n  driver_id     uuid references drivers,\n  shipment_id   uuid references shipments,\n  container_id  uuid references containers,\n  load_date     date not null,\n  unload_date   date,\n  from_loc      text,\n  to_loc        text,\n  weight_kg     int,\n  odo_start     int,\n  odo_end       int,\n  revenue_paise bigint not null default 0,\n  status        trip_status not null default 'draft',\n  created_by    uuid references users,\n  created_at    timestamptz default now()\n) partition by range (load_date);\n\ncreate index trips_org_veh_date\n  on trips (org_id, vehicle_id, load_date desc);\ncreate index trips_org_driver_date\n  on trips (org_id, driver_id, load_date desc);\ncreate index trips_pending\n  on trips (org_id, load_date) where status = 'pending';" },
+        { name: "rollup — what the dashboards read", sql: "create materialized view vehicle_month as\nselect t.org_id,\n       t.vehicle_id,\n       date_trunc('month', t.load_date)::date as month,\n       count(*)                       as trips,\n       sum(t.odo_end - t.odo_start)   as km,\n       sum(t.weight_kg) / 1000.0      as tons,\n       sum(t.revenue_paise)           as revenue_paise,\n       sum(e.amount_paise)            as trip_cost_paise\nfrom trips t\nleft join trip_expenses e on e.trip_id = t.id\nwhere t.status = 'approved'\ngroup by 1, 2, 3;\n\ncreate unique index on vehicle_month (org_id, vehicle_id, month);\n-- refresh concurrently on write, or every 60s" },
+        { name: "isolation — one tenant can't read another", sql: "alter table trips enable row level security;\n\ncreate policy trips_tenant on trips\n  using (org_id = current_setting('app.org_id')::uuid);\n\ncreate policy trips_driver_own on trips\n  for select to driver_role\n  using (driver_id = current_setting('app.driver_id')::uuid);" }
+      ],
+      endpoints: [
+        { m: "POST", p: "/trips", d: "Idempotent on the client uuid — safe to retry from a phone with no signal." },
+        { m: "GET", p: "/trips?from&to&vehicle&driver&cursor", d: "Keyset pagination on (load_date, id). No offset scans." },
+        { m: "POST", p: "/receipts:upload-url", d: "Signed URL; the file never passes through the API. OCR runs as a queued job." },
+        { m: "GET", p: "/summary?month&vehicle&direction", d: "Reads vehicle_month, not raw trips — constant cost as the log grows." },
+        { m: "GET", p: "/shipments/:bl", d: "One BL with its containers, movements and cost lines — the landed cost of a consignment." },
+        { m: "POST", p: "/monthly-expenses", d: "Office and manager only; writes an audit_log row with the diff." },
+        { m: "POST", p: "/months/2026-09:close", d: "Freezes the month; later edits become adjustments, never silent rewrites." }
+      ],
+      scaling: [
+        { label: "Partitioning", body: "trips and trip_expenses partition by month. A query for September touches one partition; closed months can be moved to cheaper storage untouched." },
+        { label: "Read path", body: "Summary and report screens read a materialised monthly rollup per vehicle, refreshed on write. Dashboards never scan raw trips." },
+        { label: "Offline first", body: "iOS and Android queue trips locally with a client-generated uuid; the API is idempotent on that id, so a retry after signal returns never duplicates a trip." },
+        { label: "Files", body: "Receipts go to object storage with a signed upload URL; OCR runs as a queued job and writes back to receipts.ocr_json." }
+      ]
+    };
+  }
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+ALTER TABLE `trip_stops` ADD `odo` integer;
