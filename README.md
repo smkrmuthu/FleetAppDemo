@@ -21,6 +21,17 @@
 >    `wrangler.jsonc` pins the worker name to `fleetappdemo`.
 > 3. Attach the custom domain `fleet.oneuptech.co` to the `fleetappdemo` worker.
 >
+> **Sample data rolls itself.** Every night (the 02:30 IST cron in
+> `worker/wrangler.toml`, the same one that runs the backup) the demo API rebuilds
+> its sample movements for the current and previous month, dated relative to
+> today, and moves the trucks' due dates and two licences to match. On the 1st
+> the month rolls over by itself. Code: `worker/src/lib/demoData.ts`. It runs
+> only when `DEMO_MODE = "true"` **and** the organisation is named "Demo
+> Logistics", and it only replaces rows it created (ids starting `demo-`), so
+> movements people add while trying the demo are kept. To try it locally:
+> `npx wrangler dev -c wrangler.toml --test-scheduled`, then open
+> `http://127.0.0.1:8787/__scheduled`. To switch it off, remove `DEMO_MODE`.
+>
 > Demo sign-in: `mgr@demo.com` / `mgr123`, `office@demo.com` / `office123`,
 > `driver@demo.com` / `driver123`.
 

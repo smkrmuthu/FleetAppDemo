@@ -4,6 +4,8 @@ export interface Env {
   ALLOWED_ORIGIN: string;
   JWT_SECRET: string;
   GEMINI_API_KEY: string;
+  // "true" only on the demo deployment: turns on the nightly sample-data refresh.
+  DEMO_MODE?: string;
 }
 
 // 'viewer' is read-only: it can see Dashboard / Movement Summary / Monthly

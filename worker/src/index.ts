@@ -18,6 +18,7 @@ import { adminRoutes } from './routes/admin';
 import { fuelEntryRoutes } from './routes/fuelEntries';
 import { runBackup } from './lib/backup';
 import { purgeExpiredRateLimits } from './lib/rateLimit';
+import { isDemoMode, refreshDemoData } from './lib/demoData';
 
 const app = new Hono<{ Bindings: Env; Variables: Vars }>();
 
@@ -53,8 +54,9 @@ app.onError((err, c) => {
 export default {
   fetch: app.fetch,
   // Runs on the cron schedule in wrangler.toml: the nightly backup, then a
-  // tidy-up of expired rate-limit counters. A failure is recorded by the
-  // backup itself (and shown in Master), so it is only logged here.
+  // tidy-up of expired rate-limit counters, then (demo deployment only) the
+  // sample-data refresh. A failure is recorded by the backup itself (and shown
+  // in Master), so it is only logged here.
   async scheduled(_event: ScheduledController, env: Env, ctx: ExecutionContext) {
     ctx.waitUntil((async () => {
       try {
@@ -63,6 +65,13 @@ export default {
         console.error('nightly backup failed', err);
       }
       await purgeExpiredRateLimits(env.DB).catch((err) => console.error('rate limit cleanup failed', err));
+      if (isDemoMode(env)) {
+        try {
+          console.log('demo data refresh', JSON.stringify(await refreshDemoData(env)));
+        } catch (err) {
+          console.error('demo data refresh failed', err);
+        }
+      }
     })());
   }
 };

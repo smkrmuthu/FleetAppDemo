@@ -9,7 +9,10 @@ compatibility_date = "2026-01-01"
 # content from fixed origins regardless of device. Never list the SMT
 # production origins (smt.oneuptech.co, fleetapp.smkrmuthu.workers.dev) here:
 # this demo API is separate from FleetApp-SMT.
+# Turns on the nightly sample-data refresh (src/lib/demoData.ts). It also refuses
+# to run unless the organisation is named "Demo Logistics". Never set this on SMT.
 [vars]
+DEMO_MODE = "true"
 ALLOWED_ORIGIN = "https://smkrmuthu.github.io,https://fleet.oneuptech.co,https://fleetappdemo.smkrmuthu.workers.dev,capacitor://localhost,https://localhost,http://localhost:5180"
 
 # Nightly backup at 21:00 UTC (02:30 IST) — see src/lib/backup.ts
