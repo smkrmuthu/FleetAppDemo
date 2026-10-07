@@ -603,6 +603,7 @@ export function App() {
             onTabChange={setTab}
             onEditTrip={startEditingTrip}
             readOnly={role === 'Viewer'}
+            userName={currentUserName}
           />
         )}
         {shownTab === 'summary' && (

@@ -1,7 +1,7 @@
 // Shared building blocks for every Fleet Ledger screen. They only arrange
 // markup and pick classes from index.css — colours, sizes and spacing come
 // from the design tokens there, never from values written in here.
-import { useEffect, type ButtonHTMLAttributes, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ButtonHTMLAttributes, type CSSProperties, type ReactNode } from 'react';
 import type { TripStatus } from '../types';
 
 // Inline-style equivalent of the .card class, for screens that build their
@@ -124,8 +124,13 @@ export function DataTable({ children, minWidth, style }: { children: ReactNode; 
   );
 }
 
-export function EmptyState({ children }: { children: ReactNode }) {
-  return <div className="card empty-state">{children}</div>;
+export function EmptyState({ children, icon }: { children: ReactNode; icon?: ReactNode }) {
+  return (
+    <div className="card empty-state">
+      {icon && <div style={{ display: 'grid', placeItems: 'center', marginBottom: 10, color: 'var(--color-text-muted)' }}>{icon}</div>}
+      {children}
+    </div>
+  );
 }
 
 export function AttentionCard({ tone, icon, title, count, description, children, footer }: {
@@ -191,6 +196,54 @@ export function Modal({ label, onClose, locked, maxWidth = 760, children }: {
       <div className="modal" role="dialog" aria-modal="true" aria-label={label} style={{ maxWidth }}>
         {children}
       </div>
+    </div>
+  );
+}
+
+// Eases a number from its previous value to `target`. Skipped entirely (the
+// value just jumps) when the user has asked their device to reduce motion.
+export function useCountUp(target: number, durationMs = 700): number {
+  const [value, setValue] = useState(0);
+  const from = useRef(0);
+  useEffect(() => {
+    if (typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      from.current = target;
+      setValue(target);
+      return;
+    }
+    const begin = from.current;
+    const startedAt = performance.now();
+    let raf = 0;
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - startedAt) / durationMs);
+      const v = begin + (target - begin) * (1 - Math.pow(1 - t, 3));
+      from.current = v;
+      setValue(v);
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target, durationMs]);
+  return value;
+}
+
+// A headline figure on the dark dashboard hero.
+export function HeroKpi({ label, value, format, unit, sub, icon }: {
+  label: ReactNode;
+  value: number;
+  format: (n: number) => string;
+  unit?: ReactNode;
+  sub?: ReactNode;
+  icon?: ReactNode;
+}) {
+  const shown = useCountUp(value);
+  return (
+    <div className="hero-kpi">
+      <div className="hero-kpi-label">{icon}{label}</div>
+      <div className="hero-kpi-value" aria-label={`${label}: ${format(value)}${typeof unit === 'string' ? ' ' + unit : ''}`}>
+        <span aria-hidden="true">{format(Math.round(shown))}</span>{unit && <span className="hero-kpi-unit" aria-hidden="true">{unit}</span>}
+      </div>
+      {sub && <div className="hero-kpi-sub">{sub}</div>}
     </div>
   );
 }

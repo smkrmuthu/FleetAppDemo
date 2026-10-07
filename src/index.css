@@ -57,6 +57,8 @@
 
   /* — type — */
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Headings, big figures and the wordmark: a heavy, signage-like face. */
+  --font-display: "Archivo", "Inter", system-ui, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --fs-page-title: 28px;
   --fs-section: 18px;
@@ -85,7 +87,7 @@
   --color-accent: var(--color-primary);
   --color-divider: var(--color-border);
   --color-profit: var(--color-success);
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-display);
   --font-body: var(--font-sans);
 
   --color-neutral-100: #F1F3F5;
@@ -126,8 +128,8 @@ body {
   font-feature-settings: "cv11", "ss01";
 }
 
-h1, h2, h3, h4 { font-family: var(--font-sans); font-weight: 700; margin: 0; color: var(--color-text); letter-spacing: -0.01em; }
-h1 { font-size: var(--fs-page-title); line-height: 1.2; }
+h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; margin: 0; color: var(--color-text); letter-spacing: -0.01em; }
+h1 { font-size: var(--fs-page-title); line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; }
 h2 { font-size: var(--fs-section); line-height: 1.35; }
 h3 { font-size: 15px; }
 
@@ -154,7 +156,7 @@ input, select, textarea, button { font-family: var(--font-sans); }
 }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn svg { flex: none; }
-.btn-primary { background: var(--color-primary); color: #fff; }
+.btn-primary { background: var(--color-primary); color: #fff; font-weight: 700; }
 .btn-primary:hover:not(:disabled) { background: var(--color-primary-hover); }
 .btn-primary:active:not(:disabled) { background: var(--color-primary-active); }
 .btn-secondary { background: var(--color-surface); border-color: var(--color-border-strong); }
@@ -163,6 +165,8 @@ input, select, textarea, button { font-family: var(--font-sans); }
 .btn-ghost:hover:not(:disabled) { background: var(--color-primary-soft); }
 .btn-sm { min-height: 30px; padding: 0 10px; font-size: 12px; }
 .btn-block { width: 100%; margin-top: var(--space-2); justify-content: center; min-height: 40px; }
+.btn-on-dark { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.22); color: #fff; }
+.btn-on-dark:hover:not(:disabled) { background: rgba(255, 255, 255, 0.16); border-color: rgba(255, 255, 255, 0.4); }
 .btn-icon { min-height: 36px; width: 36px; padding: 0; color: var(--color-text-secondary); }
 .btn-icon:hover { background: var(--color-table-header); color: var(--color-text); }
 
@@ -217,7 +221,7 @@ input, select, textarea, button { font-family: var(--font-sans); }
 .kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-4); }
 .kpi-card { padding: var(--space-4) var(--space-5); display: grid; gap: 6px; }
 .kpi-label { font-size: var(--fs-label); font-weight: 500; color: var(--color-text-secondary); display: flex; align-items: center; gap: 6px; }
-.kpi-value { font-size: var(--fs-kpi); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.kpi-value { font-family: var(--font-display); font-size: 30px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; font-variant-numeric: tabular-nums; }
 .kpi-unit { font-size: 14px; font-weight: 500; color: var(--color-text-secondary); margin-left: 4px; }
 .kpi-sub { font-size: 12px; color: var(--color-text-muted); }
 
@@ -228,9 +232,11 @@ input, select, textarea, button { font-family: var(--font-sans); }
   gap: var(--space-4) var(--space-6); flex-wrap: wrap; margin-bottom: var(--space-6);
 }
 .page-eyebrow, .kicker {
-  font-size: var(--fs-label); font-weight: 500; letter-spacing: 0;
-  color: var(--color-text-secondary); margin-bottom: 4px;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--color-text-secondary); margin-bottom: 6px;
 }
+.page-eyebrow::before, .kicker::before { content: ""; width: 18px; height: 3px; border-radius: 2px; background: var(--color-primary); flex: none; }
 .page-description { color: var(--color-text-secondary); margin: 6px 0 0; font-size: 14px; max-width: 72ch; }
 .page-actions { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
 .section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: var(--space-8) 0 var(--space-3); }
@@ -260,7 +266,7 @@ input, select, textarea, button { font-family: var(--font-sans); }
 .table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: var(--fs-table); font-variant-numeric: tabular-nums; }
 .table th {
   text-align: left; white-space: nowrap;
-  font-size: 12px; font-weight: 600; letter-spacing: 0; text-transform: none;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
   color: var(--color-text-secondary); background: var(--color-table-header);
   padding: 10px 12px; border-bottom: 1px solid var(--color-border);
 }
@@ -310,11 +316,8 @@ input, select, textarea, button { font-family: var(--font-sans); }
   padding: max(16px, env(safe-area-inset-top)) 12px max(16px, env(safe-area-inset-bottom));
 }
 .sidebar-brand { display: flex; align-items: center; gap: 10px; padding: 4px 8px 18px; color: #fff; }
-.sidebar-brand-mark {
-  width: 30px; height: 30px; border-radius: var(--radius-sm); flex: none;
-  display: grid; place-items: center; background: var(--color-primary); color: #fff;
-}
-.sidebar-brand-name { font-size: 14px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.15; }
+.sidebar-brand-mark { flex: none; display: block; line-height: 0; }
+.sidebar-brand-name { font-family: var(--font-display); font-size: 16px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; line-height: 1.1; }
 .sidebar-brand-sub { font-size: 11px; color: var(--color-sidebar-muted); font-weight: 500; letter-spacing: 0; text-transform: none; }
 .sidebar-scroll { flex: 1; overflow-y: auto; margin: 0 -4px; padding: 0 4px; }
 .sidebar-section { margin-top: 18px; }
@@ -422,10 +425,10 @@ input, select, textarea, button { font-family: var(--font-sans); }
 .bar-row { display: grid; grid-template-columns: 96px minmax(0, 1fr) 84px; align-items: center; gap: 10px; font-size: 12px; }
 .bar-row-label { font-weight: 600; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .bar-row-value { text-align: right; color: var(--color-text-secondary); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.bar-track { position: relative; height: 8px; border-radius: 4px; background: var(--chart-track); }
-.bar-fill { position: absolute; inset: 0 auto 0 0; border-radius: 4px; }
+.bar-track { position: relative; height: 10px; border-radius: 5px; background: var(--chart-track); }
+.bar-fill { position: absolute; inset: 0 auto 0 0; border-radius: 5px; }
 .bar-pair { display: grid; gap: 3px; }
-.bar-pair .bar-track { height: 6px; }
+.bar-pair .bar-track { height: 7px; }
 .bar-marker { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--color-text); border-radius: 1px; }
 
 /* ========================= modal ========================= */
@@ -477,20 +480,112 @@ input, select, textarea, button { font-family: var(--font-sans); }
 .sign-in-brand {
   position: relative; overflow: hidden;
   display: grid; grid-template-rows: auto 1fr auto;
-  min-height: 100vh; padding: 48px 56px;
+  min-height: 100vh; padding: 48px 56px 0;
   background: var(--color-sidebar); color: #fff;
 }
 .sign-in-brand-mark { display: flex; align-items: center; gap: 12px; }
 .sign-in-hero { align-self: center; }
-.sign-in-headline { font-size: clamp(36px, 4.2vw, 56px); font-weight: 700; line-height: 1.08; letter-spacing: -0.03em; margin: 0; color: #fff; }
+.sign-in-headline { font-family: var(--font-display); font-size: clamp(40px, 5vw, 72px); font-weight: 900; line-height: 1; letter-spacing: -0.035em; margin: 0; color: #fff; }
 .sign-in-headline span { display: block; }
 .sign-in-headline span:last-child { color: var(--color-primary); }
 .sign-in-copy { margin: 20px 0 0; max-width: 42ch; font-size: 15px; line-height: 1.6; color: var(--color-sidebar-text); }
-.sign-in-foot { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 12px; color: var(--color-sidebar-muted); }
-.sign-in-watermark-fleet { position: absolute; right: -8%; bottom: -6%; width: 58%; max-width: 420px; height: auto; opacity: 0.05; pointer-events: none; }
-.sign-in-brand > *:not(.sign-in-watermark-fleet) { position: relative; z-index: 1; }
+.sign-in-foot { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 12px; color: var(--color-sidebar-muted); padding: 14px 0 18px; }
 .sign-in-form-panel { display: flex; align-items: center; justify-content: center; padding: 48px; background: var(--color-surface); }
 .sign-in-form { width: 100%; max-width: 400px; }
+
+
+/* ========================= hero (dashboard) ========================= */
+
+.hero {
+  position: relative; overflow: hidden; color: #fff;
+  background: var(--color-sidebar); border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
+}
+/* A safety-stripe edge and faint hazard hatching in the corner. */
+.hero::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 6px; background: var(--color-primary); }
+.hero::after {
+  content: ""; position: absolute; top: 0; right: 0; width: 260px; height: 150px; pointer-events: none;
+  background: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 14px);
+  -webkit-mask-image: linear-gradient(to bottom left, #000 30%, transparent 85%);
+  mask-image: linear-gradient(to bottom left, #000 30%, transparent 85%);
+}
+.hero-top { position: relative; z-index: 1; display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-4) var(--space-6); flex-wrap: wrap; padding: 26px 32px 22px 34px; }
+.hero h1 { color: #fff; font-size: 34px; }
+.hero .page-eyebrow { color: var(--color-sidebar-muted); }
+.hero .page-description { color: var(--color-sidebar-text); }
+.hero-kpis { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 2px dashed rgba(255, 255, 255, 0.18); margin-left: 6px; }
+.hero-kpi { padding: 20px 24px 22px; min-width: 0; }
+.hero-kpi + .hero-kpi { border-left: 2px dashed rgba(255, 255, 255, 0.12); }
+.hero-kpi-label { display: flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-sidebar-muted); }
+.hero-kpi-value { font-family: var(--font-display); font-size: clamp(30px, 3.1vw, 42px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; margin-top: 8px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.hero-kpi-unit { font-size: 15px; font-weight: 600; color: var(--color-sidebar-muted); margin-left: 6px; letter-spacing: 0; }
+.hero-kpi-sub { margin-top: 6px; font-size: 12px; color: var(--color-sidebar-text); }
+
+/* ========================= fleet status ========================= */
+
+.fleet-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--space-4); }
+.truck-card {
+  --tone: var(--color-border-strong);
+  position: relative; overflow: hidden; display: grid; gap: 14px; align-content: start;
+  padding: 16px 18px 16px 22px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.truck-card::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 5px; background: var(--tone); }
+.truck-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(23, 33, 43, 0.1); }
+.truck-card[data-state="road"] { --tone: var(--color-success); }
+.truck-card[data-state="pending"] { --tone: var(--color-warning); }
+.truck-card[data-state="idle"] { --tone: var(--color-border-strong); }
+.truck-card[data-state="offroad"] { --tone: var(--color-text-secondary); }
+.truck-head { display: grid; gap: 8px; justify-items: start; }
+.truck-reg { white-space: nowrap; font-family: var(--font-display); font-size: 18px; font-weight: 800; letter-spacing: 0.01em; line-height: 1.15; }
+.truck-model { font-size: 12px; color: var(--color-text-muted); margin-top: 2px; }
+.route-line { display: flex; align-items: center; gap: 6px; color: var(--color-text-secondary); }
+.route-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--color-text); background: var(--color-surface); flex: none; }
+.route-dot.end { background: var(--color-text); }
+.route-track { flex: 1; height: 0; border-top: 2px dashed var(--color-border-strong); }
+.truck-card[data-state="road"] .route-track { border-top-color: var(--color-success); }
+.truck-card[data-state="pending"] .route-track { border-top-style: solid; border-top-color: var(--color-warning); }
+.route-labels { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; font-weight: 500; margin-top: 5px; }
+.route-labels span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 48%; }
+.route-caption { font-size: 11px; color: var(--color-text-muted); margin-top: 4px; }
+.truck-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding-top: 12px; border-top: 1px solid var(--color-border); }
+.truck-stat-value { font-family: var(--font-display); font-size: 17px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.2; }
+.truck-stat-label { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-muted); }
+.truck-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; font-size: 12px; color: var(--color-text-secondary); }
+.truck-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* ========================= route network ========================= */
+
+.map-card { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(240px, 1fr); overflow: hidden; background: var(--color-sidebar); color: #fff; border: 0; }
+.map-canvas { position: relative; min-height: 430px; }
+.map-canvas svg { display: block; width: 100%; height: 100%; }
+.map-tag { position: absolute; top: 14px; left: 16px; z-index: 1; }
+.map-tag .badge { background: rgba(255, 255, 255, 0.1); color: var(--color-sidebar-text); }
+.map-side { padding: 22px 24px; border-left: 1px solid rgba(255, 255, 255, 0.08); display: grid; gap: 14px; align-content: start; }
+.map-side h3 { color: #fff; font-size: 16px; }
+.map-sub { font-size: 12px; color: var(--color-sidebar-muted); margin-top: 2px; }
+.lane-list { list-style: none; margin: 0; padding: 0; }
+.lane-list li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 0; border-top: 1px solid rgba(255, 255, 255, 0.08); font-size: 13px; }
+.lane-list li:first-child { border-top: 0; }
+.lane-count { font-family: var(--font-display); font-weight: 800; font-size: 15px; font-variant-numeric: tabular-nums; }
+.map-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--color-sidebar-muted); }
+.map-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.map-legend i { width: 16px; height: 0; border-top: 2px solid var(--color-sidebar-text); display: inline-block; }
+.map-legend i.open { border-top-color: var(--color-primary); }
+
+/* ========================= sign in (brand panel) ========================= */
+
+.sign-in-road { position: relative; margin: 0 -56px; padding: 0 56px; }
+.sign-in-road svg { display: block; width: 100%; max-width: 520px; height: auto; }
+.sign-in-road::after { content: ""; display: block; height: 80px; margin: 0 -56px; background: #0F1720; border-top: 3px solid var(--color-primary); }
+.sign-in-lane { position: absolute; left: 0; right: 0; bottom: 52px; height: 0; border-top: 3px dashed rgba(255, 255, 255, 0.28); z-index: 1; }
+.sign-in-road .sign-in-foot { position: absolute; left: 56px; right: 56px; bottom: 10px; padding: 0; z-index: 1; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .sign-in-truck { animation: truck-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  @keyframes truck-in { from { transform: translateX(-60px); opacity: 0; } to { transform: none; opacity: 1; } }
+}
+@media (prefers-reduced-motion: reduce) { .truck-card { transition: none; } .truck-card:hover { transform: none; } }
 
 /* ========================= responsive ========================= */
 
@@ -547,4 +642,29 @@ input, select, textarea, button { font-family: var(--font-sans); }
   .table th.col-first, .table td.col-first { position: static; box-shadow: none; }
   /* Route rows wrap on a phone: no column captions or alignment spacers */
   .route-head, .route-spacer { display: none !important; }
+}
+
+/* ========================= responsive: hero, fleet status, map, sign-in art ========================= */
+
+@media (max-width: 899px) {
+  .hero-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hero-kpi:nth-child(3) { border-left: 0; }
+  .hero-kpi:nth-child(n + 3) { border-top: 2px dashed rgba(255, 255, 255, 0.12); }
+  .map-card { grid-template-columns: minmax(0, 1fr); }
+  .map-side { border-left: 0; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+}
+
+@media (max-width: 767px) {
+  .hero-top { padding: 20px 16px 16px 20px; }
+  .hero h1 { font-size: 28px; }
+  .hero-kpi { padding: 14px 14px 16px 18px; }
+  .hero-kpi-value { font-size: 26px; }
+  .hero::after { display: none; }
+  .fleet-grid { grid-template-columns: minmax(0, 1fr); }
+  .map-canvas { min-height: 300px; }
+  .sign-in-brand { padding: 24px 20px 0; }
+  .sign-in-road { margin: 0 -20px; padding: 0 20px; }
+  .sign-in-road::after { margin: 0 -20px; height: 72px; }
+  .sign-in-lane { bottom: 44px; }
+  .sign-in-road .sign-in-foot { left: 20px; right: 20px; bottom: 8px; }
 }

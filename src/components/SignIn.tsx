@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Truck } from 'lucide-react';
-import logoFleetWhite from '../assets/logo-fleet-white.png';
+import { BrandMark, TruckArt } from './Brand';
 import { FormField } from './ui';
 
 interface Props {
@@ -28,11 +27,10 @@ export function SignIn({ onSignIn }: Props) {
   return (
     <div className="sign-in-grid">
       <div className="sign-in-brand">
-        <img src={logoFleetWhite} alt="" className="sign-in-watermark-fleet" />
         <div className="sign-in-brand-mark">
-          <div className="sidebar-brand-mark" style={{ width: 36, height: 36 }}><Truck size={19} strokeWidth={2} aria-hidden="true" /></div>
+          <BrandMark size={42} />
           <div>
-            <div className="sidebar-brand-name" style={{ fontSize: 15 }}>Fleet Ledger</div>
+            <div className="sidebar-brand-name" style={{ fontSize: 18 }}>Fleet Ledger</div>
             <div className="sidebar-brand-sub" style={{ fontSize: 12 }}>Demo Logistics</div>
           </div>
         </div>
@@ -46,9 +44,13 @@ export function SignIn({ onSignIn }: Props) {
             Track every trip, fuel stop, and expense across your fleet — from the road to the ledger.
           </p>
         </div>
-        <div className="sign-in-foot">
-          <span>Demo account · sample data only</span>
-          <span>Powered by <strong style={{ color: 'var(--color-sidebar-text)', fontWeight: 600 }}>OneupTech</strong></span>
+        <div className="sign-in-road">
+          <TruckArt />
+          <div className="sign-in-lane" />
+          <div className="sign-in-foot">
+            <span>Demo account · sample data only</span>
+            <span>Powered by <strong style={{ color: 'var(--color-sidebar-text)', fontWeight: 600 }}>OneupTech</strong></span>
+          </div>
         </div>
       </div>
 

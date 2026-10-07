@@ -332,9 +332,9 @@ export function TripLog({ trips, vehicles, drivers, leaves, unavailability, vehi
                       <td style={{ textAlign: 'right' }}>{formatNum(t.tons, 2)}</td>
                       <td style={{ textAlign: 'right' }}>{t.odoStart != null ? formatNum(t.odoStart) : '—'}</td>
                       <td style={{ textAlign: 'right' }}>{formatNum(t.km)}</td>
-                      <td style={{ whiteSpace: 'nowrap' }}>
+                      <td style={{ minWidth: 200 }}>
                         {t.status !== 'approved' ? (
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px 8px' }}>
                             <TripStatusBadge status={t.status} short />
                             {(isDriver || isOffice || isManager) && (
                               <button type="button" className="btn btn-ghost" style={{ padding: '0 6px', fontSize: 12 }} onClick={() => onEdit(t)}>
@@ -353,7 +353,7 @@ export function TripLog({ trips, vehicles, drivers, leaves, unavailability, vehi
                             )}
                           </div>
                         ) : (
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '4px 8px' }}>
                             <TripStatusBadge status="approved" />
                             {isManager ? (
                               <button type="button" className="btn btn-ghost" style={{ padding: '0 6px', fontSize: 12 }} onClick={() => onEdit(t)}>

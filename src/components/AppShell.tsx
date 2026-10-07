@@ -6,6 +6,7 @@ import {
 import type { AppNotification, Role, TabId } from '../types';
 import { ROLE_TABS, TAB_LABELS } from '../data/mockData';
 import { NotificationBell } from './NotificationBell';
+import { BrandMark } from './Brand';
 
 interface Props {
   role: Role;
@@ -93,7 +94,7 @@ function Sidebar({ role, tab, onSelect, openMovements, onClose }: {
   return (
     <aside className="sidebar" aria-label="Main navigation">
       <div className="sidebar-brand">
-        <div className="sidebar-brand-mark"><Truck size={17} strokeWidth={2} aria-hidden="true" /></div>
+        <BrandMark size={32} />
         <div className="sidebar-brand-text" style={{ flex: 1, minWidth: 0 }}>
           <div className="sidebar-brand-name">Fleet Ledger</div>
           <div className="sidebar-brand-sub">Demo Logistics</div>

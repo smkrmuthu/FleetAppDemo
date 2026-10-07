@@ -13,10 +13,10 @@ INSERT INTO branches (id, org_id, name) VALUES
   ('branch-hosur', 'org-meridian', 'Hosur');
 
 INSERT INTO vehicles (id, org_id, reg_no, model, fc_date, fc_renewal_due, active) VALUES
-  ('TN38 AB 4412', 'org-meridian', 'TN38 AB 4412', 'Tata Signa 4825',     '2025-03-15', '2027-03-14', 1),
-  ('TN45 CQ 9087', 'org-meridian', 'TN45 CQ 9087', 'Ashok Leyland 3520',  '2024-09-30', '2026-09-29', 1),
-  ('KA01 MD 7731', 'org-meridian', 'KA01 MD 7731', 'BharatBenz 2823',     '2025-01-05', '2027-01-04', 1),
-  ('TN52 BK 2290', 'org-meridian', 'TN52 BK 2290', 'Eicher Pro 6028',     '2024-11-05', '2026-11-04', 1);
+  ('TN38 AB 4412', 'org-meridian', 'TN38 AB 4412', 'Tata Signa 4825',     '2027-03-14', '2027-03-14', 1),
+  ('TN45 CQ 9087', 'org-meridian', 'TN45 CQ 9087', 'Ashok Leyland 3520',  '2026-10-29', '2026-10-29', 1),
+  ('KA01 MD 7731', 'org-meridian', 'KA01 MD 7731', 'BharatBenz 2823',     '2027-01-04', '2027-01-04', 1),
+  ('TN52 BK 2290', 'org-meridian', 'TN52 BK 2290', 'Eicher Pro 6028',     '2026-12-20', '2026-12-20', 1);
 
 INSERT INTO drivers (id, org_id, branch_id, full_name, phone, licence_no, licence_expiry, credential, default_vehicle, active) VALUES
   ('Murugan S', 'org-meridian', 'branch-chennai', 'Murugan S', '+91 98431 20114', 'TN38 20110004412', '2028-03-14', 'Yard pass · valid', 'TN38 AB 4412', 1),

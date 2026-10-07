@@ -3,7 +3,7 @@
 // masked by a stale cached bundle, falling back to cache only when offline.
 // Paths are relative to the service worker's own scope, not the domain
 // root, so this keeps working under a subpath deployment too.
-const CACHE_NAME = 'fleet-ledger-demo-shell-v2';
+const CACHE_NAME = 'fleet-ledger-demo-shell-v3';
 const CORE_ASSETS = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', (event) => {

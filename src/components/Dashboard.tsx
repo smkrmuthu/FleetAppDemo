@@ -5,10 +5,14 @@ import {
 import type { DriverLeave, DriverMaster, MonthlyExpense, TabId, Trip, Vehicle, VehicleUnavailability } from '../types';
 import { parseDisplayDate } from '../lib/api';
 import { dieselLitres, dueStatus, formatDateRange, formatNum, rupees, tripCost, tripDurationDays, yearOptions } from '../utils/calc';
+import { buildTruckRows } from '../utils/fleetStatus';
+import { buildLanes } from '../utils/routeGeo';
 import { MonthYearFilter } from './MonthYearFilter';
+import { FleetStatus } from './FleetStatus';
+import { RouteNetwork } from './RouteNetwork';
 import {
-  AttentionCard, ChartCard, DataTable, EmptyState, FilterBar, FormField, GhostButton, KpiCard, PageHeader, PrimaryButton,
-  SecondaryButton, SectionHeading, StatusBadge, TripStatusBadge, type Tone
+  AttentionCard, ChartCard, DataTable, EmptyState, FilterBar, FormField, GhostButton, HeroKpi, PrimaryButton,
+  SectionHeading, StatusBadge, TripStatusBadge, type Tone
 } from './ui';
 
 interface Props {
@@ -22,6 +26,7 @@ interface Props {
   onEditTrip: (t: Trip) => void;
   // A read-only viewer: no shortcuts to other screens, nothing to open or edit.
   readOnly?: boolean;
+  userName?: string;
 }
 
 function currentMonthRange(): { from: string; to: string } {
@@ -98,7 +103,12 @@ function PairRows({ rows, max }: { rows: { id: string; a: number; b: number; aLa
 
 interface AttentionItem { key: string; tone: Tone; icon: ReactNode; title: string; description: string; rows: { id: string; main: ReactNode; meta: ReactNode }[]; more?: { label: string; tab: TabId } }
 
-export function Dashboard({ trips, expenses, vehicles, drivers, leaves, unavailability, onTabChange, onEditTrip, readOnly = false }: Props) {
+function greeting(): string {
+  const h = new Date().getHours();
+  return h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+}
+
+export function Dashboard({ trips, expenses, vehicles, drivers, leaves, unavailability, onTabChange, onEditTrip, readOnly = false, userName = '' }: Props) {
   const [dateFrom, setDateFrom] = useState(() => currentMonthRange().from);
   const [dateTo, setDateTo] = useState(() => currentMonthRange().to);
   const label = formatDateRange(dateFrom, dateTo);
@@ -223,39 +233,56 @@ export function Dashboard({ trips, expenses, vehicles, drivers, leaves, unavaila
     return <button type="button" className="btn btn-ghost btn-sm" style={{ padding: 0, color: 'var(--color-text)', fontWeight: 500, minHeight: 0 }} onClick={() => onEditTrip(t)}>{text}</button>;
   }
 
-  const recent = trips.slice(0, 6);
+  // Per-truck status and the route lanes for the map. Both come only from the
+  // recorded movements, availability windows and compliance dates.
+  const truckRows = buildTruckRows({
+    vehicles, trips, unavailability, now,
+    periodStats: Object.fromEntries(vehicleStats.map((v) => [v.id, { trips: v.trips, km: v.km, mileage: v.mileage }]))
+  });
+  const onRoadCount = truckRows.filter((r) => r.state === 'road').length;
+  const { lanes, skipped } = buildLanes(monthTrips.map((t) => ({ from: t.from, to: t.to, open: t.status !== 'approved' })));
+  const firstName = userName.trim();
+
+  const recent = [...trips].sort((a, b) => parseDisplayDate(b.loadDate).localeCompare(parseDisplayDate(a.loadDate)) || b.id.localeCompare(a.id)).slice(0, 6);
   const utilisation = vehicleStats.map((v) => ({ id: v.id, pct: periodDays ? Math.min(100, (v.onRoadDays / periodDays) * 100) : 0, days: v.onRoadDays }));
   const mileageMax = Math.max(1, ...vehicleStats.map((v) => v.mileage), fleetMileage) * 1.1;
   const moneyMax = Math.max(1, ...vehicleStats.flatMap((v) => [v.expense, v.revenue]));
 
   return (
     <section>
-      <PageHeader
-        eyebrow={`${readOnly ? 'Overview' : 'Manager'} · ${label}`}
-        title="Dashboard"
-        description="Where the fleet stands for the selected period, and what needs attention today."
-        actions={!readOnly && (
-          <>
-            <SecondaryButton onClick={() => onTabChange('triplog')}>Trip Log</SecondaryButton>
-            <SecondaryButton onClick={() => onTabChange('people')}>People</SecondaryButton>
-            <SecondaryButton onClick={() => onTabChange('master')}>Masters</SecondaryButton>
-            <PrimaryButton icon={<Plus size={16} />} onClick={() => onTabChange('addtrip')}>Add Movement</PrimaryButton>
-          </>
-        )}
-      />
-
-      <div className="kpi-grid" style={{ marginBottom: 'var(--space-4)' }}>
-        <KpiCard icon={<Truck size={14} />} label="Total Trips" value={formatNum(monthTrips.length)}
-          sub={`${formatNum(approvedCount)} approved · ${formatNum(monthTrips.length - approvedCount)} open`} />
-        <KpiCard icon={<Route size={14} />} label="Total Distance" value={formatNum(totals.km)} unit="km"
-          sub={totals.trips ? `${formatNum(totals.km / totals.trips)} km per trip` : 'No trips in period'} />
-        <KpiCard icon={<Gauge size={14} />} label="Diesel Consumed" value={formatNum(totals.dieselL)} unit="L"
-          sub={fleetMileage ? `Fleet average ${fleetMileage.toFixed(2)} km/L` : 'No diesel posted'} />
-        <KpiCard icon={<IndianRupee size={14} />} label="Total Expense" value={rupees(totalExpense).replace(/\.\d+$/, '')}
-          sub={idleFixed > 0
-            ? `Includes ${rupees(idleFixed).replace(/\.\d+$/, '')} fixed costs on idle trucks`
-            : <>Revenue {rupees(totals.revenue).replace(/\.\d+$/, '')}{totals.revenue === 0 && totalExpense > 0 && <> · <span style={{ color: 'var(--color-error)' }}>not recorded</span></>}</>} />
-      </div>
+      <section className="hero" aria-label="Fleet summary">
+        <div className="hero-top">
+          <div>
+            <div className="page-eyebrow">{readOnly ? 'Overview' : 'Manager'} · {label}</div>
+            <h1>Dashboard</h1>
+            <p className="page-description">
+              {greeting()}{firstName ? `, ${firstName}` : ''}.{' '}
+              {vehicles.length > 0 && <>{onRoadCount} of {vehicles.length} {vehicles.length === 1 ? 'truck is' : 'trucks are'} on the road · </>}
+              {openTrips.length === 0 ? 'nothing is waiting on you.' : `${openTrips.length} open ${openTrips.length === 1 ? 'movement' : 'movements'}.`}
+            </p>
+          </div>
+          {!readOnly && (
+            <div className="page-actions">
+              <button type="button" className="btn btn-on-dark" onClick={() => onTabChange('triplog')}>Trip Log</button>
+              <button type="button" className="btn btn-on-dark" onClick={() => onTabChange('people')}>People</button>
+              <button type="button" className="btn btn-on-dark" onClick={() => onTabChange('master')}>Masters</button>
+              <PrimaryButton icon={<Plus size={16} />} onClick={() => onTabChange('addtrip')}>Add Movement</PrimaryButton>
+            </div>
+          )}
+        </div>
+        <div className="hero-kpis">
+          <HeroKpi icon={<Truck size={14} />} label="Total Trips" value={monthTrips.length} format={(n) => formatNum(n)}
+            sub={`${formatNum(approvedCount)} approved · ${formatNum(monthTrips.length - approvedCount)} open`} />
+          <HeroKpi icon={<Route size={14} />} label="Total Distance" value={totals.km} format={(n) => formatNum(n)} unit="km"
+            sub={totals.trips ? `${formatNum(totals.km / totals.trips)} km per trip` : 'No trips in period'} />
+          <HeroKpi icon={<Gauge size={14} />} label="Diesel Consumed" value={totals.dieselL} format={(n) => formatNum(n)} unit="L"
+            sub={fleetMileage ? `Fleet average ${fleetMileage.toFixed(2)} km/L` : 'No diesel posted'} />
+          <HeroKpi icon={<IndianRupee size={14} />} label="Total Expense" value={totalExpense} format={(n) => rupees(n).replace(/\.\d+$/, '')}
+            sub={idleFixed > 0
+              ? `Includes ${rupees(idleFixed).replace(/\.\d+$/, '')} fixed costs on idle trucks`
+              : <>Revenue {rupees(totals.revenue).replace(/\.\d+$/, '')}{totals.revenue === 0 && totalExpense > 0 && <> · <span style={{ color: '#FF8A80' }}>not recorded</span></>}</>} />
+        </div>
+      </section>
 
       <FilterBar>
         <FormField label="From" htmlFor="dash-from"><input id="dash-from" className="input" type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} /></FormField>
@@ -268,6 +295,13 @@ export function Dashboard({ trips, expenses, vehicles, drivers, leaves, unavaila
           Back to this month
         </GhostButton>
       </FilterBar>
+
+      {truckRows.length > 0 && (
+        <>
+          <SectionHeading title="Fleet status" aside="Right now · figures for the selected period" />
+          <FleetStatus rows={truckRows} />
+        </>
+      )}
 
       <SectionHeading title="Fleet performance" aside={`By truck · ${label}`} />
       {vehicleStats.length === 0 ? (
@@ -320,6 +354,9 @@ export function Dashboard({ trips, expenses, vehicles, drivers, leaves, unavaila
           </tfoot>
         </DataTable>
       )}
+
+      <SectionHeading title="Routes" aside={label} />
+      <RouteNetwork lanes={lanes} skipped={skipped} periodLabel={label} />
 
       {vehicleStats.length > 0 && (
         <>
