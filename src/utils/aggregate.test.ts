@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { aggregateByVehicle, isFastag } from './aggregate';
+import { aggregateByVehicle, isFastag, totalOfVehicles } from './aggregate';
 import type { MonthlyExpense, Trip, Vehicle } from '../types';
 
 const vehicle = (id: string) => ({ id, model: 'Tata' }) as Vehicle;
@@ -52,5 +52,37 @@ describe('isFastag', () => {
     expect(isFastag(monthly('A', 'Fastag ', 1))).toBe(true);
     expect(isFastag(monthly('A', 'Fast Tag', 1))).toBe(false);
     expect(isFastag(monthly('A', 'Toll', 1))).toBe(false);
+  });
+});
+
+describe('totalOfVehicles', () => {
+  const trips = [
+    trip('A', 1000, [{ kind: 'diesel', amount: 300 }, { kind: 'toll', amount: 50 }]),
+    trip('B', 500, [{ kind: 'diesel', amount: 400 }]),
+    trip('B', 250, [{ kind: 'other', amount: 100 }])
+  ];
+  const expenses = [monthly('A', 'Fastag', 20), monthly('A', 'Permit', 30), monthly('B', 'EMI', 70)];
+  const rows = aggregateByVehicle(trips, expenses, [vehicle('A'), vehicle('B'), vehicle('C')]);
+  const total = totalOfVehicles(rows);
+
+  it('adds every column across the rows, including vehicles with nothing recorded', () => {
+    expect(total.id).toBe('Total');
+    expect(total.trips).toBe(3);
+    expect(total.km).toBe(300);
+    expect(total.tons).toBe(30);
+    expect(total.revenue).toBe(1750);
+    expect(total.diesel).toBe(700);
+    expect(total.monthly).toBe(120);
+  });
+
+  it('keeps profit equal to revenue minus cost, and the Fastag shift neutral', () => {
+    expect(total.cost).toBe(total.tripExpense + total.monthly);
+    expect(total.profit).toBe(total.revenue - total.cost);
+    expect(total.ledgerToll + total.ledgerMonthly).toBe(total.toll + total.monthly);
+    expect(total.ledgerTripExpense + total.ledgerMonthly).toBe(total.tripExpense + total.monthly);
+  });
+
+  it('gives a zero total for an empty table', () => {
+    expect(totalOfVehicles([])).toMatchObject({ trips: 0, km: 0, revenue: 0, profit: 0, cost: 0 });
   });
 });

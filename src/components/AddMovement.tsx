@@ -616,6 +616,13 @@ export function AddMovement({ onSubmit, driverOnly, vehicles, drivers, master, l
                       </tr>
                     ))}
                   </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colSpan={4}>Total</td>
+                      <td style={{ textAlign: 'right' }}>{rupees(lines.reduce((a, l) => a + l.amount, 0))}</td>
+                      <td />
+                    </tr>
+                  </tfoot>
                 </table>
               </div>
             )}

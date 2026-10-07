@@ -94,6 +94,8 @@ export interface PdfTable {
   right?: number[];
   // Size the table to its content instead of the full page width (key/value blocks)
   compact?: boolean;
+  // A bold closing row, e.g. the totals
+  foot?: string[];
 }
 
 export interface PdfReport {
@@ -140,19 +142,21 @@ export async function savePdf(filename: string, report: PdfReport): Promise<void
     autoTable(doc, {
       startY: y + 8,
       head: [t.head],
+      ...(t.foot && t.body.length ? { foot: [t.foot] } : {}),
       body: t.body.length ? t.body : [[{ content: 'Nothing recorded for this period.', colSpan: t.head.length, styles: { textColor: [96, 93, 93] } }]] as never,
       margin: { left: margin, right: margin },
       tableWidth: t.compact ? 'wrap' : 'auto',
       theme: 'grid',
       styles: { font: 'helvetica', fontSize: 9, cellPadding: 5, lineColor: [186, 182, 182], lineWidth: 0.4, textColor: [32, 30, 29] },
       headStyles: { fillColor: [32, 30, 29], textColor: [255, 255, 255], fontStyle: 'bold' },
+      footStyles: { fillColor: [235, 237, 240], textColor: [32, 30, 29], fontStyle: 'bold' },
       alternateRowStyles: { fillColor: [246, 244, 244] },
       columnStyles: Object.fromEntries((t.right ?? []).map((i) => [i, { halign: 'right' }])),
       didParseCell: (data) => {
         // right-align the header cells above right-aligned columns too
-        if (data.section === 'head' && (t.right ?? []).includes(data.column.index)) data.cell.styles.halign = 'right';
+        if ((data.section === 'head' || data.section === 'foot') && (t.right ?? []).includes(data.column.index)) data.cell.styles.halign = 'right';
         // loss figures in red
-        if (data.section === 'body' && typeof data.cell.raw === 'string' && /^-Rs\./.test(data.cell.raw)) data.cell.styles.textColor = [174, 24, 0];
+        if ((data.section === 'body' || data.section === 'foot') && typeof data.cell.raw === 'string' && /^-Rs\./.test(data.cell.raw)) data.cell.styles.textColor = [174, 24, 0];
       }
     });
     y = ((doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY) + 26;

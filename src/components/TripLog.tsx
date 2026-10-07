@@ -83,6 +83,11 @@ function TripDetailBody({ t, showFinancials }: { t: Trip; showFinancials: boolea
                     {' — '}<strong style={{ color: 'var(--color-text)' }}>{rupees(l.amount)}</strong>
                   </div>
                 ))}
+                {t.expenses.length > 1 && (
+                  <div style={{ fontWeight: 700, borderTop: '1px solid var(--color-border)', paddingTop: 4, marginTop: 2 }}>
+                    Total — {rupees(t.expenses.reduce((a, l) => a + l.amount, 0))}
+                  </div>
+                )}
               </div>
             </div>
           )}

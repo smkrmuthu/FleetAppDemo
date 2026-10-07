@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { DriverMaster, MonthlyExpense, Trip, Vehicle } from '../types';
 import type { VehicleAgg } from '../utils/aggregate';
-import { aggregateByVehicle, isFastag } from '../utils/aggregate';
+import { aggregateByVehicle, isFastag, totalOfVehicles } from '../utils/aggregate';
 import { dateInRange, formatDateRange, formatNum, rupees, tripCost, yearOptions } from '../utils/calc';
 import { MonthYearFilter } from './MonthYearFilter';
 import { exportSummaryExcel, exportSummaryPdf, type Stat, type SummaryData } from '../lib/reports';
@@ -228,6 +228,25 @@ export function MovementSummary({ trips, expenses, vehicles, drivers, vehicleFil
               </tr>
             ))}
           </tbody>
+          {sortedByVehicle.length > 0 && (() => {
+            const t = totalOfVehicles(sortedByVehicle);
+            return (
+              <tfoot>
+                <tr>
+                  <td>Total</td>
+                  <td />
+                  <td style={{ textAlign: 'right' }}>{formatNum(t.trips)}</td>
+                  <td style={{ textAlign: 'right' }}>{formatNum(t.km)}</td>
+                  <td style={{ textAlign: 'right' }}>{formatNum(t.tons, 2)}</td>
+                  <td style={{ textAlign: 'right' }}>{rupees(t.ledgerTripExpense)}</td>
+                  <td style={{ textAlign: 'right' }}>{rupees(t.ledgerMonthly)}</td>
+                  <td style={{ textAlign: 'right' }}>{rupees(t.revenue)}</td>
+                  <td style={{ textAlign: 'right', color: t.profit >= 0 ? 'var(--color-profit)' : 'var(--color-accent-700)' }}>{rupees(t.profit)}</td>
+                  <td style={{ textAlign: 'right' }}>{t.km ? rupees(t.cost / t.km) : '—'}</td>
+                </tr>
+              </tfoot>
+            );
+          })()}
         </table>
       </div>
     </section>

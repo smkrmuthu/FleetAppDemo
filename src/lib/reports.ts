@@ -1,5 +1,5 @@
 import type { DriverMaster, MasterSettings, MonthlyExpense, Trip, UserAccount, Vehicle } from '../types';
-import type { VehicleAgg } from '../utils/aggregate';
+import { totalOfVehicles, type VehicleAgg } from '../utils/aggregate';
 import { tripCost, vehicleAge } from '../utils/calc';
 import { parseDisplayDate } from './api';
 import {
@@ -22,7 +22,16 @@ const fileStem = (base: string, p: Period) => safeName(`${base}_${p.from || 'sta
 
 // ── shared sheets ───────────────────────────────────────────────────────────
 
-export function tripsSheet(trips: Trip[], financials: boolean, name = 'Trips'): SheetSpec {
+// A "Total" row for a sheet `width` columns wide: the label in the first column
+// and the given cells at their column positions, the rest empty.
+function totalRow(width: number, cells: Record<number, SheetCell>): SheetCell[] {
+  return Array.from({ length: width }, (_, i) => (i === 0 ? label('Total') : (cells[i] ?? '')));
+}
+
+// Totals are only added to the report exports (a person reads them); the full
+// backup uses the same sheets with none, so it stays pure data.
+
+export function tripsSheet(trips: Trip[], financials: boolean, name = 'Trips', withTotal = false): SheetSpec {
   const head = [
     'Trip no.', 'Loading date', 'Unloading date', 'Item no.', 'Vehicle', 'Driver', 'Loading point', 'Loading point note',
     'Stops (place, odometer)', 'Final unloading point', 'Final unloading note', 'Transporter', 'Tons', 'Odometer start', 'Odometer end', 'KM',
@@ -46,6 +55,18 @@ export function tripsSheet(trips: Trip[], financials: boolean, name = 'Trips'): 
       STATUS_LABEL[t.status] ?? t.status, t.remarks ?? ''
     ]);
   }
+  if (withTotal && trips.length) {
+    const sums = trips.reduce((a, t) => {
+      const c = tripCost(t);
+      return { tons: a.tons + t.tons, km: a.km + t.km, diesel: a.diesel + c.diesel, adblue: a.adblue + c.adblue, toll: a.toll + c.toll, other: a.other + c.other, expense: a.expense + c.expense, revenue: a.revenue + t.revenue, profit: a.profit + c.profit };
+    }, { tons: 0, km: 0, diesel: 0, adblue: 0, toll: 0, other: 0, expense: 0, revenue: 0, profit: 0 });
+    const at = (h: string) => head.indexOf(h);
+    rows.push(totalRow(head.length, {
+      [at('Tons')]: dec(sums.tons), [at('KM')]: int(sums.km), [at('Diesel')]: money(sums.diesel), [at('AdBlue')]: money(sums.adblue),
+      [at('Toll')]: money(sums.toll), [at('Other')]: money(sums.other), [at('Trip expense')]: money(sums.expense),
+      ...(financials ? { [at('Revenue')]: money(sums.revenue), [at('Profit')]: money(sums.profit) } : {})
+    }));
+  }
   const widths = [26, 13, 13, 12, 13, 16, 22, 22, 36, 24, 22, 20, 8, 12, 12, 8, 12, 10, 10, 10, 13, ...(financials ? [13, 13] : []), 11, 28];
   return { name, rows, widths, freezeRows: 1 };
 }
@@ -61,7 +82,7 @@ export function routeSheet(trips: Trip[]): SheetSpec {
   return { name: 'Route and odometers', rows, widths: [26, 13, 20, 30, 14, 30], freezeRows: 1 };
 }
 
-export function expenseLinesSheet(trips: Trip[]): SheetSpec {
+export function expenseLinesSheet(trips: Trip[], withTotal = false): SheetSpec {
   const kindLabel: Record<string, string> = { diesel: 'Diesel', adblue: 'AdBlue', toll: 'Toll', other: 'Other' };
   const rows: SheetCell[][] = [[th('Trip no.'), th('Vehicle'), th('Date'), th('Kind'), th('Litres', true), th('Rate / litre', true), th('Amount', true), th('Details')]];
   for (const t of trips) {
@@ -72,13 +93,15 @@ export function expenseLinesSheet(trips: Trip[]): SheetSpec {
       ]);
     }
   }
+  if (withTotal && rows.length > 1) rows.push(totalRow(8, { 6: money(trips.reduce((a, t) => a + t.expenses.reduce((b, l) => b + l.amount, 0), 0)) }));
   return { name: 'Fuel and expense entries', rows, widths: [26, 13, 13, 10, 10, 12, 13, 30], freezeRows: 1 };
 }
 
-export function monthlyExpensesSheet(expenses: MonthlyExpense[]): SheetSpec {
+export function monthlyExpensesSheet(expenses: MonthlyExpense[], withTotal = false): SheetSpec {
   const dash = (v: string) => (v === '—' ? '' : v);
   const rows: SheetCell[][] = [[th('Date'), th('Vehicle'), th('Driver'), th('Description'), th('Remarks'), th('Amount', true)]];
   for (const e of expenses) rows.push([dateCell(parseDisplayDate(e.date)), e.vehicle, dash(e.driver), e.category, dash(e.remarks), money(e.amount)]);
+  if (withTotal && expenses.length) rows.push(totalRow(6, { 5: money(expenses.reduce((a, e) => a + e.amount, 0)) }));
   return { name: 'Fixed costs', rows, widths: [13, 13, 16, 20, 30, 13], freezeRows: 1 };
 }
 
@@ -96,7 +119,7 @@ export async function exportTripLog(trips: Trip[], financials: boolean, p: Perio
     widths: [70]
   };
   await saveWorkbook(`${fileStem('trip-log', p)}.xlsx`, [
-    tripsSheet(trips, financials), routeSheet(trips), expenseLinesSheet(trips), info
+    tripsSheet(trips, financials, 'Trips', true), routeSheet(trips), expenseLinesSheet(trips, true), info
   ]);
 }
 
@@ -135,13 +158,14 @@ export async function exportSummaryExcel(d: SummaryData): Promise<void> {
     name: 'Vehicle-wise',
     rows: [
       ['Vehicle', 'Model', 'Trips', 'KM', 'Tons', 'Trip expense', 'Monthly expense', 'Revenue', 'Profit', 'Rs / km'].map((h, i) => th(h, i >= 2)),
-      ...d.byVehicle.map((b) => [b.id, b.model === '—' ? '' : b.model, int(b.trips), int(b.km), dec(b.tons), money(b.ledgerTripExpense), money(b.ledgerMonthly), money(b.revenue), money(b.profit), b.km ? money(b.cost / b.km) : null] as SheetCell[])
+      ...d.byVehicle.map((b) => [b.id, b.model === '—' ? '' : b.model, int(b.trips), int(b.km), dec(b.tons), money(b.ledgerTripExpense), money(b.ledgerMonthly), money(b.revenue), money(b.profit), b.km ? money(b.cost / b.km) : null] as SheetCell[]),
+      (([t]) => totalRow(10, { 2: int(t.trips), 3: int(t.km), 4: dec(t.tons), 5: money(t.ledgerTripExpense), 6: money(t.ledgerMonthly), 7: money(t.revenue), 8: money(t.profit), 9: t.km ? money(t.cost / t.km) : '' }))([totalOfVehicles(d.byVehicle)])
     ],
     widths: [14, 18, 8, 10, 10, 14, 16, 14, 14, 10],
     freezeRows: 1
   };
   await saveWorkbook(`${fileStem('movement-summary', d.period)}.xlsx`, [
-    totals, perVehicle, tripsSheet(d.trips, true), routeSheet(d.trips), expenseLinesSheet(d.trips), monthlyExpensesSheet(d.expenses)
+    totals, perVehicle, tripsSheet(d.trips, true, 'Trips', true), routeSheet(d.trips), expenseLinesSheet(d.trips, true), monthlyExpensesSheet(d.expenses, true)
   ]);
 }
 
@@ -165,7 +189,8 @@ export async function exportSummaryPdf(d: SummaryData): Promise<void> {
           b.id, b.model === '—' ? '' : b.model, String(b.trips), b.km.toLocaleString('en-IN'), b.tons.toFixed(1),
           rs(b.ledgerTripExpense), rs(b.ledgerMonthly), rs(b.revenue), rs(b.profit), b.km ? rs(b.cost / b.km) : '-'
         ]),
-        right: [2, 3, 4, 5, 6, 7, 8, 9]
+        right: [2, 3, 4, 5, 6, 7, 8, 9],
+        foot: (([t]) => ['Total', '', String(t.trips), t.km.toLocaleString('en-IN'), t.tons.toFixed(1), rs(t.ledgerTripExpense), rs(t.ledgerMonthly), rs(t.revenue), rs(t.profit), t.km ? rs(t.cost / t.km) : '-'])([totalOfVehicles(d.byVehicle)])
       }
     ]
   });
@@ -198,13 +223,14 @@ export async function exportReportExcel(d: ReportData): Promise<void> {
       ...d.byVehicle.map((b) => [
         b.id, int(b.trips), int(b.km), dec(b.tons), money(b.diesel), money(b.ledgerToll), money(b.other), money(b.ledgerMonthly), money(b.cost),
         money(b.revenue), money(b.profit), b.revenue ? percent(b.profit / b.revenue) : null, b.km ? money(b.cost / b.km) : null
-      ] as SheetCell[])
+      ] as SheetCell[]),
+      (([t]) => totalRow(13, { 1: int(t.trips), 2: int(t.km), 3: dec(t.tons), 4: money(t.diesel), 5: money(t.ledgerToll), 6: money(t.other), 7: money(t.ledgerMonthly), 8: money(t.cost), 9: money(t.revenue), 10: money(t.profit), 11: t.revenue ? percent(t.profit / t.revenue) : '', 12: t.km ? money(t.cost / t.km) : '' }))([totalOfVehicles(d.byVehicle)])
     ],
     widths: [14, 8, 10, 10, 13, 12, 12, 13, 14, 14, 14, 9, 13],
     freezeRows: 1
   };
   await saveWorkbook(`${fileStem('monthly-report', d.period)}.xlsx`, [
-    headline, ledger, tripsSheet(d.trips, true), routeSheet(d.trips), expenseLinesSheet(d.trips), monthlyExpensesSheet(d.expenses)
+    headline, ledger, tripsSheet(d.trips, true, 'Trips', true), routeSheet(d.trips), expenseLinesSheet(d.trips, true), monthlyExpensesSheet(d.expenses, true)
   ]);
 }
 
@@ -225,7 +251,8 @@ export async function exportReportPdf(d: ReportData): Promise<void> {
         heading: 'Cost per kilometre, by vehicle',
         head: ['Vehicle', 'KM', 'Total cost', 'Cost per km'],
         body: d.byVehicle.map((b) => [b.id, b.km.toLocaleString('en-IN'), rs(b.cost), b.km ? rs(b.cost / b.km) : '-']),
-        right: [1, 2, 3]
+        right: [1, 2, 3],
+        foot: (([t]) => ['Total', t.km.toLocaleString('en-IN'), rs(t.cost), t.km ? rs(t.cost / t.km) : '-'])([totalOfVehicles(d.byVehicle)])
       },
       {
         heading: 'Vehicle-wise ledger',
@@ -234,7 +261,11 @@ export async function exportReportPdf(d: ReportData): Promise<void> {
           b.id, String(b.trips), b.km.toLocaleString('en-IN'), b.tons.toFixed(1), rs(b.diesel), rs(b.ledgerToll), rs(b.other), rs(b.ledgerMonthly),
           rs(b.cost), rs(b.revenue), rs(b.profit), b.revenue ? `${Math.round((b.profit / b.revenue) * 100)}%` : '-'
         ]),
-        right: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+        right: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+        foot: (([t]) => [
+          'Total', String(t.trips), t.km.toLocaleString('en-IN'), t.tons.toFixed(1), rs(t.diesel), rs(t.ledgerToll), rs(t.other), rs(t.ledgerMonthly),
+          rs(t.cost), rs(t.revenue), rs(t.profit), t.revenue ? `${Math.round((t.profit / t.revenue) * 100)}%` : '-'
+        ])([totalOfVehicles(d.byVehicle)])
       }
     ]
   });

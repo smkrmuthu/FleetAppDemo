@@ -342,6 +342,15 @@ export function MonthlyExpenses({ expenses: allExpenses, trips, vehicles, driver
               </tr>
             ))}
           </tbody>
+          {expenses.length > 0 && (
+            <tfoot>
+              <tr>
+                <td colSpan={6}>Total ({expenses.length})</td>
+                <td style={{ textAlign: 'right' }}>{rupees(expenses.reduce((a, e) => a + e.amount, 0))}</td>
+                <td colSpan={2} />
+              </tr>
+            </tfoot>
+          )}
         </table>
       </div>
       )}

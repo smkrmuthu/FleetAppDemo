@@ -227,6 +227,14 @@ export function MovementReview({ action, form, original, lines, originalLines, s
                 </tr>
               ))}
             </tbody>
+            {lines.length > 0 && (
+              <tfoot>
+                <tr>
+                  <td colSpan={3}>Total</td>
+                  <td style={{ textAlign: 'right' }}>{rupees(lines.reduce((a, l) => a + l.amount, 0))}</td>
+                </tr>
+              </tfoot>
+            )}
           </table>
         </div>
       )}

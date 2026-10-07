@@ -1,5 +1,5 @@
 import type { DriverMaster, MonthlyExpense, Trip, Vehicle } from '../types';
-import { aggregateByVehicle } from '../utils/aggregate';
+import { aggregateByVehicle, totalOfVehicles } from '../utils/aggregate';
 import { dateInRange, formatDateRange, formatNum, rupees, tripCost, yearOptions } from '../utils/calc';
 import { MonthYearFilter } from './MonthYearFilter';
 import { exportReportExcel, exportReportPdf, type ReportData, type Stat } from '../lib/reports';
@@ -163,6 +163,27 @@ export function MonthlyReport({ trips: allTrips, expenses: allExpenses, vehicles
               </tr>
             ))}
           </tbody>
+          {byVehicle.length > 0 && (() => {
+            const t = totalOfVehicles(byVehicle);
+            return (
+              <tfoot>
+                <tr>
+                  <td>Total</td>
+                  <td style={{ textAlign: 'right' }}>{formatNum(t.trips)}</td>
+                  <td style={{ textAlign: 'right' }}>{formatNum(t.km)}</td>
+                  <td style={{ textAlign: 'right' }}>{formatNum(t.tons, 1)}</td>
+                  <td style={{ textAlign: 'right' }}>{rupees(t.diesel)}</td>
+                  <td style={{ textAlign: 'right' }}>{rupees(t.ledgerToll)}</td>
+                  <td style={{ textAlign: 'right' }}>{rupees(t.other)}</td>
+                  <td style={{ textAlign: 'right' }}>{rupees(t.ledgerMonthly)}</td>
+                  <td style={{ textAlign: 'right' }}>{rupees(t.cost)}</td>
+                  <td style={{ textAlign: 'right' }}>{rupees(t.revenue)}</td>
+                  <td style={{ textAlign: 'right', color: t.profit >= 0 ? 'var(--color-profit)' : 'var(--color-accent-700)' }}>{rupees(t.profit)}</td>
+                  <td style={{ textAlign: 'right' }}>{t.revenue ? Math.round((t.profit / t.revenue) * 100) + '%' : '—'}</td>
+                </tr>
+              </tfoot>
+            );
+          })()}
         </table>
       </div>
     </section>

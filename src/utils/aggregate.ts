@@ -55,3 +55,18 @@ export function aggregateByVehicle(trips: Trip[], expenses: MonthlyExpense[], ve
     };
   });
 }
+
+// The "Total" row under a per-vehicle table: every amount summed across the
+// rows shown. Ratios (margin, ₹/km) are not carried here — compute them from
+// these totals, never by adding the rows' own ratios together.
+export function totalOfVehicles(rows: VehicleAgg[]): VehicleAgg {
+  const sum = (pick: (r: VehicleAgg) => number) => rows.reduce((a, r) => a + pick(r), 0);
+  return {
+    id: 'Total', model: '',
+    trips: sum((r) => r.trips), km: sum((r) => r.km), tons: sum((r) => r.tons),
+    diesel: sum((r) => r.diesel), adblue: sum((r) => r.adblue), toll: sum((r) => r.toll), other: sum((r) => r.other),
+    tripExpense: sum((r) => r.tripExpense), monthly: sum((r) => r.monthly),
+    ledgerToll: sum((r) => r.ledgerToll), ledgerMonthly: sum((r) => r.ledgerMonthly), ledgerTripExpense: sum((r) => r.ledgerTripExpense),
+    cost: sum((r) => r.cost), revenue: sum((r) => r.revenue), profit: sum((r) => r.profit)
+  };
+}
