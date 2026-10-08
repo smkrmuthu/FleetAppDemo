@@ -100,6 +100,16 @@ docs/                   RUNBOOK.md, backup/restore, architecture
 - Covered by `demoData.test.ts`, which builds a real SQLite database from the migrations and seed.
 - To switch it off, remove `DEMO_MODE` from `worker/wrangler.toml` and deploy.
 
+## Large-fleet sample data (optional, for scale testing)
+
+`worker/scripts/large-fleet.mjs` generates SQL for ~120 trucks, ~110 drivers and ~700 movements across this and last month (repeatable output). Everything it adds is marked (`lf-*` ids, `custom_fields` `{"sample":"large-fleet"}`), and `worker/scripts/large-fleet-remove.sql` takes it all away. Load it on the **local** DB first; do not apply it to the live demo DB without asking, since it changes what prospects see.
+
+```bash
+cd worker && node scripts/large-fleet.mjs > large-fleet.sql
+npx wrangler d1 execute fleet-ledger-demo-db --local -c wrangler.toml --file=large-fleet.sql
+npx wrangler d1 execute fleet-ledger-demo-db --local -c wrangler.toml --file=scripts/large-fleet-remove.sql   # undo
+```
+
 ## Deploying
 
 - **Web app:** push to `main`; the Cloudflare Git build publishes the `fleetappdemo` worker. Verify in a private window at https://fleet.oneuptech.co.
