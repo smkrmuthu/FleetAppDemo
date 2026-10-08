@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import { Search } from 'lucide-react';
 import type { DriverLeave, DriverMaster, MasterSettings, Vehicle, VehicleUnavailability } from '../types';
 import { formatDisplayDateTime } from '../lib/api';
 import { BackupPanel } from './BackupPanel';
+import { Pager, usePaging } from './Pager';
 import { formatLeaveDuration, leaveDurationMinutes } from '../utils/calc';
 
 interface Props {
@@ -42,6 +44,7 @@ export function Master({
   transporters, onAddTransporter, onRemoveTransporter, isManager
 }: Props) {
   const rates = settings;
+  const [driverQuery, setDriverQuery] = useState('');
   const [diesel, setDiesel] = useState(fmt(rates.dieselRate));
   const [adblue, setAdblue] = useState(fmt(rates.adblueRate));
   const [rateError, setRateError] = useState('');
@@ -118,6 +121,7 @@ export function Master({
   const [leaveError, setLeaveError] = useState('');
   const [savingLeave, setSavingLeave] = useState(false);
   const sortedLeaves = [...leaves].sort((a, b) => a.startsAt.localeCompare(b.startsAt));
+  const leavePaging = usePaging(sortedLeaves.length, 'leaves');
 
   async function addLeave() {
     if (!leaveForm.driver) return setLeaveError('Select a driver.');
@@ -137,6 +141,9 @@ export function Master({
   const [unavailError, setUnavailError] = useState('');
   const [savingUnavail, setSavingUnavail] = useState(false);
   const sortedUnavailability = [...unavailability].sort((a, b) => a.startsAt.localeCompare(b.startsAt));
+  const unavailPaging = usePaging(sortedUnavailability.length, 'unavail');
+  const shownVehicles = vehicles.filter((v) => !driverQuery.trim() || `${v.id} ${v.model}`.toLowerCase().includes(driverQuery.trim().toLowerCase()));
+  const defaultPaging = usePaging(shownVehicles.length, driverQuery, 10); // each row's driver list is long, so keep the page short
 
   // The id of the window being edited, or null when the form is adding a new one.
   const [editingUnavailId, setEditingUnavailId] = useState<string | null>(null);
@@ -272,13 +279,19 @@ export function Master({
         When a truck is picked in Add Movement, its default driver is filled in for you. It's only a starting point — the driver
         can be changed on the movement. Changes here save as soon as you pick.
       </p>
+      {vehicles.length > 10 && (
+        <div className="fleet-search" style={{ marginBottom: 12, display: 'block' }}>
+          <Search size={15} aria-hidden="true" />
+          <input className="input" type="search" placeholder="Search trucks by reg no or model" aria-label="Search trucks" value={driverQuery} onChange={(e) => setDriverQuery(e.target.value)} />
+        </div>
+      )}
       <div className="scroll-x" style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', background: 'var(--color-surface)' }}>
         <table className="table" style={{ minWidth: 640 }}>
           <thead>
             <tr><th>Truck</th><th>Model</th><th>Default driver</th></tr>
           </thead>
           <tbody>
-            {vehicles.map((v) => {
+            {defaultPaging.slice(shownVehicles).map((v) => {
               const current = v.defaultDriver ?? '';
               const known = !current || drivers.some((d) => d.name === current);
               const status = rowStatus[v.id];
@@ -306,12 +319,13 @@ export function Master({
                 </tr>
               );
             })}
-            {vehicles.length === 0 && (
-              <tr><td colSpan={3} style={{ color: 'var(--color-neutral-700)' }}>No trucks yet — add one under People.</td></tr>
+            {shownVehicles.length === 0 && (
+              <tr><td colSpan={3} style={{ color: 'var(--color-neutral-700)' }}>{vehicles.length === 0 ? 'No trucks yet — add one under People.' : 'No trucks match.'}</td></tr>
             )}
           </tbody>
         </table>
       </div>
+      <Pager attached page={defaultPaging.page} pageSize={defaultPaging.size} total={shownVehicles.length} onPage={defaultPaging.setPage} />
 
       <h2 style={{ fontSize: 'var(--fs-section)', margin: 'var(--space-8) 0 12px' }}>Driver leave</h2>
       <p style={{ color: 'var(--color-neutral-700)', fontSize: 13, marginTop: -4, marginBottom: 12, maxWidth: '74ch', lineHeight: 1.6 }}>
@@ -362,7 +376,7 @@ export function Master({
             <tr><th>Driver</th><th>From</th><th>To</th><th>Duration</th><th>Remarks</th><th className="col-actions"></th></tr>
           </thead>
           <tbody>
-            {sortedLeaves.map((l) => (
+            {leavePaging.slice(sortedLeaves).map((l) => (
               <tr key={l.id}>
                 <td style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{l.driver}</td>
                 <td style={{ whiteSpace: 'nowrap' }}>{formatDisplayDateTime(l.startsAt)}</td>
@@ -380,6 +394,7 @@ export function Master({
           </tbody>
         </table>
       </div>
+      <Pager attached page={leavePaging.page} pageSize={leavePaging.size} total={sortedLeaves.length} onPage={leavePaging.setPage} />
 
       <h2 style={{ fontSize: 'var(--fs-section)', margin: 'var(--space-8) 0 12px' }}>Truck unavailability</h2>
       <p style={{ color: 'var(--color-neutral-700)', fontSize: 13, marginTop: -4, marginBottom: 12, maxWidth: '74ch', lineHeight: 1.6 }}>
@@ -436,7 +451,7 @@ export function Master({
             <tr><th>Truck</th><th>From</th><th>To</th><th>Duration</th><th>Remarks</th><th className="col-actions"></th></tr>
           </thead>
           <tbody>
-            {sortedUnavailability.map((w) => (
+            {unavailPaging.slice(sortedUnavailability).map((w) => (
               <tr key={w.id} style={editingUnavailId === w.id ? { background: 'var(--color-accent-100)' } : undefined}>
                 <td style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{w.vehicle}</td>
                 <td style={{ whiteSpace: 'nowrap' }}>{formatDisplayDateTime(w.startsAt)}</td>
@@ -457,6 +472,7 @@ export function Master({
           </tbody>
         </table>
       </div>
+      <Pager attached page={unavailPaging.page} pageSize={unavailPaging.size} total={sortedUnavailability.length} onPage={unavailPaging.setPage} />
 
       <h2 style={{ fontSize: 'var(--fs-section)', margin: 'var(--space-8) 0 12px' }}>Transporters</h2>
       <p style={{ color: 'var(--color-neutral-700)', fontSize: 13, marginTop: -4, marginBottom: 12, maxWidth: '74ch', lineHeight: 1.6 }}>

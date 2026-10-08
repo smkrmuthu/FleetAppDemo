@@ -11,6 +11,7 @@ import { TRIP_EXPENSE_LABEL } from '../data/mockData';
 import { fetchDocumentBlobUrl, parseDisplayDate } from '../lib/api';
 import { dateInRange, formatDateRange, formatDuration, formatNum, overlappingUnavailability, rupees, tripCost, tripDurationDays, yearOptions } from '../utils/calc';
 import { MonthYearFilter } from './MonthYearFilter';
+import { Pager, usePaging } from './Pager';
 import { SortableTh, type SortDir } from './SortableTh';
 
 const DETAIL_COLUMNS = 9; // Trip No., Loading date, Duration, Vehicle, Driver, Tons, Odo Meter start, KM, Status
@@ -236,6 +237,8 @@ export function TripLog({ trips, vehicles, drivers, leaves, unavailability, vehi
     return sort.dir === 'asc' ? cmp : -cmp;
   });
 
+  const paging = usePaging(rows.length, [vehicleFilter, driverFilter, dateFrom, dateTo].join('|'));
+
   return (
     <section>
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap', marginBottom: 18 }}>
@@ -297,6 +300,7 @@ export function TripLog({ trips, vehicles, drivers, leaves, unavailability, vehi
           No movements match the selected filters.
         </div>
       ) : (
+        <>
         <DualScroll>
           <table className="table" style={{ minWidth: 1020 }}>
             <thead>
@@ -313,7 +317,7 @@ export function TripLog({ trips, vehicles, drivers, leaves, unavailability, vehi
               </tr>
             </thead>
             <tbody>
-              {rows.map((t) => {
+              {paging.slice(rows).map((t) => {
                 const isOpen = expanded.has(t.id);
                 return (
                   <Fragment key={t.id}>
@@ -389,6 +393,8 @@ export function TripLog({ trips, vehicles, drivers, leaves, unavailability, vehi
             </tfoot>
           </table>
         </DualScroll>
+        <Pager attached page={paging.page} pageSize={paging.size} total={rows.length} onPage={paging.setPage} />
+        </>
       )}
 
       {viewing && (

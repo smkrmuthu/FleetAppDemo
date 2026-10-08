@@ -85,6 +85,7 @@ docs/                   RUNBOOK.md, backup/restore, architecture
 - Use design tokens from `src/index.css` (`var(--color-...)`, `var(--font-heading)`), not hard-coded colours. Display/figures use Archivo, body Inter.
 - Reuse components from `ui.tsx` before writing new markup. Tables use `<table className="table">`; a `<tfoot>` row renders as the bold Total row.
 - Money is stored as paise (integers) in the DB; format with `rupees()` / `formatNum()` from `src/utils/calc.ts`.
+- **Long lists:** tables that can grow past ~25 rows use `usePaging()` + `<Pager attached …>` (`src/components/Pager.tsx`, 25 per page, resets when filters change); totals/footers and exports still cover every row, not just the page. Fleet-sized lists also get search and "show more" (see `FleetStatus.tsx`, People, Dashboard). Test layout changes with `worker/scripts/large-fleet.mjs --vehicles 260`.
 - **Totals:** per-vehicle totals come from `totalOfVehicles()` in `src/utils/aggregate.ts`; ratios (margin, ₹/km) are recomputed from the totals, never averaged. Report exports take `withTotal`/`foot` options; the full backup (`exportBackup`) must stay pure data with no total rows.
 - Schema changes are a new migration in `worker/migrations/` plus the Drizzle schema; never edit applied migrations. Keep `seed.sql` consistent with the schema.
 - Bump the cache name in `public/sw.js` when shipped shell assets change.

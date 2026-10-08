@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import type { DriverMaster, MonthlyExpense, Trip, Vehicle } from '../types';
 import { aggregateByVehicle, totalOfVehicles } from '../utils/aggregate';
 import { dateInRange, formatDateRange, formatNum, rupees, tripCost, yearOptions } from '../utils/calc';
 import { MonthYearFilter } from './MonthYearFilter';
+import { Pager, usePaging } from './Pager';
 import { exportReportExcel, exportReportPdf, type ReportData, type Stat } from '../lib/reports';
 import { useExport } from '../lib/useExport';
 
@@ -45,6 +47,12 @@ export function MonthlyReport({ trips: allTrips, expenses: allExpenses, vehicles
 
   const byVehicle = aggregateByVehicle(trips, expenses, vehicles);
   const maxPerKm = Math.max(...byVehicle.map((b) => (b.km ? b.cost / b.km : 0)), 1);
+  // With many trucks the cost-per-km bars lead with the dearest ones and open up on request.
+  const BAR_STEP = 10;
+  const [barRows, setBarRows] = useState(BAR_STEP);
+  const perKmOf = (b: { km: number; cost: number }) => (b.km ? b.cost / b.km : 0);
+  const barList = byVehicle.length > BAR_STEP ? [...byVehicle].sort((a, b) => perKmOf(b) - perKmOf(a) || a.id.localeCompare(b.id)) : byVehicle;
+  const paging = usePaging(byVehicle.length, [dateFrom, dateTo, vehicleFilter, driverFilter].join('|'));
 
   const totalCost = totals.exp + monthlyTotal;
   const costPerTon = totals.tons ? totalCost / totals.tons : 0;
@@ -117,7 +125,7 @@ export function MonthlyReport({ trips: allTrips, expenses: allExpenses, vehicles
 
       <h2 style={{ fontSize: 'var(--fs-section)', marginBottom: 12 }}>Cost per kilometre, by vehicle</h2>
       <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 20, marginBottom: 28, background: 'var(--color-surface)' }}>
-        {byVehicle.map((b) => {
+        {barList.slice(0, barRows).map((b) => {
           const perKm = b.km ? b.cost / b.km : 0;
           return (
             <div key={b.id} style={{ display: 'grid', gridTemplateColumns: '150px minmax(0,1fr) 90px', alignItems: 'center', gap: 14, padding: '9px 0', borderBottom: '1px solid var(--color-neutral-300)' }}>
@@ -129,6 +137,13 @@ export function MonthlyReport({ trips: allTrips, expenses: allExpenses, vehicles
             </div>
           );
         })}
+        {byVehicle.length > BAR_STEP && (
+          <div className="show-more" style={{ paddingTop: 14 }}>
+            <span>Showing {Math.min(barRows, byVehicle.length)} of {formatNum(byVehicle.length)} vehicles · highest cost per km first</span>
+            {barRows < byVehicle.length && <button type="button" className="btn btn-secondary btn-sm" onClick={() => setBarRows(barRows + 20)}>Show more</button>}
+            {barRows > BAR_STEP && <button type="button" className="btn btn-ghost btn-sm" onClick={() => setBarRows(BAR_STEP)}>Show fewer</button>}
+          </div>
+        )}
       </div>
 
       <h2 style={{ fontSize: 'var(--fs-section)', marginBottom: 12 }}>Vehicle-wise ledger</h2>
@@ -144,7 +159,7 @@ export function MonthlyReport({ trips: allTrips, expenses: allExpenses, vehicles
             </tr>
           </thead>
           <tbody>
-            {byVehicle.map((b) => (
+            {paging.slice(byVehicle).map((b) => (
               <tr key={b.id}>
                 <td style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{b.id}</td>
                 <td style={{ textAlign: 'right' }}>{formatNum(b.trips)}</td>
@@ -186,6 +201,7 @@ export function MonthlyReport({ trips: allTrips, expenses: allExpenses, vehicles
           })()}
         </table>
       </div>
+      <Pager attached page={paging.page} pageSize={paging.size} total={byVehicle.length} onPage={paging.setPage} />
     </section>
   );
 }

@@ -4,6 +4,7 @@ import { categoryTint } from '../data/mockData';
 import { fetchMonthlyExpenseDocumentBlobUrl, parseDisplayDate } from '../lib/api';
 import { dateInRange, formatDateRange, matchingLoadingDate, rupees, todayIso, toNumber, yearOptions } from '../utils/calc';
 import { MonthYearFilter } from './MonthYearFilter';
+import { Pager, usePaging } from './Pager';
 
 function blankExpense(defaultVehicle: string, defaultCategory: string): ExpenseFormState {
   return { date: todayIso(), vehicle: defaultVehicle, driver: '', category: defaultCategory, amount: '0', remarks: '' };
@@ -64,6 +65,8 @@ export function MonthlyExpenses({ expenses: allExpenses, trips, vehicles, driver
       const cmp = parseDisplayDate(a.date).localeCompare(parseDisplayDate(b.date));
       return dateSort === 'asc' ? cmp : -cmp;
     });
+
+  const paging = usePaging(expenses.length, [dateFrom, dateTo, truckFilter].join('|'));
 
   const set = (k: keyof ExpenseFormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setExp((f) => ({ ...f, [k]: e.target.value } as ExpenseFormState));
@@ -285,6 +288,7 @@ export function MonthlyExpenses({ expenses: allExpenses, trips, vehicles, driver
           {truckFilter === 'all' ? 'No expenses recorded for this date range.' : `No expenses recorded for ${truckFilter} in this date range.`}
         </div>
       ) : (
+      <>
       <div className="scroll-x" style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', background: 'var(--color-surface)' }}>
         <table className="table" style={{ minWidth: 860 }}>
           <thead>
@@ -301,7 +305,7 @@ export function MonthlyExpenses({ expenses: allExpenses, trips, vehicles, driver
             </tr>
           </thead>
           <tbody>
-            {expenses.map((e) => (
+            {paging.slice(expenses).map((e) => (
               <tr key={e.id} style={e.id === editingId ? { background: 'var(--color-accent-100)' } : undefined}>
                 <td style={{ whiteSpace: 'nowrap' }}>{e.date}</td>
                 <td style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{e.vehicle}</td>
@@ -353,6 +357,8 @@ export function MonthlyExpenses({ expenses: allExpenses, trips, vehicles, driver
           )}
         </table>
       </div>
+      <Pager attached page={paging.page} pageSize={paging.size} total={expenses.length} onPage={paging.setPage} />
+      </>
       )}
     </section>
   );

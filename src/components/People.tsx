@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { Search } from 'lucide-react';
 import type { DriverMaster, UserAccount, Vehicle } from '../types';
 import { BRANCH_OPTIONS, parseDisplayDate, type VehicleEdit } from '../lib/api';
 import { dueStatus, vehicleAge } from '../utils/calc';
 import { DualScroll } from './DualScroll';
+import { Pager, usePaging } from './Pager';
 import { RecordDialog, type DialogField } from './RecordDialog';
 
 // Every date on a truck that expires or falls due, most urgent first.
@@ -204,6 +206,14 @@ export function People({
   const [newDriver, setNewDriver] = useState({ name: '', licence: '', expiry: '' });
   const [vehicleError, setVehicleError] = useState('');
   const [driverError, setDriverError] = useState('');
+  const [truckQuery, setTruckQuery] = useState('');
+  const [driverQuery, setDriverQuery] = useState('');
+  const matches = (q: string, ...fields: string[]) => !q.trim() || fields.some((f) => (f ?? '').toLowerCase().includes(q.trim().toLowerCase()));
+  const shownTrucks = vehicles.filter((v) => matches(truckQuery, v.id, v.model, v.owner));
+  const shownDrivers = drivers.filter((d) => matches(driverQuery, d.name, d.licence));
+  const userPaging = usePaging(users.length, 'users');
+  const truckPaging = usePaging(shownTrucks.length, truckQuery);
+  const driverPaging = usePaging(shownDrivers.length, driverQuery);
 
   async function addVehicle() {
     if (!newVehicle.id.trim()) {
@@ -356,7 +366,7 @@ export function People({
             </tr>
           </thead>
           <tbody>
-            {users.map((u) => (
+            {userPaging.slice(users).map((u) => (
               <tr key={u.id}>
                 <td style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{u.name}</td>
                 <td>{u.isManager ? <span className="badge badge-info">{u.role}</span> : <span className="badge badge-neutral">{u.role}</span>}</td>
@@ -378,8 +388,9 @@ export function People({
           </tbody>
         </table>
       </div>
+      <Pager attached page={userPaging.page} pageSize={userPaging.size} total={users.length} onPage={userPaging.setPage} />
 
-      <h2 style={{ fontSize: 'var(--fs-section)', marginBottom: 12 }}>Trucks</h2>
+      <h2 style={{ fontSize: 'var(--fs-section)', marginBottom: 12 }}>Trucks <span style={{ fontSize: 13, fontWeight: 400, color: 'var(--color-neutral-700)' }}>{vehicles.length}</span></h2>
       <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 16, marginBottom: 16, background: 'var(--color-surface)' }}>
         <div className="filters-grid">
           <div className="field"><label>Reg No</label><input className="input" type="text" placeholder="TN00 XX 0000" value={newVehicle.id} onChange={(e) => setNewVehicle((v) => ({ ...v, id: e.target.value }))} /></div>
@@ -396,6 +407,10 @@ export function People({
           {vehicleError && <div role="alert" style={{ color: 'var(--color-accent-700)', fontSize: 13 }}>{vehicleError}</div>}
         </div>
       </div>
+      <div className="fleet-search" style={{ marginBottom: 12, display: 'block' }}>
+        <Search size={15} aria-hidden="true" />
+        <input className="input" type="search" placeholder="Search trucks by reg no, model or owner" aria-label="Search trucks by reg no, model or owner" value={truckQuery} onChange={(e) => setTruckQuery(e.target.value)} />
+      </div>
       <div style={{ marginBottom: 30 }}>
       <DualScroll>
         <table className="table" style={{ minWidth: 1500 }}>
@@ -406,7 +421,7 @@ export function People({
             </tr>
           </thead>
           <tbody>
-            {vehicles.map((v) => (
+            {truckPaging.slice(shownTrucks).map((v) => (
               <tr key={v.id}>
                 <td style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{v.id}</td>
                 <td style={{ whiteSpace: 'nowrap' }}>{v.regDate}</td>
@@ -438,15 +453,16 @@ export function People({
                 </td>
               </tr>
             ))}
-            {vehicles.length === 0 && (
-              <tr><td colSpan={13} style={{ color: 'var(--color-neutral-700)' }}>No trucks yet.</td></tr>
+            {shownTrucks.length === 0 && (
+              <tr><td colSpan={13} style={{ color: 'var(--color-neutral-700)' }}>{vehicles.length === 0 ? 'No trucks yet.' : 'No trucks match.'}</td></tr>
             )}
           </tbody>
         </table>
       </DualScroll>
+      <Pager attached page={truckPaging.page} pageSize={truckPaging.size} total={shownTrucks.length} onPage={truckPaging.setPage} />
       </div>
 
-      <h2 style={{ fontSize: 'var(--fs-section)', marginBottom: 12 }}>Drivers</h2>
+      <h2 style={{ fontSize: 'var(--fs-section)', marginBottom: 12 }}>Drivers <span style={{ fontSize: 13, fontWeight: 400, color: 'var(--color-neutral-700)' }}>{drivers.length}</span></h2>
       <div style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: 16, marginBottom: 16, background: 'var(--color-surface)' }}>
         <div className="filters-grid">
           <div className="field"><label>Name</label><input className="input" type="text" placeholder="Driver name" value={newDriver.name} onChange={(e) => setNewDriver((d) => ({ ...d, name: e.target.value }))} /></div>
@@ -455,6 +471,10 @@ export function People({
           <button type="button" className="btn btn-primary" style={{ justifySelf: 'start' }} onClick={addDriver}>Add driver</button>
           {driverError && <div role="alert" style={{ color: 'var(--color-accent-700)', fontSize: 13 }}>{driverError}</div>}
         </div>
+      </div>
+      <div className="fleet-search" style={{ marginBottom: 12, display: 'block' }}>
+        <Search size={15} aria-hidden="true" />
+        <input className="input" type="search" placeholder="Search drivers by name or licence no" aria-label="Search drivers by name or licence no" value={driverQuery} onChange={(e) => setDriverQuery(e.target.value)} />
       </div>
       <div className="scroll-x" style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', background: 'var(--color-surface)' }}>
         <table className="table" style={{ minWidth: 760 }}>
@@ -465,7 +485,7 @@ export function People({
             </tr>
           </thead>
           <tbody>
-            {drivers.map((d) => (
+            {driverPaging.slice(shownDrivers).map((d) => (
               <tr key={d.name}>
                 <td style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{d.name}</td>
                 <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: 12, whiteSpace: 'nowrap' }}>{d.licence}</td>
@@ -480,12 +500,13 @@ export function People({
                 </td>
               </tr>
             ))}
-            {drivers.length === 0 && (
-              <tr><td colSpan={6} style={{ color: 'var(--color-neutral-700)' }}>No drivers yet.</td></tr>
+            {shownDrivers.length === 0 && (
+              <tr><td colSpan={6} style={{ color: 'var(--color-neutral-700)' }}>{drivers.length === 0 ? 'No drivers yet.' : 'No drivers match.'}</td></tr>
             )}
           </tbody>
         </table>
       </div>
+      <Pager attached page={driverPaging.page} pageSize={driverPaging.size} total={shownDrivers.length} onPage={driverPaging.setPage} />
       <p style={{ color: 'var(--color-neutral-700)', maxWidth: '74ch', lineHeight: 1.6, marginTop: 16 }}>
         A truck's tax, inspection, NP, FC and pollution dates are highlighted in the Due column once they are within 60
         days or past. Office and Manager can add, edit or remove trucks and drivers; only a Manager can edit or delete

@@ -3,6 +3,7 @@ import type { DriverMaster, FuelEntry, MasterSettings, Role, Trip, TripDocument,
 import { parseDisplayDate, scanReceipt, type ScannedReceipt } from '../lib/api';
 import { dateInRange, formatDateRange, rupees, todayIso, toNumber, yearOptions } from '../utils/calc';
 import { MonthYearFilter } from './MonthYearFilter';
+import { Pager, usePaging } from './Pager';
 import { exportFuelExcel, exportFuelPdf, type FuelRow } from '../lib/reports';
 import { useExport } from '../lib/useExport';
 import { SortableTh, type SortDir } from './SortableTh';
@@ -260,6 +261,7 @@ export function FuelExpenses({ trips, vehicles, drivers, master, role, dateFrom,
   const totalLitres = entries.reduce((a, e) => a + (e.line.litres ?? 0), 0);
   const totalAmount = entries.reduce((a, e) => a + e.line.amount, 0);
   const notAssigned = entries.filter((e) => !e.trip).length;
+  const paging = usePaging(entries.length, [dateFrom, dateTo, truckFilter].join('|'));
   const fuelRows = (): FuelRow[] => entries.map(({ trip, line, vehicle: truck }) => ({
     date: line.date, vehicle: truck, tripNo: trip ? trip.waybillNo : 'Not assigned', litres: line.litres ?? null, rate: line.ratePerLitre ?? null,
     amount: line.amount, remarks: line.details ?? ''
@@ -395,6 +397,7 @@ export function FuelExpenses({ trips, vehicles, drivers, master, role, dateFrom,
           {allEntries.length === 0 ? 'No fuel entries yet.' : 'No fuel entries match the selected filters.'}
         </div>
       ) : (
+        <>
         <div className="scroll-x" style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', background: 'var(--color-surface)' }}>
           <table className="table" style={{ minWidth: 760 }}>
             <thead>
@@ -404,7 +407,7 @@ export function FuelExpenses({ trips, vehicles, drivers, master, role, dateFrom,
               </tr>
             </thead>
             <tbody>
-              {entries.map((row) => {
+              {paging.slice(entries).map((row) => {
                 const { trip, line } = row;
                 return (
                 <tr key={line.id} style={editing?.line.id === line.id ? { background: 'var(--color-accent-100)' } : undefined}>
@@ -442,6 +445,8 @@ export function FuelExpenses({ trips, vehicles, drivers, master, role, dateFrom,
             </tfoot>
           </table>
         </div>
+        <Pager attached page={paging.page} pageSize={paging.size} total={entries.length} onPage={paging.setPage} />
+        </>
       )}
     </section>
   );

@@ -4,6 +4,7 @@ import type { VehicleAgg } from '../utils/aggregate';
 import { aggregateByVehicle, isFastag, totalOfVehicles } from '../utils/aggregate';
 import { dateInRange, formatDateRange, formatNum, rupees, tripCost, yearOptions } from '../utils/calc';
 import { MonthYearFilter } from './MonthYearFilter';
+import { Pager, usePaging } from './Pager';
 import { exportSummaryExcel, exportSummaryPdf, type Stat, type SummaryData } from '../lib/reports';
 import { useExport } from '../lib/useExport';
 
@@ -84,6 +85,7 @@ export function MovementSummary({ trips, expenses, vehicles, drivers, vehicleFil
         return sort.dir === 'asc' ? cmp : -cmp;
       })
     : byVehicle;
+  const paging = usePaging(sortedByVehicle.length, [dateFrom, dateTo, vehicleFilter, driverFilter].join('|'));
 
   function sortHeader(key: SortKey, label: string, align: 'left' | 'right' = 'left') {
     const dir = sort?.key === key ? sort.dir : null;
@@ -211,7 +213,7 @@ export function MovementSummary({ trips, expenses, vehicles, drivers, vehicleFil
             </tr>
           </thead>
           <tbody>
-            {sortedByVehicle.map((b) => (
+            {paging.slice(sortedByVehicle).map((b) => (
               <tr key={b.id}>
                 <td style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>{b.id}</td>
                 <td style={{ color: 'var(--color-neutral-700)' }}>{b.model}</td>
@@ -249,6 +251,7 @@ export function MovementSummary({ trips, expenses, vehicles, drivers, vehicleFil
           })()}
         </table>
       </div>
+      <Pager attached page={paging.page} pageSize={paging.size} total={sortedByVehicle.length} onPage={paging.setPage} />
     </section>
   );
 }

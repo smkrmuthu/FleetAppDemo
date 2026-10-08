@@ -3,6 +3,7 @@ import { ArrowRight, Plus } from 'lucide-react';
 import type { Role, Trip } from '../types';
 import { parseDisplayDate } from '../lib/api';
 import { formatNum, todayIso } from '../utils/calc';
+import { Pager, usePaging } from './Pager';
 import { DataTable, EmptyState, FilterBar, FormField, GhostButton, KpiCard, PageHeader, PrimaryButton, SecondaryButton, TripStatusBadge } from './ui';
 
 interface Props {
@@ -41,6 +42,7 @@ export function Movements({ trips, role, onAddMovement, onEdit, onDelete, onOpen
     return d === null ? max : Math.max(max ?? 0, d);
   }, null);
   const vehicleOptions = [...new Set(open.map((t) => t.vehicle))].sort();
+  const paging = usePaging(rows.length, `${status}|${vehicle}`);
 
   return (
     <section>
@@ -84,6 +86,7 @@ export function Movements({ trips, role, onAddMovement, onEdit, onDelete, onOpen
           {open.length === 0 ? 'Nothing in progress — every movement is approved.' : 'No open movements match these filters.'}
         </EmptyState>
       ) : (
+        <>
         <DataTable minWidth={880}>
           <thead>
             <tr>
@@ -98,7 +101,7 @@ export function Movements({ trips, role, onAddMovement, onEdit, onDelete, onOpen
             </tr>
           </thead>
           <tbody>
-            {rows.map(({ t, iso }) => {
+            {paging.slice(rows).map(({ t, iso }) => {
               const days = daysSince(iso);
               return (
                 <tr key={t.id}>
@@ -124,6 +127,8 @@ export function Movements({ trips, role, onAddMovement, onEdit, onDelete, onOpen
             })}
           </tbody>
         </DataTable>
+        <Pager attached page={paging.page} pageSize={paging.size} total={rows.length} onPage={paging.setPage} />
+        </>
       )}
       {!isDriver && pending > 0 && (
         <p className="muted" style={{ fontSize: 13, marginTop: 'var(--space-3)' }}>
