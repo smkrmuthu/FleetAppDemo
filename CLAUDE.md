@@ -103,9 +103,9 @@ docs/                   RUNBOOK.md, backup/restore, architecture
 
 ## Large-fleet sample data (optional, for scale testing)
 
-`worker/scripts/large-fleet.mjs` generates SQL for 260 trucks, 250 drivers and this and last month's movements (`--vehicles`, `--drivers`, `--today` change that). The SQL is short (~15 KB): the database builds the rows itself with recursive queries and a repeatable hash, so the same arguments give the same data. Statements are separated by a `--;` line. Everything it adds is marked (`lf-*` ids, `custom_fields` `{"sample":"large-fleet"}`), and `worker/scripts/large-fleet-remove.sql` takes it all away.
+The generator is `worker/src/lib/largeFleet.ts` (260 trucks, 250 drivers, this and last month's movements). The database builds the rows itself from ~15 KB of SQL (recursive queries and a repeatable hash), so the same date always gives the same data. `worker/scripts/large-fleet.mjs` prints it (`--vehicles`, `--drivers`, `--today`; statements are split by a `--;` line; needs Node 22.18+). Everything it adds is marked (`lf-*` ids, `custom_fields` `{"sample":"large-fleet"}`), and `worker/scripts/large-fleet-remove.sql` takes it all away.
 
-**It is loaded in the live demo DB** (8 Oct 2026, dated that day). It does not roll forward by itself: the nightly refresh only maintains the `demo-*` rows. To re-date it, run the remove script, then load a fresh run with the new `--today`. Do not load or remove it on the live DB without asking, since it changes what prospects see.
+**It is loaded in the live demo DB (8 Oct 2026) and rolls forward every night** inside the demo refresh (`demoData.ts` → `planLargeFleet`): on the 1st both months are rebuilt, on other nights only this month's movements and fixed costs, and truck due dates and licence expiries move with the calendar. It only runs while the set is present, so `large-fleet-remove.sql` stops it too. Nothing people create is touched. Do not load or remove the set on the live DB without asking, since it changes what prospects see. Roll tests: `worker/src/lib/largeFleet.test.ts`.
 
 ```bash
 cd worker && node scripts/large-fleet.mjs > large-fleet.sql

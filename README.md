@@ -32,6 +32,10 @@
 > `npx wrangler dev -c wrangler.toml --test-scheduled`, then open
 > `http://127.0.0.1:8787/__scheduled`. To switch it off, remove `DEMO_MODE`.
 >
+> If the large sample fleet (260 trucks, `worker/src/lib/largeFleet.ts`) is loaded, the
+> same nightly run keeps it current too: whole on the 1st, this month's movements on
+> other nights. `worker/scripts/large-fleet-remove.sql` removes it (and stops the roll).
+>
 > Demo sign-in: `mgr@demo.com` / `mgr123`, `office@demo.com` / `office123`,
 > `driver@demo.com` / `driver123`.
 

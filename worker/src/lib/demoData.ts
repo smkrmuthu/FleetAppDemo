@@ -12,10 +12,14 @@
 // "ot…"/"oe…" rows and notifications n7/n8 that an earlier hand-run script
 // added). Anything people create while trying the demo is left alone.
 //
+// If the large sample fleet (largeFleet.ts) has been loaded, the same run rolls it forward
+// too, in the same batch.
+//
 // Safety: it does nothing unless DEMO_MODE is "true" AND the organisation is
 // named "Demo Logistics", so it cannot run against the production database.
 
 import type { Env } from '../types';
+import { buildLargeFleetStatements, LARGE_FLEET_MARK, planLargeFleet, type LargeFleetOptions } from './largeFleet';
 
 const ORG = 'org-meridian';
 const ORG_NAME = 'Demo Logistics';
@@ -229,7 +233,7 @@ export function isDemoMode(env: Pick<Env, 'DEMO_MODE'>): boolean {
   return env.DEMO_MODE === 'true';
 }
 
-export type DemoRefreshResult = { ran: false; reason: string } | { ran: true; today: string; statements: number };
+export type DemoRefreshResult = { ran: false; reason: string } | { ran: true; today: string; statements: number; largeFleet: LargeFleetOptions['mode'] | null };
 
 export async function refreshDemoData(env: Pick<Env, 'DB' | 'DEMO_MODE'>, now: Date = new Date()): Promise<DemoRefreshResult> {
   if (!isDemoMode(env)) return { ran: false, reason: 'DEMO_MODE is not on' };
@@ -237,7 +241,16 @@ export async function refreshDemoData(env: Pick<Env, 'DB' | 'DEMO_MODE'>, now: D
   if (!org || org.name !== ORG_NAME) return { ran: false, reason: `organisation is not "${ORG_NAME}"` };
   const today = istToday(now);
   const statements = buildDemoStatements(today);
+  // The large sample fleet, if someone has loaded it, rolls forward with the calendar:
+  // the whole of it on the 1st, only this month's movements on other nights.
+  const fleet = await env.DB.prepare(
+    `SELECT (SELECT count(*) FROM vehicles WHERE org_id = ? AND custom_fields = ?) AS vehicles,
+            (SELECT count(*) FROM drivers WHERE org_id = ? AND custom_fields = ?) AS drivers,
+            (SELECT load_date FROM trips WHERE id = 'lf-0-0') AS first`
+  ).bind(ORG, LARGE_FLEET_MARK, ORG, LARGE_FLEET_MARK).first<{ vehicles: number; drivers: number; first: string | null }>();
+  const plan = fleet ? planLargeFleet(today, fleet) : null;
+  if (plan) statements.push(...buildLargeFleetStatements(today, plan));
   // one batch = one transaction: either the whole refresh applies or none of it
   await env.DB.batch(statements.map((s) => env.DB.prepare(s)));
-  return { ran: true, today, statements: statements.length };
+  return { ran: true, today, statements: statements.length, largeFleet: plan ? plan.mode : null };
 }
