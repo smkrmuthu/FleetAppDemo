@@ -25,6 +25,14 @@ export function rupees(v: number): string {
   return '₹' + v.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
+// Whole rupees, switching to lakh / crore once a figure is too wide for a big
+// KPI tile: ₹9,85,000 · ₹12.40 L · ₹2.02 Cr.
+export function rupeesCompact(v: number): string {
+  if (v >= 1e7) return `₹${(v / 1e7).toFixed(2)} Cr`;
+  if (v >= 1e6) return `₹${(v / 1e5).toFixed(2)} L`;
+  return rupees(v).replace(/\.\d+$/, '');
+}
+
 export function formatNum(v: number, decimals = 0): string {
   return v.toLocaleString('en-IN', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
 }

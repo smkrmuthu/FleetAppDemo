@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { dieselLitres, rupees, tripCost } from './calc';
+import { dieselLitres, rupees, rupeesCompact, tripCost } from './calc';
 import type { Trip, TripExpenseLine } from '../types';
 
 const line = (kind: TripExpenseLine['kind'], amount: number, litres?: number): TripExpenseLine => ({ id: `${kind}${amount}`, date: '01 Oct 2026', kind, amount, litres });
@@ -26,5 +26,13 @@ describe('rupees', () => {
   it('shows paise and Indian digit grouping', () => {
     expect(rupees(1234567.5)).toBe('₹12,34,567.50');
     expect(rupees(0)).toBe('₹0.00');
+  });
+});
+
+describe('rupeesCompact', () => {
+  it('keeps small amounts whole and shortens lakhs and crores', () => {
+    expect(rupeesCompact(985000)).toBe('₹9,85,000');
+    expect(rupeesCompact(1240000)).toBe('₹12.40 L');
+    expect(rupeesCompact(20248166.4)).toBe('₹2.02 Cr');
   });
 });

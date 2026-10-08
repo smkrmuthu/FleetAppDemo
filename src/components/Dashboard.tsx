@@ -4,12 +4,14 @@ import {
 } from 'lucide-react';
 import type { DriverLeave, DriverMaster, MonthlyExpense, TabId, Trip, Vehicle, VehicleUnavailability } from '../types';
 import { parseDisplayDate } from '../lib/api';
-import { dieselLitres, dueStatus, formatDateRange, formatNum, rupees, tripCost, tripDurationDays, yearOptions } from '../utils/calc';
+import { dieselLitres, dueStatus, formatDateRange, formatNum, rupees, rupeesCompact, tripCost, tripDurationDays, yearOptions } from '../utils/calc';
 import { buildTruckRows } from '../utils/fleetStatus';
 import { buildLanes } from '../utils/routeGeo';
 import { MonthYearFilter } from './MonthYearFilter';
 import { FleetStatus } from './FleetStatus';
+import { Pager } from './Pager';
 import { RouteNetwork } from './RouteNetwork';
+import { SortableTh, type SortDir } from './SortableTh';
 import {
   AttentionCard, ChartCard, DataTable, EmptyState, FilterBar, FormField, GhostButton, HeroKpi, PrimaryButton,
   SectionHeading, StatusBadge, TripStatusBadge, type Tone
@@ -56,6 +58,12 @@ function daysInRange(from: string, to: string): number {
 // A truck below this share of the fleet's average km/L is flagged.
 const LOW_MILEAGE_SHARE = 0.85;
 const ATTENTION_ROWS = 4;
+// With hundreds of trucks the charts show the ones worth looking at first, and open up on request.
+const CHART_ROWS = 8;
+const CHART_STEP = 12;
+const PERF_PAGE = 15;
+
+type PerfKey = 'id' | 'trips' | 'km' | 'onRoadDays' | 'dieselL' | 'tons' | 'mileage' | 'expense' | 'revenue' | 'perTon';
 
 interface Bar { id: string; value: number; label: string; color: string; marker?: number }
 
@@ -103,6 +111,12 @@ function PairRows({ rows, max }: { rows: { id: string; a: number; b: number; aLa
 
 interface AttentionItem { key: string; tone: Tone; icon: ReactNode; title: string; description: string; rows: { id: string; main: ReactNode; meta: ReactNode }[]; more?: { label: string; tab: TabId } }
 
+function groupBy<T>(items: T[], key: (t: T) => string): Map<string, T[]> {
+  const m = new Map<string, T[]>();
+  for (const it of items) { const k = key(it); const l = m.get(k); if (l) l.push(it); else m.set(k, [it]); }
+  return m;
+}
+
 function greeting(): string {
   const h = new Date().getHours();
   return h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
@@ -111,6 +125,10 @@ function greeting(): string {
 export function Dashboard({ trips, expenses, vehicles, drivers, leaves, unavailability, onTabChange, onEditTrip, readOnly = false, userName = '' }: Props) {
   const [dateFrom, setDateFrom] = useState(() => currentMonthRange().from);
   const [dateTo, setDateTo] = useState(() => currentMonthRange().to);
+  const [perfSort, setPerfSort] = useState<{ key: PerfKey; dir: SortDir }>({ key: 'trips', dir: 'desc' });
+  const [perfPage, setPerfPage] = useState(0);
+  const [chartRows, setChartRows] = useState(CHART_ROWS);
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const label = formatDateRange(dateFrom, dateTo);
   const periodDays = daysInRange(dateFrom, dateTo);
   const inPeriod = (display: string) => {
@@ -144,15 +162,17 @@ export function Dashboard({ trips, expenses, vehicles, drivers, leaves, unavaila
 
   // Full per-truck breakdown for the filtered period — trucks with no
   // movements in it are left out rather than shown as a row of zeroes.
+  const monthTripsByVehicle = groupBy(monthTrips, (t) => t.vehicle);
+  const monthExpensesByVehicle = groupBy(monthExpenses, (e) => e.vehicle);
   const vehicleStats = vehicles
     .map((v) => {
-      const vTrips = monthTrips.filter((t) => t.vehicle === v.id);
+      const vTrips = monthTripsByVehicle.get(v.id) ?? [];
       const km = vTrips.reduce((a, t) => a + t.km, 0);
       const dieselL = vTrips.reduce((a, t) => a + dieselLitres(t.expenses), 0);
       const tons = vTrips.reduce((a, t) => a + t.tons, 0);
       const onRoadDays = vTrips.reduce((a, t) => a + (tripDurationDays(t.loadDate, t.unloadDate) ?? 0), 0);
       const tripExpense = vTrips.reduce((a, t) => a + tripCost(t).expense, 0);
-      const fixed = monthExpenses.filter((e) => e.vehicle === v.id).reduce((a, e) => a + e.amount, 0);
+      const fixed = (monthExpensesByVehicle.get(v.id) ?? []).reduce((a, e) => a + e.amount, 0);
       const revenue = vTrips.reduce((a, t) => a + t.revenue, 0);
       return {
         id: v.id, trips: vTrips.length, km, onRoadDays, dieselL, tons,
@@ -277,7 +297,7 @@ export function Dashboard({ trips, expenses, vehicles, drivers, leaves, unavaila
             sub={totals.trips ? `${formatNum(totals.km / totals.trips)} km per trip` : 'No trips in period'} />
           <HeroKpi icon={<Gauge size={14} />} label="Diesel Consumed" value={totals.dieselL} format={(n) => formatNum(n)} unit="L"
             sub={fleetMileage ? `Fleet average ${fleetMileage.toFixed(2)} km/L` : 'No diesel posted'} />
-          <HeroKpi icon={<IndianRupee size={14} />} label="Total Expense" value={totalExpense} format={(n) => rupees(n).replace(/\.\d+$/, '')}
+          <HeroKpi icon={<IndianRupee size={14} />} label="Total Expense" value={totalExpense} format={rupeesCompact}
             sub={idleFixed > 0
               ? `Includes ${rupees(idleFixed).replace(/\.\d+$/, '')} fixed costs on idle trucks`
               : <>Revenue {rupees(totals.revenue).replace(/\.\d+$/, '')}{totals.revenue === 0 && totalExpense > 0 && <> · <span style={{ color: '#FF8A80' }}>not recorded</span></>}</>} />
@@ -303,21 +323,29 @@ export function Dashboard({ trips, expenses, vehicles, drivers, leaves, unavaila
         </>
       )}
 
-      <SectionHeading title="Fleet performance" aside={`By truck · ${label}`} />
+      <SectionHeading title="Fleet performance" aside={`By truck · ${label}${vehicleStats.length > PERF_PAGE ? ` · ${formatNum(vehicleStats.length)} trucks with movements` : ''}`} />
       {vehicleStats.length === 0 ? (
         <EmptyState>No movements in this period.</EmptyState>
       ) : (
+        <>
         <DataTable minWidth={960}>
           <thead>
             <tr>
-              <th>Truck</th><th className="num">Trips</th><th className="num">KM</th>
-              <th className="num">On-road days</th><th className="num">Diesel (L)</th>
-              <th className="num">Load (t)</th><th className="num">Mileage (km/L)</th>
-              <th className="num">Expense</th><th className="num">Revenue</th><th className="num">₹/ton</th>
+              {([
+                ['id', 'Truck', false], ['trips', 'Trips', true], ['km', 'KM', true], ['onRoadDays', 'On-road days', true], ['dieselL', 'Diesel (L)', true],
+                ['tons', 'Load (t)', true], ['mileage', 'Mileage (km/L)', true], ['expense', 'Expense', true], ['revenue', 'Revenue', true], ['perTon', '₹/ton', true]
+              ] as [PerfKey, string, boolean][]).map(([key, text, num]) => (
+                <SortableTh key={key} label={text} className={num ? 'num' : undefined} align={num ? 'right' : 'left'}
+                  active={perfSort.key === key} dir={perfSort.dir}
+                  onSort={() => { setPerfSort((s) => ({ key, dir: s.key === key && s.dir === 'desc' ? 'asc' : key === 'id' ? 'asc' : 'desc' })); setPerfPage(0); }} />
+              ))}
             </tr>
           </thead>
           <tbody>
-            {vehicleStats.map((v) => {
+            {[...vehicleStats].sort((a, b) => {
+              const d = perfSort.key === 'id' ? a.id.localeCompare(b.id) : a[perfSort.key] - b[perfSort.key];
+              return (perfSort.dir === 'asc' ? d : -d) || a.id.localeCompare(b.id);
+            }).slice(perfPage * PERF_PAGE, (perfPage + 1) * PERF_PAGE).map((v) => {
               const noRevenue = v.revenue === 0 && v.expense > 0;
               return (
                 <tr key={v.id}>
@@ -340,7 +368,7 @@ export function Dashboard({ trips, expenses, vehicles, drivers, leaves, unavaila
           </tbody>
           <tfoot>
             <tr>
-              <td>Fleet</td>
+              <td>Fleet · {formatNum(vehicleStats.length)} {vehicleStats.length === 1 ? 'truck' : 'trucks'}</td>
               <td className="num">{formatNum(totals.trips)}</td>
               <td className="num">{formatNum(totals.km)}</td>
               <td className="num">{formatNum(totals.onRoadDays)}</td>
@@ -353,6 +381,8 @@ export function Dashboard({ trips, expenses, vehicles, drivers, leaves, unavaila
             </tr>
           </tfoot>
         </DataTable>
+        <Pager attached page={perfPage} pageSize={PERF_PAGE} total={vehicleStats.length} onPage={setPerfPage} />
+        </>
       )}
 
       <SectionHeading title="Routes" aside={label} />
@@ -362,21 +392,28 @@ export function Dashboard({ trips, expenses, vehicles, drivers, leaves, unavaila
         <>
           <SectionHeading title="Trends" aside="By truck" />
           <div className="chart-grid">
-            <ChartCard title="Fleet utilisation" subtitle={`On-road days out of ${periodDays} in the period`}>
-              <BarRows max={100} rows={utilisation.map((u) => ({ id: u.id, value: u.pct, label: `${Math.round(u.pct)}% · ${u.days}d`, color: 'var(--chart-primary)' }))} />
+            <ChartCard title="Fleet utilisation" subtitle={`On-road days out of ${periodDays} in the period${vehicleStats.length > CHART_ROWS ? ' · busiest first' : ''}`}>
+              <BarRows max={100} rows={[...utilisation].sort((a, b) => b.pct - a.pct || a.id.localeCompare(b.id)).slice(0, chartRows).map((u) => ({ id: u.id, value: u.pct, label: `${Math.round(u.pct)}% · ${u.days}d`, color: 'var(--chart-primary)' }))} />
             </ChartCard>
-            <ChartCard title="Fuel efficiency" subtitle="km per litre of diesel"
+            <ChartCard title="Fuel efficiency" subtitle={`km per litre of diesel${vehicleStats.length > CHART_ROWS ? ' · lowest first' : ''}`}
               legend={[{ label: 'km/L', color: 'var(--chart-neutral)' }, { label: 'Below average', color: 'var(--color-warning)' }, { label: 'Fleet average', color: 'var(--color-text)' }]}>
-              <BarRows max={mileageMax} rows={vehicleStats.map((v) => ({
+              <BarRows max={mileageMax} rows={[...vehicleStats].sort((a, b) => (a.mileage || Infinity) - (b.mileage || Infinity) || a.id.localeCompare(b.id)).slice(0, chartRows).map((v) => ({
                 id: v.id, value: v.mileage, label: v.mileage ? v.mileage.toFixed(2) : '—',
                 color: lowMileage(v.mileage) ? 'var(--color-warning)' : 'var(--chart-neutral)', marker: fleetMileage || undefined
               }))} />
             </ChartCard>
-            <ChartCard title="Expense vs revenue" subtitle="Trip costs plus fixed costs, against revenue"
+            <ChartCard title="Expense vs revenue" subtitle={`Trip costs plus fixed costs, against revenue${vehicleStats.length > CHART_ROWS ? ' · weakest margin first' : ''}`}
               legend={[{ label: 'Expense', color: 'var(--chart-primary)' }, { label: 'Revenue', color: 'var(--chart-positive)' }]}>
-              <PairRows max={moneyMax} rows={vehicleStats.map((v) => ({ id: v.id, a: v.expense, b: v.revenue, aLabel: rupees(v.expense), bLabel: rupees(v.revenue) }))} />
+              <PairRows max={moneyMax} rows={[...vehicleStats].sort((a, b) => (a.revenue - a.expense) - (b.revenue - b.expense) || a.id.localeCompare(b.id)).slice(0, chartRows).map((v) => ({ id: v.id, a: v.expense, b: v.revenue, aLabel: rupees(v.expense), bLabel: rupees(v.revenue) }))} />
             </ChartCard>
           </div>
+          {vehicleStats.length > CHART_ROWS && (
+            <div className="show-more" style={{ marginTop: 'var(--space-3)' }}>
+              <span>Showing {Math.min(chartRows, vehicleStats.length)} of {formatNum(vehicleStats.length)} trucks</span>
+              {chartRows < vehicleStats.length && <button type="button" className="btn btn-secondary btn-sm" onClick={() => setChartRows(chartRows + CHART_STEP)}>Show {Math.min(CHART_STEP, vehicleStats.length - chartRows)} more</button>}
+              {chartRows > CHART_ROWS && <button type="button" className="btn btn-ghost btn-sm" onClick={() => setChartRows(CHART_ROWS)}>Show fewer</button>}
+            </div>
+          )}
         </>
       )}
 
@@ -387,11 +424,16 @@ export function Dashboard({ trips, expenses, vehicles, drivers, leaves, unavaila
         <div className="attention-grid">
           {attention.map((a) => (
             <AttentionCard key={a.key} tone={a.tone} icon={a.icon} title={a.title} count={a.rows.length} description={a.description}
-              footer={!readOnly && a.more && a.rows.length > ATTENTION_ROWS
-                ? <GhostButton size="sm" className="attention-more" style={{ padding: 0 }} onClick={() => onTabChange(a.more!.tab)}>+{a.rows.length - ATTENTION_ROWS} more · {a.more.label}</GhostButton>
-                : undefined}>
-              <ul className="attention-list">
-                {a.rows.slice(0, ATTENTION_ROWS).map((r) => (
+              footer={a.rows.length > ATTENTION_ROWS ? (
+                <span style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+                  <GhostButton size="sm" className="attention-more" style={{ padding: 0 }} onClick={() => setExpanded((e) => ({ ...e, [a.key]: !e[a.key] }))}>
+                    {expanded[a.key] ? 'Show fewer' : `+${a.rows.length - ATTENTION_ROWS} more`}
+                  </GhostButton>
+                  {!readOnly && a.more && <GhostButton size="sm" className="attention-more" style={{ padding: 0 }} onClick={() => onTabChange(a.more!.tab)}>{a.more.label}</GhostButton>}
+                </span>
+              ) : undefined}>
+              <ul className={expanded[a.key] ? 'attention-list expanded' : 'attention-list'}>
+                {a.rows.slice(0, expanded[a.key] ? undefined : ATTENTION_ROWS).map((r) => (
                   <li key={r.id}><span style={{ minWidth: 0 }}>{r.main}</span><span className="attention-meta">{r.meta}</span></li>
                 ))}
               </ul>

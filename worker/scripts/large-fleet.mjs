@@ -58,12 +58,14 @@ for (let i = 0; i < N_VEH; i++) {
   const [st, , rto] = STATES[i % STATES.length];
   const reg = `${st}${pad(rto + (i % 3))} ${String.fromCharCode(65 + (i * 7) % 26)}${String.fromCharCode(65 + (i * 11 + 3) % 26)} ${1000 + ((i * 937) % 9000)}`;
   const fcOffset = i % 9 === 0 ? int(-12, 25) : int(40, 400); // a few due soon or lapsed
-  vehicles.push({ id: reg, model: pick(MODELS), fc: addDays(today, fcOffset), odo: int(40000, 260000), driver: null });
+  // km per litre differs by truck: most 2.9–3.5, a few thirsty ones
+  vehicles.push({ id: reg, model: pick(MODELS), fc: addDays(today, fcOffset), odo: int(40000, 260000), driver: null, kmpl: i % 11 === 4 ? 2.4 + rnd() * 0.3 : 2.9 + rnd() * 0.6 });
 }
 const drivers = [];
 const usedNames = new Set(['Murugan S', 'Rafiq A', 'Prakash N', 'Ilango R']);
 for (let i = 0; i < N_DRV; i++) {
-  let name; do { name = `${pick(FIRST)} ${pick(LAST)}`; } while (usedNames.has(name) && (name = `${name}.${pad(i)}`) && usedNames.has(name));
+  let name, tries = 0;
+  do { name = `${pick(FIRST)} ${pick(LAST)}${tries++ > 20 ? ' ' + pick(LAST) : ''}`; } while (usedNames.has(name));
   usedNames.add(name);
   const lic = i % 8 === 0 ? int(-5, 40) : int(120, 1400);
   const d = { id: name, branch: BRANCHES[i % 3], phone: `+91 9${int(4000, 9999)} ${int(10000, 99999)}`, lic: `${vehicles[i % N_VEH].id.slice(0, 2)}${int(10, 99)} ${2008 + (i % 12)}${pad(int(1, 99999), 7)}`, exp: addDays(today, lic), vehicle: vehicles[i] ? vehicles[i].id : null };
@@ -98,7 +100,7 @@ function addTrip(v, load, span, status, odoStart) {
   trips.push(`(${q(id)}, ${q(ORG)}, ${q(v.id)}, ${q(driver)}, ${q(`EWB ${int(1000, 9999)} ${int(1000, 9999)} ${int(1000, 9999)}`)}, ${q(`ITM-${int(1000, 9999)}`)}, ${q(load)}, ${unload ? q(unload) : 'NULL'}, ${q(place(a))}, ${q(place(b))}, ${tons * 1000}, ${odoStart}, ${odoStart + dist}, ${revenue}, ${q(status)}, ${q(createdBy)}, ${q(load + 'T09:00:00Z')}, ${q(load + 'T09:00:00Z')})`);
   const lastDay = unload ?? load;
   const lines = [];
-  const litres = Math.round(dist / 3.1);
+  const litres = Math.round(dist / v.kmpl);
   if (days > 1 && litres > 160) { lines.push(['diesel', load, Math.round(litres / 2)], ['diesel', lastDay, litres - Math.round(litres / 2)]); } else lines.push(['diesel', load, litres]);
   const tolls = int(1, Math.min(4, 1 + Math.floor(dist / 250)));
   for (let k = 0; k < tolls; k++) lines.push(['toll', addDays(load, Math.min(days - 1, k)), null]);
@@ -125,9 +127,9 @@ for (const v of vehicles) {
   // this month: completed trips, plus the state each truck is in today
   day = int(1, 3); const ends = todayDay;
   const mood = rnd();
-  const tail = mood < 0.14 ? 'draft' : mood < 0.24 ? 'pending' : 'approved';
+  const tail = mood < 0.14 ? 'draft' : mood < 0.2 ? 'pending' : 'approved';
   for (let k = 0, n = int(1, 3); k < n && day <= ends - 3; k++) {
-    const load = addDays(monthStart, day - 1); const dist = addTrip(v, load, int(1, 2), rnd() < 0.15 ? 'pending' : 'approved', odo);
+    const load = addDays(monthStart, day - 1); const dist = addTrip(v, load, int(1, 2), rnd() < 0.05 ? 'pending' : 'approved', odo);
     odo += dist + 1; day += Math.max(2, Math.ceil(dist / 420) + int(1, 2));
   }
   if (tail === 'draft' && !offroad.has(v.id)) addTrip(v, addDays(today, -int(0, 1)), 3, 'draft', odo);

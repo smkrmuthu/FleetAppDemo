@@ -5,6 +5,8 @@ import { StatusBadge } from './ui';
 
 const W = 640;
 const H = 460;
+// Past this many lanes the map turns to spaghetti, so it draws the busiest ones.
+const MAX_LANES = 24;
 
 interface Placed { name: string; x: number; y: number; dx: number; dy: number; anchor: 'start' | 'end' | 'middle' }
 
@@ -37,7 +39,8 @@ function placeLabels(points: { name: string; x: number; y: number }[]): Placed[]
 // Dark map-style panel of the lanes trucks ran in the period. Town positions
 // are approximate (looked up from the place names on each movement) and the
 // layout is for orientation only, so the panel says so.
-export function RouteNetwork({ lanes, skipped, periodLabel }: { lanes: Lane[]; skipped: number; periodLabel: string }) {
+export function RouteNetwork({ lanes: allLanes, skipped, periodLabel }: { lanes: Lane[]; skipped: number; periodLabel: string }) {
+  const lanes = allLanes.slice(0, MAX_LANES);
   const uid = useId().replace(/:/g, '');
   const towns = [...new Map(lanes.flatMap((l) => [l.from, l.to]).map((t) => [t.name, t])).values()];
   const proj = towns.length ? projectTowns(towns, W, H, 56) : null;
@@ -102,7 +105,9 @@ export function RouteNetwork({ lanes, skipped, periodLabel }: { lanes: Lane[]; s
       <div className="map-side">
         <div>
           <h3>Route network</h3>
-          <div className="map-sub">Lanes run in {periodLabel}</div>
+          <div className="map-sub">
+            {allLanes.length > MAX_LANES ? `Busiest ${MAX_LANES} of ${allLanes.length} lanes` : 'Lanes'} run in {periodLabel}
+          </div>
         </div>
         {lanes.length === 0 ? (
           <div className="map-sub">Routes appear here once movements with known places are recorded.</div>

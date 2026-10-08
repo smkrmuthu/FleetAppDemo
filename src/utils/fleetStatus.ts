@@ -59,16 +59,20 @@ export function buildTruckRows(args: {
   nowDate?: Date;
 }): TruckRow[] {
   const { vehicles, trips, unavailability, now, periodStats, nowDate } = args;
+  const tripsByVehicle = new Map<string, Trip[]>();
+  for (const t of trips) { const l = tripsByVehicle.get(t.vehicle); if (l) l.push(t); else tripsByVehicle.set(t.vehicle, [t]); }
+  const windowsByVehicle = new Map<string, VehicleUnavailability[]>();
+  for (const w of unavailability) { const l = windowsByVehicle.get(w.vehicle); if (l) l.push(w); else windowsByVehicle.set(w.vehicle, [w]); }
   return vehicles.map((v) => {
-    const vTrips = trips
-      .filter((t) => t.vehicle === v.id)
+    const vTrips = (tripsByVehicle.get(v.id) ?? [])
+      .slice()
       .sort((a, b) => {
         const d = parseDisplayDate(b.loadDate).localeCompare(parseDisplayDate(a.loadDate));
         return d !== 0 ? d : b.id.localeCompare(a.id);
       });
     const live = vTrips.find((t) => t.status === 'draft');
     const pending = vTrips.find((t) => t.status === 'pending');
-    const offroad = unavailability.some((w) => w.vehicle === v.id && w.startsAt <= now && now <= w.endsAt);
+    const offroad = (windowsByVehicle.get(v.id) ?? []).some((w) => w.startsAt <= now && now <= w.endsAt);
     const state: TruckState = offroad ? 'offroad' : live ? 'road' : pending ? 'pending' : 'idle';
     const routeTrip = state === 'road' ? live : state === 'pending' ? pending : vTrips[0];
     const routeKind = !routeTrip ? null : routeTrip === live ? 'live' : routeTrip === pending ? 'pending' : 'last';
