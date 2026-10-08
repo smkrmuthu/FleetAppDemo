@@ -166,7 +166,9 @@ export const tripExpenses = sqliteTable(
     createdAt: text('created_at').notNull().default(sql`(current_timestamp)`)
   },
   (t) => ({
-    tripIdx: index('trip_expenses_trip').on(t.orgId, t.tripId)
+    tripIdx: index('trip_expenses_trip').on(t.orgId, t.tripId),
+    // deleting a movement looks its lines up by trip alone (the foreign key), which the index above can't serve
+    byTripIdx: index('trip_expenses_by_trip').on(t.tripId)
   })
 );
 
@@ -187,7 +189,8 @@ export const tripStops = sqliteTable(
     createdAt: text('created_at').notNull().default(sql`(current_timestamp)`)
   },
   (t) => ({
-    tripIdx: index('trip_stops_trip').on(t.orgId, t.tripId)
+    tripIdx: index('trip_stops_trip').on(t.orgId, t.tripId),
+    byTripIdx: index('trip_stops_by_trip').on(t.tripId)
   })
 );
 
@@ -205,7 +208,8 @@ export const tripDocuments = sqliteTable(
     createdAt: text('created_at').notNull().default(sql`(current_timestamp)`)
   },
   (t) => ({
-    tripIdx: index('trip_documents_trip').on(t.orgId, t.tripId)
+    tripIdx: index('trip_documents_trip').on(t.orgId, t.tripId),
+    byTripIdx: index('trip_documents_by_trip').on(t.tripId)
   })
 );
 
@@ -281,7 +285,8 @@ export const notifications = sqliteTable(
     createdAt: text('created_at').notNull().default(sql`(current_timestamp)`)
   },
   (t) => ({
-    orgReadIdx: index('notifications_org_read').on(t.orgId, t.read, t.createdAt)
+    orgReadIdx: index('notifications_org_read').on(t.orgId, t.read, t.createdAt),
+    byTripIdx: index('notifications_by_trip').on(t.relatedTripId)
   })
 );
 

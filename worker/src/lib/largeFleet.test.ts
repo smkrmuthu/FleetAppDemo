@@ -125,6 +125,16 @@ describe('nightly roll', () => {
   });
 });
 
+describe('deleting a movement', () => {
+  it('finds its lines, stops, documents and notices by index instead of scanning the tables', () => {
+    const db = freshDb();
+    for (const [table, column] of [['trip_expenses', 'trip_id'], ['trip_stops', 'trip_id'], ['trip_documents', 'trip_id'], ['notifications', 'related_trip_id']]) {
+      const plan = db.prepare(`EXPLAIN QUERY PLAN SELECT 1 FROM ${table} WHERE ${column} = 'x'`).all().map((r) => String((r as { detail: string }).detail)).join(' ');
+      expect(plan, `${table}.${column}`).toMatch(/USING (COVERING )?INDEX/);
+    }
+  });
+});
+
 describe('refreshDemoData with the large set loaded', () => {
   it('adds the roll to the same single batch, and leaves it out when the set is absent', async () => {
     for (const present of [true, false]) {
