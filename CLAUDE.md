@@ -103,7 +103,9 @@ docs/                   RUNBOOK.md, backup/restore, architecture
 
 ## Large-fleet sample data (optional, for scale testing)
 
-`worker/scripts/large-fleet.mjs` generates SQL for ~120 trucks, ~110 drivers and ~700 movements across this and last month (repeatable output). Everything it adds is marked (`lf-*` ids, `custom_fields` `{"sample":"large-fleet"}`), and `worker/scripts/large-fleet-remove.sql` takes it all away. Load it on the **local** DB first; do not apply it to the live demo DB without asking, since it changes what prospects see.
+`worker/scripts/large-fleet.mjs` generates SQL for 260 trucks, 250 drivers and this and last month's movements (`--vehicles`, `--drivers`, `--today` change that). The SQL is short (~15 KB): the database builds the rows itself with recursive queries and a repeatable hash, so the same arguments give the same data. Statements are separated by a `--;` line. Everything it adds is marked (`lf-*` ids, `custom_fields` `{"sample":"large-fleet"}`), and `worker/scripts/large-fleet-remove.sql` takes it all away.
+
+**It is loaded in the live demo DB** (8 Oct 2026, dated that day). It does not roll forward by itself: the nightly refresh only maintains the `demo-*` rows. To re-date it, run the remove script, then load a fresh run with the new `--today`. Do not load or remove it on the live DB without asking, since it changes what prospects see.
 
 ```bash
 cd worker && node scripts/large-fleet.mjs > large-fleet.sql
