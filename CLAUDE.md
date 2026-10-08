@@ -71,7 +71,7 @@ src/
   components/           screens: Dashboard, TripLog, AddMovement, MovementReview, MonthlyReport,
                         MovementSummary, MonthlyExpenses, FuelExpenses, Master, People, SettingsPage, ...
   lib/api.ts            API client      lib/reports.ts, exporter.ts   Excel/PDF exports
-  utils/                aggregate.ts (per-vehicle totals), calc.ts, fleetStatus.ts, routeGeo.ts (+ tests)
+  utils/                aggregate.ts (per-vehicle totals), calc.ts, fleetStatus.ts, routeGeo.ts (built-in towns), placeGeo.ts (place names → map positions, lane grouping), roadRoute.ts (road routes) (+ tests)
 worker/
   src/index.ts          Hono app + scheduled handler (backup, demo refresh)
   src/routes/           one file per resource    src/lib/  jwt, password, backup, demoData, ...
@@ -89,7 +89,11 @@ docs/                   RUNBOOK.md, backup/restore, architecture
 - **Totals:** per-vehicle totals come from `totalOfVehicles()` in `src/utils/aggregate.ts`; ratios (margin, ₹/km) are recomputed from the totals, never averaged. Report exports take `withTotal`/`foot` options; the full backup (`exportBackup`) must stay pure data with no total rows.
 - Schema changes are a new migration in `worker/migrations/` plus the Drizzle schema; never edit applied migrations. Keep `seed.sql` consistent with the schema.
 - Bump the cache name in `public/sw.js` when shipped shell assets change.
-- Anything shown as an approximation must say so (the route map is labelled "Illustrative layout"; there is no GPS — fleet status is derived from recorded movements and unavailability windows).
+- Anything shown as an approximation must say so (the route map is a real OpenStreetMap map via Leaflet, tagged "Likely road routes · not GPS" or "Straight lines"; there is no GPS — fleet status is derived from recorded movements and unavailability windows).
+
+## Route map
+
+`RouteNetwork.tsx` groups the month's movements into lanes (loading place → stops → unloading place) and draws them on a Leaflet map (`RouteMap.tsx`, OpenStreetMap tiles). Positions come from the built-in town list in `routeGeo.ts` first, then a Nominatim search limited to southern India; road routes come from the public OSRM servers (about one request a second). Both are remembered in the browser (localStorage). For big fleets it draws only the 24 busiest lanes and asks for road routes for the 10 busiest. Ported from FleetApp-SMT's map, without its client-specific places (Chennai sites, areas): do not copy those into this repo.
 
 ## Demo sample data (nightly refresh)
 

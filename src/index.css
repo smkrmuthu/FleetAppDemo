@@ -558,9 +558,13 @@ input, select, textarea, button { font-family: var(--font-sans); }
 
 .map-card { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(240px, 1fr); overflow: hidden; background: var(--color-sidebar); color: #fff; border: 0; }
 .map-canvas { position: relative; min-height: 430px; }
-.map-canvas svg { display: block; width: 100%; height: 100%; }
-.map-tag { position: absolute; top: 14px; left: 16px; z-index: 1; }
-.map-tag .badge { background: rgba(255, 255, 255, 0.1); color: var(--color-sidebar-text); }
+.map-canvas { isolation: isolate; }
+.map-leaflet { position: absolute; inset: 0; background: #E8ECEF; }
+.map-empty { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; font-size: 14px; color: var(--color-sidebar-muted); }
+.map-place-label { font: 600 12px/1.2 var(--font-body, Inter, sans-serif); color: var(--color-text); padding: 2px 6px; border: 0; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,.25); }
+.map-place-label::before { display: none; }
+.map-tag { position: absolute; top: 14px; right: 14px; z-index: 1200; }
+.map-tag .badge { background: rgba(23, 33, 43, 0.88); color: #fff; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); }
 .map-side { padding: 22px 24px; border-left: 1px solid rgba(255, 255, 255, 0.08); display: grid; gap: 14px; align-content: start; }
 .map-side h3 { color: #fff; font-size: 16px; }
 .map-sub { font-size: 12px; color: var(--color-sidebar-muted); margin-top: 2px; }

@@ -1,7 +1,8 @@
 // Approximate positions of the towns, yards and ports that appear in trip
 // routes, used only to lay out the dashboard's illustrative route network.
 // Trips store free-text places ("Chennai Yard", "Sriperumbudur ICD"), so a
-// place is matched by the first known town name it contains. Anything that
+// place is matched by the first known town name it contains. The map in
+// RouteNetwork.tsx uses these positions first and only searches for the rest. Anything that
 // matches nothing is left off the map (and counted), never guessed.
 
 export interface Town { name: string; lat: number; lon: number }
@@ -32,44 +33,4 @@ export function findTown(place: string): Town | null {
   const p = place.toLowerCase();
   for (const { keys, town } of TOWNS) if (keys.some((k) => p.includes(k))) return town;
   return null;
-}
-
-export interface Lane { from: Town; to: Town; trips: number; open: boolean }
-
-// Groups trips into lanes (one per from→to pair of known towns). Trips with a
-// place that isn't recognised, or that start and end in the same town, are
-// counted in `skipped` instead.
-export function buildLanes(trips: { from: string; to: string; open: boolean }[]): { lanes: Lane[]; skipped: number } {
-  const byKey = new Map<string, Lane>();
-  let skipped = 0;
-  for (const t of trips) {
-    const a = findTown(t.from);
-    const b = findTown(t.to);
-    if (!a || !b || a.name === b.name) { skipped++; continue; }
-    const key = `${a.name}>${b.name}`;
-    const lane = byKey.get(key);
-    if (lane) { lane.trips++; lane.open = lane.open || t.open; }
-    else byKey.set(key, { from: a, to: b, trips: 1, open: t.open });
-  }
-  return { lanes: [...byKey.values()].sort((x, y) => y.trips - x.trips), skipped };
-}
-
-export interface Projection { width: number; height: number; project: (t: Town) => { x: number; y: number } }
-
-// Fits the towns used by `lanes` into a width × height box, keeping the
-// map's proportions (about 1° of longitude per degree of latitude).
-export function projectTowns(towns: Town[], width: number, height: number, pad = 44): Projection {
-  const lats = towns.map((t) => t.lat);
-  const lons = towns.map((t) => t.lon);
-  const minLat = Math.min(...lats), maxLat = Math.max(...lats);
-  const minLon = Math.min(...lons), maxLon = Math.max(...lons);
-  const spanLat = Math.max(0.5, maxLat - minLat);
-  const spanLon = Math.max(0.5, maxLon - minLon);
-  const scale = Math.min((width - pad * 2) / spanLon, (height - pad * 2) / spanLat);
-  const offX = (width - spanLon * scale) / 2;
-  const offY = (height - spanLat * scale) / 2;
-  return {
-    width, height,
-    project: (t) => ({ x: offX + (t.lon - minLon) * scale, y: offY + (maxLat - t.lat) * scale })
-  };
 }
