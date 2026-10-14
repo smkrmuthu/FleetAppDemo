@@ -16,15 +16,15 @@
     "secret:gemini": "wrangler secret put GEMINI_API_KEY -c wrangler.toml"
   },
   "dependencies": {
-    "drizzle-orm": "^0.45.3",
-    "hono": "^4.13.12",
-    "zod": "^4.5.4"
+    "drizzle-orm": "^0.45.4",
+    "hono": "^4.13.13",
+    "zod": "^4.6.6"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20261001.1",
+    "@cloudflare/workers-types": "^5.20261011.1",
     "drizzle-kit": "^0.31.11",
     "typescript": "^7.0.2",
     "vitest": "^5.0.3",
-    "wrangler": "^4.145.0"
+    "wrangler": "^4.149.0"
   }
 }
